@@ -11,6 +11,9 @@ cd to the `api/` folder to begin.
 2. Run `source venv/bin/activate` to enter the environment.
 3. Run `pip install -r requirements.txt` to install all relevant dependencies.
 
+to disable the virtual environment after installing, run `deactivate`.
+
+
 ### Node (frontend)
 cd to the `frontend` folder to behin.
 
@@ -18,6 +21,14 @@ cd to the `frontend` folder to behin.
 
 ## Running Project
 
-To launch frontend, cd to the `frontend/` directory and run `npm start.` To run the backend, cd to `api/` and run `python3 app.py`.
+### frontend
+cd to the `frontend/` directory and run `npm start.`
+
+## backend
+1. cd to `api/`
+2. Run `source venv/bin/activate` to initialize the virtual environment
+3. run `python3 app.py`.
+
+to disable the virtual environment after running, run `deactivate`.
 
 ## Language Installation
