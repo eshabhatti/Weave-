@@ -24,7 +24,7 @@ cd to the `frontend` folder to behin.
 ### frontend
 cd to the `frontend/` directory and run `npm start.`
 
-## backend
+### backend
 1. cd to `api/`
 2. Run `source venv/bin/activate` to initialize the virtual environment
 3. run `python3 app.py`.
