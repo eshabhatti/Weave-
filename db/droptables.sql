@@ -3,6 +3,9 @@
 -- Format is:
 -- 		DROP TABLE TableName ;
 
+-- Drops the Post table.
+DROP TABLE Post;
+
 -- Drops the UserAccount table
 DROP TABLE UserAccount;
 

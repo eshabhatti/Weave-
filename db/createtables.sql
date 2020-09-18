@@ -44,3 +44,36 @@ CREATE TABLE UserAccount (
     PRIMARY KEY (username),
     UNIQUE (email)
 );
+
+-- NOTE: When topics are added, their table needs to be initialized here.
+
+-- Initializes the Post Table
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		post_id: Unique ID value assigned to a post upon creation
+-- 		topic_name: The one topic that the post is assigned to; foreign key that applies to Topic
+-- 			NOTE: For now, just assign this value as "null" or "general"
+-- 		creator: The creator of the post's username; foreign key that applies to UserAccount
+-- 		date_created: The date of the post's creation
+-- 		post_type: A flag that states whether the post is pure text (1) or picture-caption (2) -- maybe not needed?
+-- 		content: A string that completely holds a text post's content. In a picture-caption post, this holds the caption.
+-- 		pic_path: A filepath to the picture that is assigned to the post
+-- 		upvote_count: The total number of upvotes the post has (initialized to 0)
+-- 		downvote_count: The total number of downvotes the post has (initialized to 0)
+-- 		anon_flag: A flag that marks whether (0) or not (1) the post is anonymous
+-- 		moderation_status: an integer flag corresponding to the user's moderation status
+-- 			NOTE: For now, this attribute will always be set to 0
+CREATE TABLE Post (
+    post_id INT NOT NULL,
+    topic_name VARCHAR(30) NOT NULL,
+    creator VARCHAR(20) NOT NULL,
+    date_created DATE NOT NULL,
+    post_type INT NOT NULL,
+    content VARCHAR(750),
+    pic_path VARCHAR(100), 
+    upvote_count INT NOT NULL,
+    downvote_count INT NOT NULL,
+    anon_flag INT NOT NULL,
+    moderation_status INT NOT NULL,
+	PRIMARY KEY (post_id),
+    FOREIGN KEY (creator) REFERENCES UserAccount(username)    
+);
