@@ -1,0 +1,24 @@
+# dependencies
+/weave-code/node_modules
+/weave-code/.pnp
+/weave-code/.pnp.js
+
+# testing
+/weave-code/coverage
+
+# production
+/weave-code/build
+
+# misc
+/weave-code/.DS_Store
+/weave-code/.env.local
+/weave-code/.env.development.local
+/weave-code/.env.test.local
+/weave-code/.env.production.local
+
+/weave-code/npm-debug.log*
+/weave-code/yarn-debug.log*
+/weave-code/yarn-error.log*
+
+/weave-code/api/venv
+/weave-code/api/__pycache__
