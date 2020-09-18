@@ -19,7 +19,7 @@ USE weave;
 -- 		username: plaintext username with a maximum of 20 characters
 -- 		email: plaintext email that the user's account is connected with
 -- 		encrypted_password: user password hashed with scrypt (output will be locked at 64 bytes?)
--- 		password_salt: (cyprtographically) random value to be appended to password before hash
+-- 		password_salt: (cyprtographically) random value to be appended to password before hash (locked at 16 bytes?)
 -- 		first_name: optional value that represents the user's first name
 -- 		last_name: optional value that represents the user's last name
 -- 			NOTE: These names are separated to make injection attacks harder.
@@ -30,9 +30,9 @@ USE weave;
 -- 		moderation_status: an integer flag corresponding to the user's moderation status
 -- 			NOTE: For now, the above two attributes will always be set to 0
 CREATE TABLE UserAccount (
-	username VARCHAR(20) NOT NULL,
+    username VARCHAR(20) NOT NULL,
     email VARCHAR(50) NOT NULL,
-    encrypted_password VARCHAR(20) NOT NULL,
+    encrypted_password CHAR(64) NOT NULL,
     password_salt CHAR(16) NOT NULL,
     first_name VARCHAR(15),
     last_name VARCHAR(15),
