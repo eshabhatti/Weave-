@@ -3,4 +3,9 @@
 -- Format is:
 -- 		DROP TABLE TableName ;
 
--- This is currently a placeholder file. There is no script here yet.
+-- Drops the UserAccount table
+DROP TABLE UserAccount;
+
+-- Terminates the entire database. This will also drop the tables above.
+-- The DROP statements will be kept nonetheless in case the database needs to be cleared, not removed.
+DROP DATABASE weave; 
