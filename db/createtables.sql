@@ -1,0 +1,12 @@
+-- This will be the general constructor for Weave's database.
+-- All tables needed for the database will be created, along with the database itself.
+-- Format is:
+-- 		CREATE TABLE TableName (
+-- 			column_attribute TYPE OTHER_CONDITIONS,
+-- 			column_attribute TYPE OTHER_CONDITIONS,
+-- 			... ,
+-- 			PRIMARY KEY (column_attribute),
+-- 			FOREIGN KEY (column_attribute) REFERENCES ReferenceTable(reference_attribute)
+-- 		);
+
+-- This is currently a placeholder file. There is no script here yet.

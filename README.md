@@ -11,11 +11,11 @@ cd to the `api/` folder to begin.
 2. Run `source venv/bin/activate` to enter the environment.
 3. Run `pip install -r requirements.txt` to install all relevant dependencies.
 
-to disable the virtual environment after installing, run `deactivate`.
+To disable the virtual environment after installing, run `deactivate`.
 
 
 ### Node (frontend)
-cd to the `frontend` folder to behin.
+cd to the `frontend/` folder to begin.
 
 1. Run `npm install` to install all modules.
 
@@ -26,9 +26,13 @@ cd to the `frontend/` directory and run `npm start.`
 
 ### backend
 1. cd to `api/`
-2. Run `source venv/bin/activate` to initialize the virtual environment
+2. Run `source venv/bin/activate` to initialize the virtual environment on MacOS/Linux; run `venv\Scripts\activate` to do so on Windows.
 3. run `python3 app.py`.
 
-to disable the virtual environment after running, run `deactivate`.
+To disable the virtual environment after running, run `deactivate`.
 
 ## Language Installation
+
+Download Python 3.5.8 from `https://www.python.org/downloads/`
+
+Download Node.JS (npm) from `https://nodejs.org/en/`
