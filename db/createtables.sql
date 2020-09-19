@@ -77,3 +77,33 @@ CREATE TABLE Post (
     PRIMARY KEY (post_id),
     FOREIGN KEY (creator) REFERENCES UserAccount(username)    
 );
+
+-- Initializes the SavedPost table.
+-- ATTRIBUTE DESCRIPTIONS: 
+-- 		username: The user who saved the post
+-- 		post_id: The post that the user saved
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair
+-- 		date_saved: The date that the post was saved
+CREATE TABLE SavedPost (
+    username VARCHAR(20) NOT NULL,
+    post_id INT NOT NULL,
+    date_saved DATE NOT NULL,
+    PRIMARY KEY (username, post_id),
+    FOREIGN KEY (username) REFERENCES UserAccount(username),
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
+);
+
+-- Initializes the PostVote table.
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		username: The user who voted on the post
+-- 		post_id: The post that the user saved
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair
+-- 		score: A flag representing an upvote (1) or downvote (-1)
+CREATE TABLE PostVote (
+    username VARCHAR(20) NOT NULL,
+    post_id INT NOT NULL,
+    score INT NOT NULL,
+    PRIMARY KEY (username, post_id),
+    FOREIGN KEY (username) REFERENCES UserAccount(username),
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
+);

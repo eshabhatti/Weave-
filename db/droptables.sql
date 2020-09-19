@@ -3,6 +3,12 @@
 -- Format is:
 -- 		DROP TABLE TableName ;
 
+-- Drops the PostVote table.
+DROP TABLE PostVote;
+
+-- Drops the SavedPost table.
+DROP TABLE SavedPost;
+
 -- Drops the Post table.
 DROP TABLE Post;
 
