@@ -79,6 +79,7 @@ CREATE TABLE Post (
 );
 
 -- Initializes the SavedPost table.
+-- Note that users can save their own posts on a database level. This can be prevented by the backend.
 -- ATTRIBUTE DESCRIPTIONS: 
 -- 		username: The user who saved the post
 -- 		post_id: The post that the user saved
