@@ -23,7 +23,7 @@ USE example;
 -- NOT NULL states that the column cannot have a null value. CHECK can check other conidtions.
 -- UNIQUE states that the value in the column must be unique, for email + username. 
 CREATE TABLE Dummy (
-	username VARCHAR(20) NOT NULL,
+    username VARCHAR(20) NOT NULL,
     realname VARCHAR(20) NOT NULL,
     description VARCHAR(150),
     date_of_birth DATE,
@@ -61,7 +61,7 @@ ORDER BY realname
 -- Creates another table, but this time the tables will be linked with a foreign key.
 -- The foreign key relates to a primary key in another table.
 CREATE TABLE Post (
-	post_id INT NOT NULL,
+    post_id INT NOT NULL,
     content VARCHAR(750),
     creator_username VARCHAR(20),
     PRIMARY KEY (post_id),
