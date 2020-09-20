@@ -48,6 +48,7 @@ CREATE TABLE UserAccount (
 -- NOTE: When topics are added, their table needs to be initialized here.
 
 -- Initializes the Post Table
+-- If album posts are allowed, this table will need to be modified
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		post_id: Unique ID value assigned to a post upon creation
 -- 		topic_name: The one topic that the post is assigned to; foreign key that applies to Topic
@@ -60,7 +61,7 @@ CREATE TABLE UserAccount (
 -- 		upvote_count: The total number of upvotes the post has (initialized to 0)
 -- 		downvote_count: The total number of downvotes the post has (initialized to 0)
 -- 		anon_flag: A flag that marks whether (1) or not (0) the post is anonymous
--- 		moderation_status: an integer flag corresponding to the user's moderation status
+-- 		moderation_status: an integer flag corresponding to the post's moderation status
 -- 			NOTE: For now, this attribute will always be set to 0
 CREATE TABLE Post (
     post_id INT NOT NULL,
