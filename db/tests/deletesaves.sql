@@ -1,5 +1,5 @@
 -- Dummy data file.
--- Deletes all data in the UserAccount table that 'createposts.sql' will create.
+-- Deletes all data in the SavedPosts table that 'createsaves.sql' will create.
 DELETE FROM SavedPost WHERE username = "SneakySpy" AND post_id = 001;
 DELETE FROM SavedPost WHERE username = "realuser2" AND post_id = 001;
 DELETE FROM SavedPost WHERE username = "realuser1" AND post_id = 005;

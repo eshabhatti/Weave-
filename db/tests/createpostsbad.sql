@@ -1,5 +1,5 @@
 -- Dummy data file.
--- Tries to create a series of fake users. None of these queries should succeed.
+-- Tries to create a series of fake posts. None of these queries should succeed.
 -- Make sure to run 'createusers.sql' and 'createposts.sql' before running this file.
 -- MySQL workbench should let you run queries individually if the script stops after the first error.
 
