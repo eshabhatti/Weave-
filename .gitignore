@@ -27,4 +27,6 @@
 
 /.vscode
 
+/package-lock.json
+
 

@@ -46,6 +46,7 @@ VALUES (
 -- 			creator: a string that MUST correspond exactly to a username in the UserAccount table
 -- 			date_created: a date string representing when the post was created IN THE FORMAT "YYYY-MM-DD"
 -- 			post_type: an integer flag set to 1 if the post is text and set to 2 if the post is picture-caption
+-- 			title: a string holding the text corresponding to the post's title; 75 characters max; CANNOT BE NULL
 -- 			content: a string holding either a text post or the picture's caption; 750 characters max; can be NULL (picture but no caption)
 -- 			pic_path: a string holding a filepath to the post's picture; 100 characters max; can be NULL
 -- 			upvote_count: an integer representing the post's total upvotes; initialize this as 0
@@ -61,6 +62,7 @@ VALUES (
     "realuser1",                                           -- creator
     "2020-9-20",                                           -- date_created
     1,                                                     -- post_type
+    "text post",                                           -- title
     "text content text content text content",              -- content
     NULL,                                                  -- pic_path
     0,                                                     -- upvote_count
@@ -74,8 +76,9 @@ VALUES (
     202,                                                   -- post_id
     "general",                                             -- topic_name
     "realuser1",                                           -- creator
-    "2020-9-20",                                           -- date_created
+    "2020-9-21",                                           -- date_created
     2,                                                     -- post_type
+    "picture-caption post",                                -- title
     "text content text content text content",              -- content
     "/picfilepath/image.jpeg",                             -- pic_path
     0,                                                     -- upvote_count
@@ -83,6 +86,7 @@ VALUES (
     1,                                                     -- anon_flag
     0                                                      -- moderation_status
 );
+-- NOTE THAT POSTS MAY NOT BE INSERTED INTO THE DATABASE UNLESS THEY HAVE A VALID USER TO CONNECT TO
 
 -- TO INSERT A RELATIONSHIP ENTITY THAT REPRESENTS A SAVED POST:
 -- 		INSERT INTO SavedPost
@@ -98,6 +102,7 @@ VALUES (
     101,                              -- post_id
     "2020-09-20"                      -- date_saved
 );
+-- NOTE THAT SAVED POSTS MAY NOT BE INSERTED INTO THE DATABASE UNLESS THEY HAVE A VALID USER AND A VALID POST TO CONNECT TO
 
 -- TO INSERT A RELATIONSHIP ENTITY THAT REPRESENTS AN UPVOTE/DOWNVOTE:
 -- 		INSERT INTO PostVote
@@ -113,6 +118,7 @@ VALUES (
     101,                              -- post_id
     "1"                               -- score
 );
+-- NOTE THAT POST VOTES MAY NOT BE INSERTED INTO THE DATABASE UNLESS THEY HAVE A VALID USER AND A VALID POST TO CONNECT TO
 -- IMPORTANT: When adding a new vote into the database, you also need to update the post table.
 -- You would generally do this using the following format:
 -- 		UPDATE [TableName] SET [attribute = new_attribute] WHERE [condition];
