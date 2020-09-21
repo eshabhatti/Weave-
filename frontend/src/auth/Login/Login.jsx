@@ -4,6 +4,7 @@ import "./login.css";
 export default function Login() {
   const [loginName, updateLoginName] = useState("");
   const [password, updatePassword] = useState("");
+  const [errorMessage, updateErrorMessage] = useState("");
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -11,13 +12,20 @@ export default function Login() {
       username: loginName,
       password: password
     }
-    console.log(body);
     /*
      * post to backend
      */
-    // fetch();
+    const endpoint = "";
+    // fetch(endpoint).then(response => response.json()).then(data => {
+    //   if (data.errorMessage) {
+    //     updateErrorMessage(data.errorMessage);
+    //   }
+    // });
+    updateErrorMessage("Incorrect username or password");
     alert(JSON.stringify(body));
   }
+
+  const errObject = errorMessage !== "" ? <ErrorBubble message="Incorrect username or password" /> : null;
 
   return (
     <div>
@@ -28,21 +36,36 @@ export default function Login() {
           <label className="login-form-label">username/email</label>
           <input
             value={loginName}
-            onChange={e => updateLoginName(e.target.value)} className="login-form-input"
+            onChange={e => {
+              updateLoginName(e.target.value);
+              updateErrorMessage("");
+            }} className="login-form-input"
           />
 
           <label className="login-form-label">password</label>
           <input
             value={password}
-            onChange={e => updatePassword(e.target.value)}
+            onChange={e => {
+              updatePassword(e.target.value);
+              updateErrorMessage("");
+            }}
             type="password"
             className="login-form-input" />
           <button type="submit" className="login-submit-btn" onClick={(e) => onSubmit(e)}>login</button>
 
         </form>
-        <a href="#" className="login-link">create an account</a>
+        {errObject}
+        <a href="register" className="login-link">create an account</a>
         <a href="#" className="login-link">forgot password</a>
       </div>
+    </div>
+  )
+}
+
+function ErrorBubble({ message }) {
+  return (
+    <div className="login-error-bubble">
+      <p className="login-error-message">{message}</p>
     </div>
   )
 }
