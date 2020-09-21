@@ -1,11 +1,13 @@
 import time
 import re
+import bcrypt
 from flask import Flask, request
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 
 # Config for MySQL
+# RUN CREATETABLES.SQL ON YOUR LOCAL MYSQL SERVER IN ORDER FOR THE DATABASE TO WORK
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'pass' # original password is pass
@@ -68,12 +70,19 @@ def register_user():
         # # # End validation
         if(valid_info):
 
+            # # Hashes the password for security before storing it in the database
+            # Creates a random salt using the bcrypt library.
+            salt = bcrypt.gensalt()
+            # Hashes the password with bcrypt.
+            hash_password = bcrypt.hashpw(reg_info["password"].encode(), salt)
+
             # Insert new user into database.
             # Lots of strings are static right now. Names will probably have to be set to NULL instead.
+            # We also need to insert the actual date into the database, not just a static value.
             # Minor error: the values with "Null" in the above register are written to the database as strings ("Null") rather than the keyword (NULL)
             cursor = mysql.connection.cursor()
-            register_query = "INSERT INTO UserAccount VALUES (%s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s);"
-            register_values = (reg_info["username"],reg_info["email"], "pass", "word", "real", "user", "1998-12-12" , "Null", "Null", "0", "0")
+            register_query = "INSERT INTO UserAccount VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+            register_values = (reg_info["username"], reg_info["email"], hash_password, "real", "user", "1998-12-12" , "Null", "Null", "0", "0")
             cursor.execute(register_query, register_values)
             mysql.connection.commit()         
             

@@ -12,7 +12,6 @@ INSERT INTO UserAccount
 VALUES (
     "realuser3",
     "t8lBTZKRH7gECPa3CPBKWJXm5zDtuyREdMRszg6iSu2LLLgwLloFZgRWVJofcHSL",
-    "fVuq1ED1AL2nBerc",
     "Real",
     "Userman",
     "1990-10-10",
@@ -28,7 +27,6 @@ VALUES (
     "realuser3",
     "ohialmostforgotanemail@hotmail.com",
     "t8lBTZKRH7gECPa3CPBKWJXm5zDtuyREdMRszg6iSu2LLLgwLloFZgRWVJofcHSL",
-    "fVuq1ED1AL2nBerc",
     "Real",
     "Userman",
     NULL,
@@ -45,24 +43,6 @@ VALUES (
     "realuser3",
     "ohialmostforgotanemail@hotmail.com",
     "t8lBTZKRH7gECPa3CPBKWJXm5zDtuSu2LLLgwLloFZgRWVJofcHSLt8lBTZKRH7gECPa3CPBKWJXm5zDtuSu2LLLgwLloFZgRWVJofcHSL",
-    "fVuq1ED1AL2nBerc",
-    "Real",
-    "Userman",
-    "1990-10-10",
-    "I do not like how this database works. >:(",
-    NULL,
-    0,
-    0
-);
-
--- Incorrect password salt length (too long).
--- NOTE: SQL does not check for strings that are too short. If this is expected to be set, the backend will have to handle it.
-INSERT INTO UserAccount
-VALUES (
-    "realuser3",
-    "ohialmostforgotanemail@hotmail.com",
-    "t8lBTZKRH7gECPa3CPBKWJXm5zDtuyREdMRszg6iSu2LLLgwLloFZgRWVJofcHSL",
-    "fVuq1nBercfVuq1ED1AL2nBerc",
     "Real",
     "Userman",
     "1990-10-10",
@@ -78,7 +58,6 @@ VALUES (
     "realuser3",
     "ohialmostforgotanemail@hotmail.com",
     "t8lBTZKRH7gECPa3CPBKWJXm5zDtuyREdMRszg6iSu2LLLgwLloFZgRWVJofcHSL",
-    "fVuq1ED1AL2nBerc",
     "Real",
     "Userman",
     "1900-20-10",
@@ -101,7 +80,6 @@ VALUES (
     "realuser3",
     "ohialmostforgotanemail@hotmail.com",
     "t8lBTZKRH7gECPa3CPBKWJXm5zDtuyREdMRszg6iSu2LLLgwLloFZgRWVJofcHSL",
-    "fVuq1ED1AL2nBerc",
     "Real",
     "Userman",
     "1900-02-10",
@@ -117,7 +95,6 @@ VALUES (
     "fakeuser1",
     "exampleuser@gmail.com",
     "t8lBTZKRH7gECPa3CPBKWJXm5zDtuyREdMRszg6iSu2LLLgwLloFZgRWVJofcHSL",
-    "fVuq1ED1AL2nBerc",
     "Real",
     "Userman",
     "1900-02-10",
