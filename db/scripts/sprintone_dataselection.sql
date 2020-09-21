@@ -36,7 +36,7 @@ LIMIT 10
 
 -- Returning user verification is one instance where data will need to be pulled from one table.
 -- Assuming the user "realuser1" is logging in with their username and password only, the needed query would be:
-SELECT username, encrypted_password, password_salt
+SELECT username, encrypted_password
 FROM UserAccount
 WHERE username = "realuser1"
 ;

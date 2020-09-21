@@ -25,7 +25,7 @@ def get_current_time():
     return {'time': time.time()}
 
 # # # # Backend code for REGISTER requests.
-# # Currently expects a POST request with a JSON formatted like: {"username":"[username]","password":"[password-plaintext]","email":"[email]"}  
+# # Expects a POST request with a JSON formatted like: {"username":"[username]","password":"[password-plaintext]","email":"[email]"}  
 # # See an example of current function (on Windows) with:
 # # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\",\"email\":\"test@tes.com\"}" http://localhost:5000/register/
 @app.route('/register/', methods=["GET", "POST"])
@@ -70,11 +70,8 @@ def register_user():
         # # # End validation
         if(valid_info):
 
-            # # Hashes the password for security before storing it in the database
-            # Creates a random salt using the bcrypt library.
-            salt = bcrypt.gensalt()
-            # Hashes the password with bcrypt.
-            hash_password = bcrypt.hashpw(reg_info["password"].encode(), salt)
+            # Hashes the password for security before storing it in the database (using bcrypt).
+            hash_password = bcrypt.hashpw(reg_info["password"].encode(), bcrypt.gensalt())
 
             # Insert new user into database.
             # Lots of strings are static right now. Names will probably have to be set to NULL instead.
@@ -91,27 +88,40 @@ def register_user():
             print(cursor.fetchall())
             return "send user to their new profile page"
 
-        # # # End validation -- incorrect formats    
-        # else:
-        #    return "invalid request"
-
     # Not a POST request.        
     else:
         return "serve register page"
 
 # # # # Backend code for LOGIN requests
-# Basically nothing here is implemented yet. Wow.
+# Should expect a POST request with a JSON like this: {"username":"[username_or_email]","password":"[password]""}
+# Test basic functionality with the following script (on Windows):
+# curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\"}" http://localhost:5000/login/
 @app.route('/login/', methods=["GET", "POST"])
 def login_user():
-     if request.method == "POST" and 'username' in request.form and 'password' in request.form:
-         username = request.form['username']
-         password = request.form['password']
-         #need to deal with password hashing
-         cursor = mysql.connection.cursor()
-         cursor.execute("SELECT * FROM UserAccount WHERE username = %s AND password = %s", (username, password))
-         account = cursor.fetchall()
 
-     else:
+    # The backend has received a login POST request.
+    if request.method == "POST" and 'username' in request.form and 'password' in request.form:
+        
+        # Get username and password from request
+        username = request.form['username']
+        password = request.form['password']
+
+        # Need to determine if username in the JSON relates to the username column or the email column
+
+        # Need to pull the hashed password of the selected user out of the database
+        # This also needs to catch the case of an invalid user
+
+        # This will validate the user's password:
+        # bcrypt.checkpw(password, hashed_password)
+        # Need to check for case where password and username do not match
+
+        # This will fetch the user's information from the database after validation
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM UserAccount WHERE username = %s AND password = %s", (username, password))
+        account = cursor.fetchall()
+
+    # Not a POST request
+    else:
         return "Input a username and password"
 
 #def logout_user():
