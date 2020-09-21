@@ -7,7 +7,7 @@ app = Flask(__name__)
 #config for MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'pass'
+app.config['MYSQL_PASSWORD'] = 'pass' #original password is pass
 app.config['MYSQL_DB'] = 'weave'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 #initializes MySQL
@@ -38,6 +38,7 @@ def register_user():
             register_values = (reg_info["username"],reg_info["email"], "pass", "word", "real", "user", "1998-12-12" , "Null", "Null", "0", "0")
             cursor.execute(register_query, register_values)
             mysql.connection.commit()
+            #minor error: the values with "Null" in the above register are written to the database as strings ("Null") rather than the keyword (NULL)         
             #print resulting table for testing
             cursor.execute("SELECT * from UserAccount")
             print(cursor.fetchall())

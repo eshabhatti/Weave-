@@ -56,7 +56,8 @@ CREATE TABLE UserAccount (
 -- 		creator: The creator of the post's username; foreign key that applies to UserAccount
 -- 		date_created: The date of the post's creation
 -- 		post_type: A flag that states whether the post is pure text (1) or picture-caption (2) -- maybe not needed?
--- 		content: A string that completely holds a text post's content. In a picture-caption post, this holds the caption.
+-- 		title: A string that holds the post's title
+-- 		content: A string that completely holds a text post's content; in a picture-caption post, this holds the caption
 -- 		pic_path: A filepath to the picture that is assigned to the post
 -- 		upvote_count: The total number of upvotes the post has (initialized to 0)
 -- 		downvote_count: The total number of downvotes the post has (initialized to 0)
@@ -69,6 +70,7 @@ CREATE TABLE Post (
     creator VARCHAR(20) NOT NULL,
     date_created DATE NOT NULL,
     post_type INT NOT NULL,
+    title VARCHAR(75) NOT NULL,
     content VARCHAR(750),
     pic_path VARCHAR(100), 
     upvote_count INT NOT NULL,
