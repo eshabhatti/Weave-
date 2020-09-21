@@ -29,7 +29,7 @@ cd to the `frontend/` directory and run `npm start.`
 1. cd to `api/`
 2. Run `source venv/bin/activate` to initialize the virtual environment on MacOS/Linux.
    (To do so on Windows, run `venv\Scripts\activate`.)
-3. run `python3 app.py`.
+3. run `python3 api.py`.
 
 To disable the virtual environment after running, run `deactivate`.
 
