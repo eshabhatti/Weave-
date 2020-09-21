@@ -86,10 +86,18 @@ def register_user():
 # Basically nothing here is implemented yet. Wow.
 @app.route('/login/', methods=["GET", "POST"])
 def login_user():
-    if request.method == "POST":
-        return "try to login user"
-    else:
-        return "serve the login page"
+     if request.method == "POST" and 'username' in request.form and 'password' in request.form:
+         username = request.form['username']
+         password = request.form['password']
+         #need to deal with password hashing
+         cursor = mysql.connection.cursor()
+         cursor.execute("SELECT * FROM UserAccount WHERE username = %s AND password = %s", (username, password))
+         account = cursor.fetchall()
+
+     else:
+        return "Input a username and password"
+
+#def logout_user():
 
 if __name__ == "__main__":
    app.run()
