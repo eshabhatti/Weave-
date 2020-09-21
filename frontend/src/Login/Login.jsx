@@ -1,16 +1,9 @@
 import React, { useState } from "react";
 import "./login.css";
 
-export default function Login(props) {
+export default function Login() {
   const [loginName, updateLoginName] = useState("");
   const [password, updatePassword] = useState("");
-
-  const handleChange = (event) => {
-    const { target } = event;
-    const { value } = target;
-    props.update(value);
-    event.persist();
-  }
 
   const onSubmit = (event) => {
     event.preventDefault();
