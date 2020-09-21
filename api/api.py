@@ -23,10 +23,9 @@ def get_current_time():
     return {'time': time.time()}
 
 # # # # Backend code for REGISTER requests.
-# # Currently expects a POST request with a JSON formatted like: {"username":"[username]","email":"[email]"}  
-# # Needs to be modified to also expect a password field within the JSON: "password":"[password-plaintext]"
+# # Currently expects a POST request with a JSON formatted like: {"username":"[username]","password":"[password-plaintext]","email":"[email]"}  
 # # See an example of current function (on Windows) with:
-# # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\": \"testname\",  \"email\" : \"test@tes.com\" }" http://localhost:5000/register/
+# # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\",\"email\":\"test@tes.com\"}" http://localhost:5000/register/
 @app.route('/register/', methods=["GET", "POST"])
 def register_user():
     
@@ -38,7 +37,7 @@ def register_user():
 
         # Checks for JSON format.
         if (not request.is_json):
-            valid_info = False # Should this function just return an error if true?
+            return "Error: Request is not JSON"
         reg_info = request.get_json()
 
         # Checks for valid username format.
@@ -46,18 +45,27 @@ def register_user():
         #    valid_info = False
         
         # Checks for valid password format.
-        #if(not password_valid(reg_info["password"]))
-        #    valid_info = False
+        # According to the backlog and the database, passwords should be between 6 and 20 characters.
+        # They should also contain one capital, one lowercase, and one number.
+        if (re.search("^\S*[A-Z]\S*$", reg_info["password"]) == None):
+            return "Error: No capital in password"
+        if (re.search("^\S*[a-z]\S*$", reg_info["password"]) == None):
+            return "Error: No lowercase in password"
+        if (re.search("^\S*[0-9]\S*$", reg_info["password"]) == None):
+            return "Error: No number in password"
+        if len(reg_info["password"]) > 20 or len(reg_info["password"]) < 6: 
+            return "Error: Invalid password length"
 
         # Checks for valid email format. 
         # Currently, the conditional checks the email string against a regex. See https://regex101.com/ for explanation.
         # Email regex should be [standard_characters]@[address].[suffix]
-        # Regex works okay (users must have an '@' or a '.') but isn't flawless -- multiple @ are allowed, for instance.
         # Validation also needs to check email length. Max length is 50.
-        if (re.search("^\S+@\S+\.\S+$", reg_info["email"]) == None):
-            valid_info = False
+        if (re.search("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}$", reg_info["email"]) == None):
+            return "Error: Invalid email format"
+        if (len(reg_info["email"]) > 50):
+            return "Error: Invalid email length"
         
-        # # # End validation -- correct formats
+        # # # End validation
         if(valid_info):
 
             # Insert new user into database.
@@ -75,8 +83,8 @@ def register_user():
             return "send user to their new profile page"
 
         # # # End validation -- incorrect formats    
-        else:
-            return "invalid request"
+        # else:
+        #    return "invalid request"
 
     # Not a POST request.        
     else:
