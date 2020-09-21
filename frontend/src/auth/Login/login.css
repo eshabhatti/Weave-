@@ -1,0 +1,101 @@
+.login-page-title {
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  margin-top: 7vh;
+}
+
+.login-container {
+  background: rgba(247, 247, 251, 0.91);
+  border-radius: 30px;
+  min-height: 450px;
+  width: 400px;
+  display: block;
+  margin: 0px auto;
+  padding-bottom: 30px;
+}
+
+.login-icon {
+  width: 100px;
+  display: block;
+  margin: 0px auto;
+  padding-top: 30px;
+}
+
+.login-form {
+  padding: 40px;
+  padding-bottom: 0px;
+  margin-bottom: 30px;
+}
+
+.login-form-label {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+.login-form-input {
+  width: 100%;
+  margin-bottom: 20px;
+  border: none;
+  height: 32px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  outline: none;
+  padding-left: 10px;
+  color: grey;
+}
+
+.login-submit-btn {
+  width: 120px;
+  height: 32px;
+  background: #7448BA;
+  border-radius: 12px;
+  display: block;
+  margin: 0px auto;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 13px;
+  transition-duration: 0.3s;
+  font-family: 'Open Sans', sans-serif;
+  margin-bottom: 40px;
+  cursor: pointer;
+}
+
+.login-submit-btn:hover {
+  background: #522a92;
+}
+
+.login-link {
+  display: block;
+  text-align: center;
+  color: rgb(134, 134, 134);
+  text-decoration: none;
+  margin-top: 10px;
+  transition-duration: 0.1s;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+}
+
+.login-link:hover {
+  color: black;
+}
+
+.login-error-bubble {
+  background-color: rgba(248, 62, 62, 0.575);
+  width: 250px;
+  height: 30px;
+  display: block;
+  margin: 0px auto;
+  border-radius: 10px;
+}
+
+.login-error-message {
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+  font-size: 12px;
+  padding-top: 6px;
+}
