@@ -11,8 +11,7 @@
 -- 		VALUES (
 -- 			username: a unique string corresponding to the chosen username; must be 20 characters or less
 -- 			email: a unique string corresponding to the user's email; must be 50 characters or less
--- 			encrypted password: a string corresponding to the hash of the user's password; will likely be set at 64 characters
--- 			password salt: a string corresponding to the user's random salt; will likely be set at 16 characters
+-- 			encrypted password: a string corresponding to the hash of the user's password; bcrypt includes the salt along with it
 -- 			first name: a string representing the user's first name; can be NULL
 -- 			last name: a string representing the user's last name; can be NULL
 -- 			date joined: a date string representing when the user joined Weave IN THE FORMAT "YYYY-MM-DD"
@@ -28,7 +27,6 @@ VALUES (
     "realuser1",                                                              -- username
     "exampleuser@gmail.com",                                                  -- email
     "ok3sKPXDGU7hZl6Ui3hgec2JpZu7gZ8K0giyQh5oInNSYj9vV7qM0g4mawZv6aGq",       -- encrypted_password
-    "cdF2PK6FrPctt7Hn",                                                       -- password_salt
     NULL,                                                                     -- first_name
     NULL,                                                                     -- last_name
     "2020-9-20",                                                              -- date_joined
