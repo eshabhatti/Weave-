@@ -1,6 +1,7 @@
 import time
 import re
 import bcrypt
+from datetime import datetime
 from flask import Flask, request
 from flask_mysqldb import MySQL
 
@@ -9,8 +10,8 @@ app = Flask(__name__)
 # Config for MySQL
 # RUN CREATETABLES.SQL ON YOUR LOCAL MYSQL SERVER IN ORDER FOR THE DATABASE TO WORK
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'pass' # original password is pass
+app.config['MYSQL_USER'] = 'root'     # Credentials should be saved in an untracked file during real deployment
+app.config['MYSQL_PASSWORD'] = 'pass' # Original password is "pass"
 app.config['MYSQL_DB'] = 'weave'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
@@ -43,11 +44,14 @@ def register_user():
         reg_info = request.get_json()
 
         # Checks for valid username format.
-        #if(not username_valid(reg_info["username"]))
-        #    valid_info = False
+        # According to the backlog and the database, usernames should be between 6 and 20 characters.
+        # Accepted characters are capital letters, lowercase letters, numerals, as well as: - _ 
+        if (re.search("^[A-Za-z0-9_-]{6,20}$", reg_info["username"]) == None):
+            return "Error: Invalid username format"
         
         # Checks for valid password format.
         # According to the backlog and the database, passwords should be between 6 and 20 characters.
+        # Accepted characters are capital letters, lowercase letters, numerals, as well as: ! @ # $ % & ? < > - _ +
         # They should also contain one capital, one lowercase, and one number.
         if (re.search("^\S*[A-Z]\S*$", reg_info["password"]) == None):
             return "Error: No capital in password"
@@ -55,8 +59,8 @@ def register_user():
             return "Error: No lowercase in password"
         if (re.search("^\S*[0-9]\S*$", reg_info["password"]) == None):
             return "Error: No number in password"
-        if len(reg_info["password"]) > 20 or len(reg_info["password"]) < 6: 
-            return "Error: Invalid password length"
+        if (re.search("^[A-Za-z0-9!@#$%&?<>-_+]{6,20}$", reg_info["password"]) == None):
+            return "Error: Invalid password format"
 
         # Checks for valid email format. 
         # Currently, the conditional checks the email string against a regex. See https://regex101.com/ for explanation.
@@ -73,13 +77,13 @@ def register_user():
             # Hashes the password for security before storing it in the database (using bcrypt).
             hash_password = bcrypt.hashpw(reg_info["password"].encode(), bcrypt.gensalt())
 
+            # Gets the current date in "YYYY-MM-DD" format.
+            current_date = datetime.today().strftime("%Y-%m-%d")
+
             # Insert new user into database.
-            # Lots of strings are static right now. Names will probably have to be set to NULL instead.
-            # We also need to insert the actual date into the database, not just a static value.
-            # Minor error: the values with "Null" in the above register are written to the database as strings ("Null") rather than the keyword (NULL)
             cursor = mysql.connection.cursor()
             register_query = "INSERT INTO UserAccount VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-            register_values = (reg_info["username"], reg_info["email"], hash_password, "real", "user", "1998-12-12" , "Null", "Null", "0", "0")
+            register_values = (reg_info["username"], reg_info["email"], hash_password, None, None, current_date , None, None, "0", "0")
             cursor.execute(register_query, register_values)
             mysql.connection.commit()         
             
