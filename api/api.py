@@ -35,6 +35,9 @@ def register_user():
     # The backend has recieved information that needs to go into the database.
     if request.method == "POST":
         
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+
         # # # Validates JSON information.
         valid_info = True
 
@@ -48,6 +51,13 @@ def register_user():
         # Accepted characters are capital letters, lowercase letters, numerals, as well as: - _ 
         if (re.search("^[A-Za-z0-9_-]{6,20}$", reg_info["username"]) == None):
             return "Error: Invalid username format"
+
+        # There also cannot be repeated usernames, which should be checked for before we get a SQL error.    
+        username_query = "SELECT username from UserAccount WHERE username = \"" + reg_info["username"] + "\";"
+        cursor.execute(username_query)
+        for row in cursor:
+            if reg_info["username"] == row["username"]:
+                return "Error: Repeated username"
         
         # Checks for valid password format.
         # According to the backlog and the database, passwords should be between 6 and 20 characters.
@@ -70,6 +80,13 @@ def register_user():
             return "Error: Invalid email format"
         if (len(reg_info["email"]) > 50):
             return "Error: Invalid email length"
+
+        # There also cannot be repeated email, which should be checked for before we get a SQL error.    
+        email_query = "SELECT email from UserAccount WHERE email = \"" + reg_info["email"] + "\";"
+        cursor.execute(email_query)
+        for row in cursor:
+            if reg_info["email"] == row["email"]:
+                return "Error: Repeated email"
         
         # # # End validation
         if(valid_info):
@@ -81,7 +98,6 @@ def register_user():
             current_date = datetime.today().strftime("%Y-%m-%d")
 
             # Insert new user into database.
-            cursor = mysql.connection.cursor()
             register_query = "INSERT INTO UserAccount VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
             register_values = (reg_info["username"], reg_info["email"], hash_password, None, None, current_date , None, None, "0", "0")
             cursor.execute(register_query, register_values)
