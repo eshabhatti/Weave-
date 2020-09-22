@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './index.css';
 import ReactDOM from 'react-dom';
 import {
@@ -9,19 +9,15 @@ import {
 
 import Login from "./auth/Login/Login";
 import Register from "./auth/Register/Register";
-
-function App() {
-  return (
-    <div>
-      <Register />
-    </div>
-  );
-}
+//import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 
 function AppRouter() {
   return (
     <Router>
       <Switch>
+        <Route path="/resetpassword">
+          {/*<ForgotPassword />*/}
+        </Route>
         <Route path="/register">
           <Register />
         </Route>
