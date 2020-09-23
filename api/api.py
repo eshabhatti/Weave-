@@ -2,9 +2,10 @@ import time
 import re
 import bcrypt
 from datetime import datetime
-from flask import Flask, request
+from flask import Flask, request, flash
 from flask_mysqldb import MySQL
-from flask_login import LoginManager, UserMixin
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from .models import User
 
 app = Flask(__name__)
 login = LoginManager(app)
@@ -23,9 +24,17 @@ mysql_cred.close()
 # Initializes MySQL
 mysql = MySQL(app)
 
+# callback function for flask_login
+# flask_login loads user object from DB upon every request to check validity of auth token
 @login.user_loader
-def load_user():
-    return 1
+def load_user(user_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM UserAccount WHERE hashed_password = %s", (user_id))
+    account = cursor.fetchall()
+    if account:
+        return User(account.username, user_id, True)
+    else:
+        return None
 
 # # # # Backend code for TIME requests. 
 # # This is no longer implmented in the frontend, I believe.
@@ -131,6 +140,8 @@ def register_user():
 @app.route('/login/', methods=["GET", "POST"])
 def login_user():
 
+    if (current_user.is_authenticated):
+        return redirect(url_for('profile'))
     # The backend has received a login POST request.
     if request.method == "POST":
 
@@ -169,14 +180,40 @@ def login_user():
         # This will fetch the user's information from the database after validation (should it all be grabbed in the first execute?)
         cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s", (username,))
         account = cursor.fetchall()
+<<<<<<< HEAD
         print(account) # debugging 
         return "Profile page of account"
+=======
+        # return "Profile page of account"
+        if account:
+            # creates a user object based on the data that has been validated
+            # then uses flask_login's login_user method to log the user in
+            user = User(account.username, account.hashed_password, active=True)
+            login_user(user)
+            flash("Logged in")
+
+            # need to travel to profile page now
+            # return redirect(url_for('profile'))
+
+            return "Logged in successfully"
+>>>>>>> f988192f1a9fe0cb1144a3f0447f713fe69f2a29
 
     # Not a POST request
     else:
         return "Serve login page"
 
-#def logout_user():
+@app.route("/logout")
+@login_required
+def logout():
+    # logs the user using flask_login's method
+    # login_required to travel to this route
+    logout_user()
+    flash("Logged out.")
+
+    # travel to login page again
+    # return redirect(url_for("login"))
+
+    return "Logged out successfuly"
 
 if __name__ == "__main__":
    app.run()
