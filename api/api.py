@@ -47,7 +47,7 @@ def get_current_time():
 # # See an example of current function (on Windows) with:
 # # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\",\"email\":\"test@tes.com\"}" http://localhost:5000/register/
 @app.route('/register/', methods=["GET", "POST"])
-def register_user():
+def weave_register():
     
     # The backend has recieved information that needs to go into the database.
     if request.method == "POST":
@@ -138,7 +138,7 @@ def register_user():
 # Test basic functionality with the following script (on Windows):
 # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\"}" http://localhost:5000/login/
 @app.route('/login/', methods=["GET", "POST"])
-def login_user():
+def weave_login():
 
     if (current_user.is_authenticated):
         return redirect(url_for('profile'))
@@ -182,17 +182,17 @@ def login_user():
         account = cursor.fetchall()
         print(account) # debugging
 
-        # return "Profile page of account"
-        if account:
-            # creates a user object based on the data that has been validated
+        # Return "Profile page of account"
+        for row in cursor:
+
+            # Creates a user object based on the data that has been validated
             # then uses flask_login's login_user method to log the user in
-            user = User(account.username, account.hashed_password, active=True)
+            user = User(row["username"], row["encrypted_password"], active=True)
             login_user(user)
             flash("Logged in")
 
-            # need to travel to profile page now
+            # Need to travel to profile page now
             # return redirect(url_for('profile'))
-
             return "Logged in successfully"
 
     # Not a POST request
@@ -201,7 +201,7 @@ def login_user():
 
 @app.route("/logout")
 @login_required
-def logout():
+def weave_logout():
     # logs the user using flask_login's method
     # login_required to travel to this route
     logout_user()
