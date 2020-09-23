@@ -22,13 +22,15 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 # Initializes MySQL
 mysql = MySQL(app)
 
+# callback function for flask_login
+# flask_login loads user object from DB upon every request to check validity of auth token
 @login.user_loader
 def load_user(user_id):
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT * FROM UserAccount WHERE hashed_password = %s", (user_id))
     account = cursor.fetchall()
     if account:
-        return User(account.username, user_id)
+        return User(account.username, user_id, True)
     else:
         return None
 
@@ -172,6 +174,8 @@ def login_user():
         account = cursor.fetchall()
         # return "Profile page of account"
         if account:
+            # creates a user object based on the data that has been validated
+            # then uses flask_login's login_user method to log the user in
             user = User(account.username, account.hashed_password, active=True)
             login_user(user)
             flash("Logged in")
@@ -188,12 +192,14 @@ def login_user():
 @app.route("/logout")
 @login_required
 def logout():
+    # logs the user using flask_login's method
+    # login_required to travel to this route
     logout_user()
     flash("Logged out.")
 
     # travel to login page again
     # return redirect(url_for("login"))
-    
+
     return "Logged out successfuly"
 
 if __name__ == "__main__":
