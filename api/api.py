@@ -4,8 +4,11 @@ import bcrypt
 from datetime import datetime
 from flask import Flask, request
 from flask_mysqldb import MySQL
+from flask_login import LoginManager, UserMixin
 
 app = Flask(__name__)
+login = LoginManager(app)
+login.login_view = 'login'
 
 # Config for MySQL
 # RUN CREATETABLES.SQL ON YOUR LOCAL MYSQL SERVER IN ORDER FOR THE DATABASE TO WORK
@@ -18,6 +21,9 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 # Initializes MySQL
 mysql = MySQL(app)
 
+@login.user_loader
+def load_user():
+    return 1
 
 # # # # Backend code for TIME requests. 
 # # This is no longer implmented in the frontend, I believe.
