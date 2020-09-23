@@ -178,8 +178,10 @@ def login_user():
             return "Invalid credentials"
             
         # This will fetch the user's information from the database after validation (should it all be grabbed in the first execute?)
-        cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s", (username,))
+        cursor.execute("SELECT * FROM UserAccount WHERE " + username_type + " = %s", (username,))
         account = cursor.fetchall()
+        print(account) # debugging
+
         # return "Profile page of account"
         if account:
             # creates a user object based on the data that has been validated
