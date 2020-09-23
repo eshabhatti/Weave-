@@ -1,5 +1,4 @@
 # dependencies
-/node_modules
 /frontend/node_modules
 /.pnp
 /.pnp.js
@@ -9,6 +8,9 @@
 
 # production
 /build
+
+# security
+/api/dbcredentials.txt
 
 # virtual environment
 /api/venv
@@ -26,7 +28,5 @@
 /yarn-error.log*
 
 /.vscode
-
 /package-lock.json
-
 

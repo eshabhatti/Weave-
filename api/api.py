@@ -12,11 +12,13 @@ login.login_view = 'login'
 
 # Config for MySQL
 # RUN CREATETABLES.SQL ON YOUR LOCAL MYSQL SERVER IN ORDER FOR THE DATABASE TO WORK
+mysql_cred = open("dbcredentials.txt")
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'     # Credentials should be saved in an untracked file during real deployment
-app.config['MYSQL_PASSWORD'] = 'pass' # Original password is "pass"
+app.config['MYSQL_USER'] = mysql_cred.readline().strip("\n\r ")      
+app.config['MYSQL_PASSWORD'] = mysql_cred.readline().strip("\n\r ") 
 app.config['MYSQL_DB'] = 'weave'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+mysql_cred.close()
 
 # Initializes MySQL
 mysql = MySQL(app)
@@ -52,6 +54,10 @@ def register_user():
             return "Error: Request is not JSON"
         reg_info = request.get_json()
 
+        # Checks that the JSON has all elements.
+        if ("username" not in reg_info or "password" not in reg_info or "email" not in reg_info):
+            return "Error: Missing JSON element"
+
         # Checks for valid username format.
         # According to the backlog and the database, usernames should be between 6 and 20 characters.
         # Accepted characters are capital letters, lowercase letters, numerals, as well as: - _ 
@@ -64,19 +70,6 @@ def register_user():
         for row in cursor:
             if reg_info["username"] == row["username"]:
                 return "Error: Repeated username"
-        
-        # Checks for valid password format.
-        # According to the backlog and the database, passwords should be between 6 and 20 characters.
-        # Accepted characters are capital letters, lowercase letters, numerals, as well as: ! @ # $ % & ? < > - _ +
-        # They should also contain one capital, one lowercase, and one number.
-        if (re.search("^\S*[A-Z]\S*$", reg_info["password"]) == None):
-            return "Error: No capital in password"
-        if (re.search("^\S*[a-z]\S*$", reg_info["password"]) == None):
-            return "Error: No lowercase in password"
-        if (re.search("^\S*[0-9]\S*$", reg_info["password"]) == None):
-            return "Error: No number in password"
-        if (re.search("^[A-Za-z0-9!@#$%&?<>-_+]{6,20}$", reg_info["password"]) == None):
-            return "Error: Invalid password format"
 
         # Checks for valid email format. 
         # Currently, the conditional checks the email string against a regex. See https://regex101.com/ for explanation.
@@ -94,11 +87,24 @@ def register_user():
             if reg_info["email"] == row["email"]:
                 return "Error: Repeated email"
         
+        # Checks for valid password format.
+        # According to the backlog and the database, passwords should be between 6 and 20 characters.
+        # Accepted characters are capital letters, lowercase letters, numerals, as well as: ! @ # $ % & ? < > - _ +
+        # They should also contain one capital, one lowercase, and one number.
+        if (re.search("[A-Z]", reg_info["password"]) == None):
+            return "Error: No capital in password"
+        if (re.search("[a-z]", reg_info["password"]) == None):
+            return "Error: No lowercase in password"
+        if (re.search("[0-9]", reg_info["password"]) == None):
+            return "Error: No number in password"
+        if (re.search("^[A-Za-z0-9!@#$%&?<>-_+]{6,20}$", reg_info["password"]) == None):
+            return "Error: Invalid password format"
+        
         # # # End validation
         if(valid_info):
 
             # Hashes the password for security before storing it in the database (using bcrypt).
-            hash_password = bcrypt.hashpw(reg_info["password"].encode(), bcrypt.gensalt())
+            hash_password = bcrypt.hashpw(reg_info["password"].encode('utf8'), bcrypt.gensalt())
 
             # Gets the current date in "YYYY-MM-DD" format.
             current_date = datetime.today().strftime("%Y-%m-%d")
@@ -110,8 +116,8 @@ def register_user():
             mysql.connection.commit()         
             
             # Print resulting table for testing.
-            cursor.execute("SELECT * from UserAccount")
-            print(cursor.fetchall())
+            # cursor.execute("SELECT * from UserAccount")
+            # print(cursor.fetchall())
             return "send user to their new profile page"
 
     # Not a POST request.        
@@ -127,19 +133,21 @@ def login_user():
 
     # The backend has received a login POST request.
     if request.method == "POST":
+
         # Checks for JSON format.
         if (not request.is_json):
             return "Error: Request is not JSON"
         login_info = request.get_json()
         
+        # Checks for the correct credentials.
         if ("username" not in login_info or "password" not in login_info):
             return "Error: Missing credentials"
         
-        # Get username and password from json
-        username = login_info['username']
-        password = login_info['password']
+        # Get username and password from JSON.
+        username = login_info["username"]
+        password = login_info["password"]
 
-        # Need to determine if username in the JSON relates to the username column or the email column
+        # Determines if username in the JSON relates to the username column or the email column
         username_type = "username"
         if (re.search("@", username) != None):
            username_type = "email"
@@ -148,7 +156,7 @@ def login_user():
         # This also needs to catch the case of an invalid user
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s", (username,)) #args have to be a tuple
-        hashed_password = cursor.fetchall();
+        hashed_password = cursor.fetchall()
         if (hashed_password == []):
             return "Invalid credentials"
         hashed_password = (hashed_password[0])["encrypted_password"]
@@ -161,6 +169,7 @@ def login_user():
         # This will fetch the user's information from the database after validation (should it all be grabbed in the first execute?)
         cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s", (username,))
         account = cursor.fetchall()
+        print(account) # debugging 
         return "Profile page of account"
 
     # Not a POST request
