@@ -120,29 +120,46 @@ def register_user():
 def login_user():
 
     # The backend has received a login POST request.
-    if request.method == "POST" and 'username' in request.form and 'password' in request.form:
+    if request.method == "POST":
+        # Checks for JSON format.
+        if (not request.is_json):
+            return "Error: Request is not JSON"
+        login_info = request.get_json()
         
-        # Get username and password from request
-        username = request.form['username']
-        password = request.form['password']
+        if ("username" not in login_info or "password" not in login_info):
+            return "Error: Missing credentials"
+        
+        # Get username and password from json
+        username = login_info['username']
+        password = login_info['password']
 
         # Need to determine if username in the JSON relates to the username column or the email column
-
+        username_type = "username"
+        if (re.search("@", username) != None):
+           username_type = "email"
+           
         # Need to pull the hashed password of the selected user out of the database
         # This also needs to catch the case of an invalid user
-
-        # This will validate the user's password:
-        # bcrypt.checkpw(password, hashed_password)
-        # Need to check for case where password and username do not match
-
-        # This will fetch the user's information from the database after validation
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM UserAccount WHERE username = %s AND password = %s", (username, password))
+        cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s", (username,)) #args have to be a tuple
+        hashed_password = cursor.fetchall();
+        if (hashed_password == []):
+            return "Invalid credentials"
+        hashed_password = (hashed_password[0])["encrypted_password"]
+        
+        # This will validate the user's password:
+        valid_password = bcrypt.checkpw(password.encode('utf8'), hashed_password.encode('utf8')) #have to encode strings here
+        if (not valid_password):
+            return "Invalid credentials"
+            
+        # This will fetch the user's information from the database after validation (should it all be grabbed in the first execute?)
+        cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s", (username,))
         account = cursor.fetchall()
+        return "Profile page of account"
 
     # Not a POST request
     else:
-        return "Input a username and password"
+        return "Serve login page"
 
 #def logout_user():
 
