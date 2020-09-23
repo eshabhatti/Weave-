@@ -2,9 +2,10 @@ import time
 import re
 import bcrypt
 from datetime import datetime
-from flask import Flask, request
+from flask import Flask, request, flash
 from flask_mysqldb import MySQL
-from flask_login import LoginManager, UserMixin
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from .models import User
 
 app = Flask(__name__)
 login = LoginManager(app)
@@ -22,8 +23,14 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 @login.user_loader
-def load_user():
-    return 1
+def load_user(user_id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM UserAccount WHERE hashed_password = %s", (user_id))
+    account = cursor.fetchall()
+    if account:
+        return User(account.username, user_id)
+    else:
+        return None
 
 # # # # Backend code for TIME requests. 
 # # This is no longer implmented in the frontend, I believe.
@@ -125,6 +132,8 @@ def register_user():
 @app.route('/login/', methods=["GET", "POST"])
 def login_user():
 
+    if (current_user.is_authenticated):
+        return redirect(url_for('profile'))
     # The backend has received a login POST request.
     if request.method == "POST":
         # Checks for JSON format.
@@ -161,13 +170,31 @@ def login_user():
         # This will fetch the user's information from the database after validation (should it all be grabbed in the first execute?)
         cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s", (username,))
         account = cursor.fetchall()
-        return "Profile page of account"
+        # return "Profile page of account"
+        if account:
+            user = User(account.username, account.hashed_password, active=True)
+            login_user(user)
+            flash("Logged in")
+
+            # need to travel to profile page now
+            # return redirect(url_for('profile'))
+
+            return "Logged in successfully"
 
     # Not a POST request
     else:
         return "Serve login page"
 
-#def logout_user():
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("Logged out.")
+
+    # travel to login page again
+    # return redirect(url_for("login"))
+    
+    return "Logged out successfuly"
 
 if __name__ == "__main__":
    app.run()

@@ -3,10 +3,10 @@ class User(UserMixin):
         self.name = name
         self.id = id
         self.active = active
+        self.auth = auth
 
     def is_active(self):
-        # Here you should write whatever the code is
-        # that checks the database if your user is active
+        # can return false for banned or deactivated users
         return self.active
 
     def is_anonymous(self):
