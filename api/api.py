@@ -6,8 +6,10 @@ from flask import Flask, request, flash
 from flask_mysqldb import MySQL
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from models import User
+# from weavepost import weave_post
 
 app = Flask(__name__)
+app.secret_key = "changethispassword".encode('utf8')
 login = LoginManager(app)
 login.login_view = 'login'
 
@@ -29,7 +31,7 @@ mysql = MySQL(app)
 @login.user_loader
 def load_user(user_id):
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM UserAccount WHERE hashed_password = %s", (user_id))
+    cursor.execute("SELECT * FROM UserAccount WHERE encrypted_password = %s;", (user_id))
     account = cursor.fetchall()
     if account:
         return User(account.username, user_id, True)
@@ -134,14 +136,16 @@ def weave_register():
         return "serve register page"
 
 # # # # Backend code for LOGIN requests
-# Should expect a POST request with a JSON like this: {"username":"[username_or_email]","password":"[password]""}
+# Should expect a POST request with a JSON like this: {"username":"[username_or_email]","password":"[password]"}
 # Test basic functionality with the following script (on Windows):
 # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\"}" http://localhost:5000/login/
 @app.route('/login/', methods=["GET", "POST"])
 def weave_login():
 
+    # Prevents the login page from being displayed if the user is already logged in.
     if (current_user.is_authenticated):
         return redirect(url_for('profile'))
+
     # The backend has received a login POST request.
     if request.method == "POST":
 
@@ -166,7 +170,7 @@ def weave_login():
         # Need to pull the hashed password of the selected user out of the database
         # This also needs to catch the case of an invalid user
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s", (username,)) #args have to be a tuple
+        cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s;", (username,)) #args have to be a tuple
         hashed_password = cursor.fetchall()
         if (hashed_password == []):
             return "Invalid credentials"
@@ -199,6 +203,7 @@ def weave_login():
     else:
         return "Serve login page"
 
+# # # # Backend code for LOGOUT requests
 @app.route("/logout")
 @login_required
 def weave_logout():
@@ -211,6 +216,20 @@ def weave_logout():
     # return redirect(url_for("login"))
 
     return "Logged out successfuly"
+
+# # # # Backend code for CREATEPOST requests
+# Expects JSON of {"username":"[username]","topic":"[topic]","type":"[post-type]","title":"[title]","content":"[content]","picpath":"[picpath]"}
+# curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\"}" http://localhost:5000/createpost/
+# @app.route("/createpost/", methods=["GET", "POST"])
+# # @login_required
+# def weave_post_create():
+
+#      # Checks for JSON format.
+#     if (not request.is_json):
+#         return "Error: Request is not JSON"
+#     weave_post(request.get_json())
+
+#     return "function called"
 
 if __name__ == "__main__":
    app.run()
