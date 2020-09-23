@@ -5,13 +5,17 @@ from datetime import datetime
 from flask import Flask, request, flash
 from flask_mysqldb import MySQL
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+
 from models import User
-# from weavepost import weave_post
+from weavepost import weave_post
 
 app = Flask(__name__)
 app.secret_key = "changethispassword".encode('utf8')
 login = LoginManager(app)
 login.login_view = 'login'
+
+# Breaks the Flask API into multiple sections.
+# app.register_blueprint(weave_post)
 
 # Config for MySQL
 # RUN CREATETABLES.SQL ON YOUR LOCAL MYSQL SERVER IN ORDER FOR THE DATABASE TO WORK
@@ -217,19 +221,6 @@ def weave_logout():
 
     return "Logged out successfuly"
 
-# # # # Backend code for CREATEPOST requests
-# Expects JSON of {"username":"[username]","topic":"[topic]","type":"[post-type]","title":"[title]","content":"[content]","picpath":"[picpath]"}
-# curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\"}" http://localhost:5000/createpost/
-# @app.route("/createpost/", methods=["GET", "POST"])
-# # @login_required
-# def weave_post_create():
-
-#      # Checks for JSON format.
-#     if (not request.is_json):
-#         return "Error: Request is not JSON"
-#     weave_post(request.get_json())
-
-#     return "function called"
 
 if __name__ == "__main__":
    app.run()
