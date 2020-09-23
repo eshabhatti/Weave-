@@ -5,7 +5,7 @@ from datetime import datetime
 from flask import Flask, request, flash
 from flask_mysqldb import MySQL
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from .models import User
+from models import User
 
 app = Flask(__name__)
 login = LoginManager(app)
