@@ -180,10 +180,6 @@ def login_user():
         # This will fetch the user's information from the database after validation (should it all be grabbed in the first execute?)
         cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s", (username,))
         account = cursor.fetchall()
-<<<<<<< HEAD
-        print(account) # debugging 
-        return "Profile page of account"
-=======
         # return "Profile page of account"
         if account:
             # creates a user object based on the data that has been validated
@@ -196,7 +192,6 @@ def login_user():
             # return redirect(url_for('profile'))
 
             return "Logged in successfully"
->>>>>>> f988192f1a9fe0cb1144a3f0447f713fe69f2a29
 
     # Not a POST request
     else:
