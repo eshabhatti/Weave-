@@ -2,17 +2,19 @@ import time
 import re
 import bcrypt
 from datetime import datetime
-from flask import Flask, request, flash
+from flask import Flask, request, jsonify
 from extensions import mysql
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_jwt_extended import (
+    JWTManager, jwt_required, get_jwt_identity,
+    create_access_token, create_refresh_token,
+    jwt_refresh_token_required, get_raw_jwt
+)
 
 from models import User
 from weavepost import weave_post
 
 app = Flask(__name__)
 app.secret_key = "changethispassword".encode('utf8')
-login = LoginManager(app)
-login.login_view = 'login'
 
 # Config for MySQL
 # RUN CREATETABLES.SQL ON YOUR LOCAL MYSQL SERVER IN ORDER FOR THE DATABASE TO WORK
@@ -24,24 +26,16 @@ app.config['MYSQL_DB'] = 'weave'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql_cred.close()
 
+app.config['JWT_SECRET_KEY'] = 'impossibletohackyouwillneverfigurethisout'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
+jwt = JWTManager(app)
+
 # Initializes MySQL
 mysql.init_app(app)
 
 # Breaks the Flask API into multiple sections.
 with app.app_context():
     app.register_blueprint(weave_post)
-
-# callback function for flask_login
-# flask_login loads user object from DB upon every request to check validity of auth token
-@login.user_loader
-def load_user(user_id):
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM UserAccount WHERE encrypted_password = %s;", (user_id))
-    account = cursor.fetchall()
-    if account:
-        return User(account.username, user_id, True)
-    else:
-        return None
 
 # # # # Backend code for TIME requests. 
 # # This is no longer implmented in the frontend, I believe.
@@ -148,10 +142,6 @@ def weave_register():
 @app.route('/login/', methods=["GET", "POST"])
 def weave_login():
 
-    # Prevents the login page from being displayed if the user is already logged in.
-    if (current_user.is_authenticated):
-        return redirect(url_for('profile'))
-
     # The backend has received a login POST request.
     if request.method == "POST":
 
@@ -194,29 +184,32 @@ def weave_login():
 
         # Return "Profile page of account"
         for row in cursor:
-
-            # Creates a user object based on the data that has been validated
-            # then uses flask_login's login_user method to log the user in
-            user = User(row["username"], row["encrypted_password"], active=True)
-            login_user(user)
-            flash("Logged in")
-
-            # Need to travel to profile page now
-            # return redirect(url_for('profile'))
-            return "Logged in successfully"
+            # creates an access token and refresh token using the usernamem
+            ret = {
+                'access_token': create_access_token(identity=row.username),
+                'refresh_token': create_refresh_token(identity=row.username)
+            }
+            return jsonify(ret), 200
 
     # Not a POST request
     else:
         return "Serve login page"
 
+@app.route('/refresh', methods=['POST'])
+@jwt_refresh_token_required
+def refresh():
+    # refresh token endpoint
+    current_user = get_jwt_identity()
+    ret = {
+            'access_token': create_access_token(identity=current_user)
+    }
+    return jsonify(ret), 200
+
 # # # # Backend code for LOGOUT requests
 @app.route("/logout")
-@login_required
 def weave_logout():
     # logs the user using flask_login's method
     # login_required to travel to this route
-    logout_user()
-    flash("Logged out.")
 
     # travel to login page again
     # return redirect(url_for("login"))
