@@ -1,27 +1,19 @@
-# from flask import Blueprint, request
-
-# weave_post = Blueprint('weave_post', __name__)
+from flask import Blueprint, request
+from extensions import mysql
+weave_post = Blueprint('weave_post', __name__)
 
 # # # # # Backend code for CREATEPOST requests
 # # Expects JSON of {"username":"[username]","topic":"[topic]","type":"[post-type]","title":"[title]","content":"[content]","picpath":"[picpath]"}
 # # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\"}" http://localhost:5000/createpost/
-# @weave_post.route("/createpost/", methods=["GET", "POST"])
-# # # @login_required
-# def weave_post_create():
+@weave_post.route("/createpost/", methods=["GET", "POST"])
+def weave_post_create():
 
-    # Checks for JSON format.
-    # if (not request.is_json):
-    #     return "Error: Request is not JSON"
-    # weave_post(request.get_json())
+    #Checks for JSON format.
+    if (not request.is_json):
+        return "Error: Request is not JSON"
+    return "function called"
 
-    # return "function called"
-
-# def weave_post(reg_info):
-    
-#     # Initializes local database instance
-#     mysql_cred = open("dbcredentials.txt")
-#     db = _mysql.connect(host="localhost", user=mysql_cred.readline().strip("\n\r "), passwd=mysql_cred.readline().strip("\n\r "), db="weave")
-#     mysql_cred.close()
+#def weave_post_test(reg_info):
 
 #     # Authentication
 
@@ -32,6 +24,4 @@
 #     print(result[0])
     
 
-#     db.close()
-    
 #     return "sucess"

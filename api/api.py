@@ -3,7 +3,7 @@ import re
 import bcrypt
 from datetime import datetime
 from flask import Flask, request, flash
-from flask_mysqldb import MySQL
+from extensions import mysql
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
 from models import User
@@ -13,9 +13,6 @@ app = Flask(__name__)
 app.secret_key = "changethispassword".encode('utf8')
 login = LoginManager(app)
 login.login_view = 'login'
-
-# Breaks the Flask API into multiple sections.
-# app.register_blueprint(weave_post)
 
 # Config for MySQL
 # RUN CREATETABLES.SQL ON YOUR LOCAL MYSQL SERVER IN ORDER FOR THE DATABASE TO WORK
@@ -28,7 +25,11 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql_cred.close()
 
 # Initializes MySQL
-mysql = MySQL(app)
+mysql.init_app(app)
+
+# Breaks the Flask API into multiple sections.
+with app.app_context():
+    app.register_blueprint(weave_post)
 
 # callback function for flask_login
 # flask_login loads user object from DB upon every request to check validity of auth token
