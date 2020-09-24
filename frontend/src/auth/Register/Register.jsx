@@ -47,7 +47,7 @@ export default function Login() {
     <div>
       <h1 className="register-page-title">Join the conversation</h1>
       <div className="register-container">
-        <img src="./img/weave-icon.svg" className="register-icon" />
+        <img src="./img/weave-icon.svg" className="register-icon" alt="" />
         <form className="register-form">
           <label className="register-form-label">username</label>
           <input
@@ -111,11 +111,11 @@ export default function Login() {
 }
 
 function isFormValid({ loginName, password, confirmPassword, isOverThirteen, email, updateErrorMessage }) {
-  if (loginName == "") {
+  if (loginName === "") {
     updateErrorMessage("Please enter a username.");
-  } else if (email == "") {
+  } else if (email === "") {
     updateErrorMessage("Please enter your email.");
-  } else if (password == "") {
+  } else if (password === "") {
     updateErrorMessage("Please enter a password.");
   } else if (password !== confirmPassword) {
     updateErrorMessage("The passwords do not match.")

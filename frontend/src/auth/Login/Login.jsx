@@ -42,7 +42,7 @@ export default function Login() {
     <div>
       <h1 className="login-page-title">Join the conversation</h1>
       <div className="login-container">
-        <img src="./img/weave-icon.svg" className="login-icon" />
+        <img src="./img/weave-icon.svg" className="login-icon" alt="" />
         <form className="login-form">
           <label className="login-form-label">username/email</label>
           <input
@@ -74,9 +74,9 @@ export default function Login() {
 }
 
 function isFormValid({ loginName, password, updateErrorMessage }) {
-  if (loginName == "") {
+  if (loginName === "") {
     updateErrorMessage("Please enter your username or email.");
-  } else if (password == "") {
+  } else if (password === "") {
     updateErrorMessage("Please enter your password.");
   } else {
     return true;
