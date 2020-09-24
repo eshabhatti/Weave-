@@ -12,27 +12,36 @@ export default function Login() {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    const body = {
-      username: loginName,
-      password,
-      email,
-      confirmPassword,
-      isOverThirteen,
+    if (isFormValid({ loginName, password, confirmPassword, email, isOverThirteen,updateErrorMessage })) {
+      const body = {
+        username: loginName,
+        password: password,
+        email
+      }
+      /*
+       * post to backend
+       */
+      const endpoint = "http://localhost:5000/register/";
+      fetch(endpoint, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body
+      }).then(response => response.json()).then(data => {
+        if (data.error_message) {
+          updateErrorMessage(data.error_message);
+        }
+        const { access_token, refresh_token } = data;
+        alert("response: " + JSON.stringify(data));
+      }).catch(err => {
+        console.error(err);
+        alert("error: check console for details");
+      });
     }
-    /*
-     * post to backend
-     */
-    const endpoint = "";
-    // fetch(endpoint).then(response => response.json()).then(data => {
-    //   if (data.errorMessage) {
-    //     updateErrorMessage(data.errorMessage);
-    //   }
-    // });
-    updateErrorMessage("Incorrect username or password");
-    alert(JSON.stringify(body));
   }
 
-  const errObject = errorMessage !== "" ? <ErrorBubble message="Incorrect username or password" /> : null;
+  const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;
 
   return (
     <div>
@@ -88,7 +97,7 @@ export default function Login() {
               updateErrorMessage("");
             }}
           />
-          <label className="register-checkbox-label">I am over 13 years old</label>
+          <label className="register-checkbox-label">I am 13 years old or older</label>
 
 
           <button type="submit" className="register-submit-btn" onClick={(e) => onSubmit(e)}>create account</button>
@@ -99,6 +108,23 @@ export default function Login() {
       </div>
     </div>
   )
+}
+
+function isFormValid({ loginName, password, confirmPassword, isOverThirteen, email, updateErrorMessage }) {
+  if (loginName == "") {
+    updateErrorMessage("Please enter a username.");
+  } else if (email == "") {
+    updateErrorMessage("Please enter your email.");
+  } else if (password == "") {
+    updateErrorMessage("Please enter a password.");
+  } else if (password !== confirmPassword) {
+    updateErrorMessage("The passwords do not match.")
+  } else if (!isOverThirteen) {
+    updateErrorMessage("You must be 13 or older to join Weave.")
+  } else {
+    return true;
+  }
+  return false;
 }
 
 function ErrorBubble({ message }) {
