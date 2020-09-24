@@ -1,7 +1,7 @@
 import time
 import re
 import bcrypt
-from datetime import datetime
+import datetime
 from flask import Flask, request, jsonify
 from extensions import mysql
 from flask_jwt_extended import (
