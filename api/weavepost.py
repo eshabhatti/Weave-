@@ -20,29 +20,27 @@ def weave_post_create():
 
     #Checks for JSON format.
     if (not request.is_json):
-        return "Error: Request is not JSON"
+        return "{\"error_message\":\"not_JSON\"}"
     post_info = request.get_json()
 
     # This horrific thing checks that the JSON has all the needed elements.
     if ("username" not in post_info or "topic" not in post_info or "type" not in post_info or "title" not in post_info or "content" not in post_info or "picpath" not in post_info or "anon" not in post_info):
-        return "Error: Missing JSON element"
+        return "{\"error_message\":\"missing_element\"}"
 
-    # Don't have to validate the username because the frontend should send us it directly.
+    # Don't have to validate the username because the frontend should send us it directly. (?)
+    # May want to validate anon flag for safety, even though the backend will always send it to us without user input. (?)
     # Topic stuff is not implemented in this sprint, but when it IS implemented there will need to be more stuff here.
 
     # Validates the content information.
-    # Most strings will be fine. Not sure how quotes will work. I think we'll have to replace \" with \\\".
+    # Most strings will be fine. However, any \" phrase must be replaced with \\\".
     post_info["content"].replace("\\\"", "\\\\\\\"")
 
     # I have no idea how image pathing is going to work right now. Does the filepath even need to be validated?
-    # In any case, there's no point doing that unless the post is picture-caption, so we check for post type below.
-
-    # May want to validate anon flag for safety, even though the backend will always send it to us without user input?
+    # In any case, there's no point doing that unless the post is picture-caption, so we check for post type below first.
     
     # # # Post is text.
     if (post_info["type"] == "1"):
-        print("text post")
-
+        
         # Assigns the Post a new post_id by querying the most recent post and then adding one.
         # The post_id is initialized to 1 because the first query should not return any posts.
         post_id = 1 
