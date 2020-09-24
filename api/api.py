@@ -105,6 +105,7 @@ def weave_login():
                 'refresh_token': create_refresh_token(identity=row["username"])
             }
             return jsonify(ret), 200
+        return "{\"error_message\": \"incorrect username/password\"}"
 
     # Not a POST request
     else:
