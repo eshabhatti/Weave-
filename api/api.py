@@ -63,6 +63,7 @@ def weave_register():
         cursor = mysql.connection.cursor()
 
         # # # Validates JSON information.
+        # I think we can get rid of this boolean actually.
         valid_info = True
 
         # Checks for JSON format.
