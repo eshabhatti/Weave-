@@ -9,13 +9,18 @@ from flask_jwt_extended import (
     create_access_token, create_refresh_token,
     jwt_refresh_token_required, get_raw_jwt
 )
+from flask_cors import CORS
 
 from models import User
 from weavepost import weave_post
 from weaveregister import weave_register
 
+# Initializes Flask
 app = Flask(__name__)
 app.secret_key = "changethispassword".encode('utf8')
+
+# Allows CORS on all domains.
+CORS(app)
 
 # Config for MySQL
 # RUN CREATETABLES.SQL ON YOUR LOCAL MYSQL SERVER IN ORDER FOR THE DATABASE TO WORK
