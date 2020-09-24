@@ -16,7 +16,7 @@ export default function Login() {
       const body = {
         username: loginName,
         password: password,
-        email
+        email: email,
       }
       /*
        * post to backend
