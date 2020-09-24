@@ -5,7 +5,7 @@ import datetime
 from flask import Flask, request, jsonify
 from extensions import mysql
 from flask_jwt_extended import (
-    JWTManager, jwt_required, get_jwt_identity,
+    JWTManager, jwt_required, jwt_optional, get_jwt_identity,
     create_access_token, create_refresh_token,
     jwt_refresh_token_required, get_raw_jwt
 )
@@ -119,6 +119,23 @@ def refresh():
             'access_token': create_access_token(identity=current_user)
     }
     return jsonify(ret), 200
+
+@app.route("/protected")
+@jwt_required
+def protected():
+    # Access the identity of current user
+    current_user = get_jwt_identity
+    return jsonify(logged_in=current_user)
+
+@app.route("/partially_protected")
+@jwt_optional
+def protected():
+    # Access the identity of current user
+    current_user = get_jwt_identity
+    if current_user:
+        return jsonify(logged_in=current_user)
+    else:
+        return jsonify(logged_in='anon')
 
 # # # # Backend code for LOGOUT requests
 @app.route("/logout")
