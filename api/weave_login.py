@@ -2,7 +2,7 @@
 # Should expect a POST request with a JSON like this: {"username":"[username_or_email]","password":"[password]"}
 # Test basic functionality with the following script (on Windows):
 # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\"}" http://localhost:5000/login/
-from flask import Blueprint, request, redirect, url_for, jsonify
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     JWTManager, jwt_required, jwt_optional, get_jwt_identity,
     create_access_token, create_refresh_token,

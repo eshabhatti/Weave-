@@ -11,9 +11,10 @@ from flask_jwt_extended import (
 from flask_cors import CORS
 
 from models import User
-from weavepost import weave_post
-from weaveregister import weave_register
-from weavelogin import weave_login
+from weave_post import weave_post
+from weave_register import weave_register
+from weave_login import weave_login
+from weave_editprofile import weave_editprofile
 
 # Initializes Flask
 app = Flask(__name__)
@@ -47,6 +48,7 @@ with app.app_context():
     app.register_blueprint(weave_post)
     app.register_blueprint(weave_register)
     app.register_blueprint(weave_login)
+    app.register_blueprint(weave_editprofile)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
