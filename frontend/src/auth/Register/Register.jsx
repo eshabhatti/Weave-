@@ -27,7 +27,7 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body
+        body: JSON.stringify(body)
       }).then(response => response.json()).then(data => {
         if (data.error_message) {
           updateErrorMessage(data.error_message);
