@@ -10,7 +10,7 @@
 /build
 
 # security
-/api/dbcredentials.txt
+/api/credentials
 
 # virtual environment
 /api/venv
