@@ -130,7 +130,7 @@ def protected():
 
 @app.route("/partially_protected")
 @jwt_optional
-def protected():
+def partially_protected():
     # Access the identity of current user
     current_user = get_jwt_identity
     if current_user:
