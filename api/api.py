@@ -85,9 +85,9 @@ def weave_login():
         # This also needs to catch the case of an invalid user
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s;", (username,)) #args have to be a tuple
-        hashed_password = cursor.fetchall()
-        if (hashed_password == []):
+        if (cursor.rowcount == 0):
             return "{\"error_message\":\"invalid_credentials\"}"
+        hashed_password = cursor.fetchall()
         hashed_password = (hashed_password[0])["encrypted_password"]
         
         # This will validate the user's password:
