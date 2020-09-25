@@ -28,7 +28,6 @@ export default function Login() {
           updateErrorMessage(data.error_message);
         }
         const { access_token, refresh_token } = data;
-        alert("response: " + JSON.stringify(data));
       }).catch(err => {
         console.error(err);
         alert("error: check console for details");
