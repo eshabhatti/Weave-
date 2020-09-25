@@ -87,7 +87,7 @@ def weave_register_user():
         # Print resulting table for testing.
         # cursor.execute("SELECT * from UserAccount")
         # print(cursor.fetchall())
-        return jsonify({'anything':'anything'}), 204
+        return jsonify({'anything':'anything'})
 
     # Not a POST request.        
     else:
