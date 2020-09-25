@@ -1,6 +1,5 @@
 import time
 import re
-import bcrypt
 import datetime
 from flask import Flask, request, jsonify
 from extensions import mysql
@@ -48,6 +47,9 @@ with app.app_context():
     app.register_blueprint(weave_post)
     app.register_blueprint(weave_register)
     app.register_blueprint(weave_login)
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # # # # Backend code for TIME requests. 
 # # This is no longer implmented in the frontend, I believe.

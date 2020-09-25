@@ -3,6 +3,11 @@
 # Test basic functionality with the following script (on Windows):
 # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\"}" http://localhost:5000/login/
 from flask import Blueprint, request, redirect, url_for, jsonify
+from flask_jwt_extended import (
+    JWTManager, jwt_required, jwt_optional, get_jwt_identity,
+    create_access_token, create_refresh_token,
+    jwt_refresh_token_required, get_raw_jwt
+)
 from extensions import mysql
 import bcrypt
 import re
