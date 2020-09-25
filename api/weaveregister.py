@@ -87,7 +87,7 @@ def weave_register_user():
         # Print resulting table for testing.
         # cursor.execute("SELECT * from UserAccount")
         # print(cursor.fetchall())
-        return redirect(url_for("weave_login"))
+        return ("Profile Created", 204)
 
     # Not a POST request.        
     else:

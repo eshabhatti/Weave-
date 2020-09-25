@@ -112,7 +112,7 @@ def weave_login():
 
     # Not a POST request
     else:
-        return "Serve login page"
+        return ("", 204)
 
 @app.route('/refresh', methods=['POST'])
 @jwt_refresh_token_required
