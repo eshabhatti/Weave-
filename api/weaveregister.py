@@ -2,7 +2,7 @@
 # # Expects a POST request with a JSON formatted like: {"username":"[username]","password":"[password-plaintext]","email":"[email]"}  
 # # See an example of current function (on Windows) with:
 # # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\",\"email\":\"test@tes.com\"}" http://localhost:5000/register/
-from flask import Blueprint, request
+from flask import Blueprint, request, redirect, url_for
 from extensions import mysql
 from datetime import datetime
 import re
@@ -87,7 +87,7 @@ def weave_register_user():
         # Print resulting table for testing.
         # cursor.execute("SELECT * from UserAccount")
         # print(cursor.fetchall())
-        return "send user to their new profile page"
+        return redirect(url_for("weave_login"))
 
     # Not a POST request.        
     else:
