@@ -17,24 +17,27 @@ from weaveregister import weave_register
 
 # Initializes Flask
 app = Flask(__name__)
-app.secret_key = "changethispassword".encode('utf8')
+flask_cred = open("credentials/flaskcredentials.txt")
+app.secret_key = flask_cred.readline().strip("\n\r ").encode('utf8')
+
+# Configures and initializes JWT
+app.config['JWT_SECRET_KEY'] = flask_cred.readline().strip("\n\r ")
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
+jwt = JWTManager(app)
+flask_cred.close()
 
 # Allows CORS on all domains.
 CORS(app)
 
 # Config for MySQL
 # RUN CREATETABLES.SQL ON YOUR LOCAL MYSQL SERVER IN ORDER FOR THE DATABASE TO WORK
-mysql_cred = open("dbcredentials.txt")
+mysql_cred = open("credentials/dbcredentials.txt")
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = mysql_cred.readline().strip("\n\r ")      
 app.config['MYSQL_PASSWORD'] = mysql_cred.readline().strip("\n\r ") 
 app.config['MYSQL_DB'] = 'weave'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql_cred.close()
-
-app.config['JWT_SECRET_KEY'] = 'impossibletohackyouwillneverfigurethisout'
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
-jwt = JWTManager(app)
 
 # Initializes MySQL
 mysql.init_app(app)
@@ -105,7 +108,7 @@ def weave_login():
                 'refresh_token': create_refresh_token(identity=row["username"])
             }
             return jsonify(ret), 200
-        return "{\"error_message\": \"incorrect username/password\"}"
+        return "{\"error_message\": \"invalid_credentials\"}"
 
     # Not a POST request
     else:
