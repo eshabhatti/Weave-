@@ -64,10 +64,10 @@ def weave_edit_profile():
         if (mod_info["biocontent"] != ""):
             final_biocontent = mod_info["biocontent"].replace("\\\"", "\\\\\\\"")
 
-        # I have no freaking idea how picture pathing will work yet so for now it will always be set as NULL
+        # The image should be stored in a public folder, where the filepath is a hashed using the user id
         final_picpath = None
-        # if (mod_info["profilepic"] != ""):
-        #    final_picpath = mod_info["profilepic"]
+        if (mod_info["profilepic"] != ""):
+            final_picpath = mod_info["profilepic"]
 
         # # # End validation
         # Updates the database with the new information.
