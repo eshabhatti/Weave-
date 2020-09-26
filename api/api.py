@@ -15,6 +15,7 @@ from weave_post import weave_post
 from weave_register import weave_register
 from weave_login import weave_login
 from weave_editprofile import weave_editprofile
+from weave_profile import weave_profile
 
 # Initializes Flask
 app = Flask(__name__)
@@ -49,6 +50,7 @@ with app.app_context():
     app.register_blueprint(weave_register)
     app.register_blueprint(weave_login)
     app.register_blueprint(weave_editprofile)
+    app.register_blueprint(weave_profile)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
