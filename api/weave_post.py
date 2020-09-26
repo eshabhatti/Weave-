@@ -6,10 +6,33 @@
 # # Test on Windows with the following curl script:
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"picpath\":\"none\",\"anon\":\"0\"}" http://localhost:5000/createpost/
 from datetime import datetime
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from extensions import mysql
 
 weave_post = Blueprint('weave_post', __name__)
+
+
+@weave_post.route("/post/<post_id>", methods=["GET"])
+def weave_post_data(post_id):
+    # The backend has received a profile GET request.
+    if request.method == "GET":
+    
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+        
+        # Checks if post exists in db
+        cursor.execute("SELECT topic_name, date_created, post_type, title, content, pic_path, upvote_count, downvote_count, anon_flag FROM POST WHERE post_id = %s;", (post_id,))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message':'User does not exist'})
+        
+        # Checks and updates return items if post is anonymous
+        post_info = (cursor.fetchall())[0]
+        if (post_info["anon_flag"] == True):
+            post_info.pop("creator", None)
+        post_info.pop("anon_flag", None)
+        
+        # Returns post info as JSON object
+        return post_info
 
 @weave_post.route("/createpost/", methods=["GET", "POST"])
 # @login_required
