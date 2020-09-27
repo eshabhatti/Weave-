@@ -86,17 +86,5 @@ def partially_protected():
     else:
         return jsonify(logged_in='anon')
 
-# # # # Backend code for LOGOUT requests
-@app.route("/logout")
-def weave_logout():
-    # logs the user using flask_login's method
-    # login_required to travel to this route
-
-    # travel to login page again
-    # return redirect(url_for("login"))
-
-    return "Logged out successfuly"
-
-
 if __name__ == "__main__":
    app.run()

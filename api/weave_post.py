@@ -1,10 +1,3 @@
-# # # # # Backend code for Weave CREATEPOST requests
-# # Will save a post to the database -- a text post if the type is 1, a picture-caption post if the type is 2
-# # Eventually it may need to save a series of picture posts but let's not worry about that right now.
-# # Note that a post is anonymous if the anon flag is set to 1. It should be set to zero otherwise.
-# # Expects JSON of {"username":"[username]","topic":"[topic]","type":"[post-type]","title":"[title]","content":"[content]","picpath":"[picpath]","anon":"[anon]"}
-# # Test on Windows with the following curl script:
-#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"picpath\":\"none\",\"anon\":\"0\"}" http://localhost:5000/createpost/
 from datetime import datetime
 from flask import Blueprint, request, jsonify
 from extensions import mysql
@@ -12,28 +5,12 @@ from extensions import mysql
 weave_post = Blueprint('weave_post', __name__)
 
 
-@weave_post.route("/post/<post_id>", methods=["GET"])
-def weave_post_data(post_id):
-    # The backend has received a profile GET request.
-    if request.method == "GET":
-    
-        # Initializes MySQL cursor
-        cursor = mysql.connection.cursor()
-        
-        # Checks if post exists in db
-        cursor.execute("SELECT topic_name, date_created, post_type, title, content, pic_path, upvote_count, downvote_count, anon_flag FROM POST WHERE post_id = %s;", (post_id,))
-        if (cursor.rowcount == 0):
-            return jsonify({'error_message':'User does not exist'})
-        
-        # Checks and updates return items if post is anonymous
-        post_info = (cursor.fetchall())[0]
-        if (post_info["anon_flag"] == True):
-            post_info.pop("creator", None)
-        post_info.pop("anon_flag", None)
-        
-        # Returns post info as JSON object
-        return post_info
-
+# # # # # Backend code for creating posts on Weave.
+# # Will save a post to the database -- a text post if the type is 1, a picture-caption post if the type is 2.
+# # Eventually it may need to save a series of picture posts but let's not worry about that right now.
+# # Expects a POST request with a JSON. Details are discussed in "/api/README.md".
+# # Call this route from the Windows Command Prompt with:
+#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"picpath\":\"none\",\"anon\":\"0\"}" http://localhost:5000/createpost/
 @weave_post.route("/createpost/", methods=["GET", "POST"])
 # @login_required
 def weave_post_create():
@@ -41,7 +18,7 @@ def weave_post_create():
     # Initializes MySQL cursor
     cursor = mysql.connection.cursor()
 
-    #Checks for JSON format.
+    # Checks for JSON format.
     if (not request.is_json):
         return "{\"error_message\":\"not_JSON\"}"
     post_info = request.get_json()
@@ -89,4 +66,35 @@ def weave_post_create():
         # Validate picture path?
         # Do other stuff
         return "Error: Not implemented yet"
+
+
+# # # # # Backend code for viewing posts on Weave
+# # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
+@weave_post.route("/post/<post_id>", methods=["GET"])
+def weave_post_data(post_id):
+    
+    # The backend has received a profile GET request.
+    if request.method == "GET":
+    
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+        
+        # Checks if post exists in db
+        cursor.execute("SELECT topic_name, date_created, post_type, title, content, pic_path, upvote_count, downvote_count, anon_flag FROM POST WHERE post_id = %s;", (post_id,))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message':'User does not exist'})
+        
+        # Checks and updates return items if post is anonymous
+        post_info = (cursor.fetchall())[0]
+        if (post_info["anon_flag"] == True):
+            post_info.pop("creator", None)
+        post_info.pop("anon_flag", None)
+        
+        # Returns post info as JSON object
+        return post_info
+
+
+# @weave_post.route("/save/<post_id>", methods=["POST"])
+# # @login_required
+# def save_weave_post():
 

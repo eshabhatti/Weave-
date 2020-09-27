@@ -1,7 +1,3 @@
-# # # # Backend code for LOGIN requests
-# Should expect a POST request with a JSON like this: {"username":"[username_or_email]","password":"[password]"}
-# Test basic functionality with the following script (on Windows):
-# curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\"}" http://localhost:5000/login/
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     JWTManager, jwt_required, jwt_optional, get_jwt_identity,
@@ -14,6 +10,11 @@ import re
 
 weave_login = Blueprint('weave_login', __name__)
 
+
+# # # # Backend code for logging into Weave. 
+# # Expects a POST request with a JSON. Details are discussed in "/api/README.md".
+# # Call this route from the Windows Command Prompt with:
+#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\"}" http://localhost:5000/login/
 @weave_login.route('/login/', methods=["GET", "POST"])
 def weave_user_login():
 
@@ -70,3 +71,16 @@ def weave_user_login():
     # Not a POST request
     else:
         return ("", 204)
+
+
+# # # # Backend code for logging out of Weave
+# # Needs to be implemented still. 
+@app.route("/logout")
+def weave_logout():
+    # logs the user using flask_login's method
+    # login_required to travel to this route
+
+    # travel to login page again
+    # return redirect(url_for("login"))
+
+    return "Logged out successfuly"

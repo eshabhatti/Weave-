@@ -1,7 +1,3 @@
-# # # # Backend code for REGISTER requests.
-# # Expects a POST request with a JSON formatted like: {"username":"[username]","password":"[password-plaintext]","email":"[email]"}  
-# # See an example of current function (on Windows) with:
-# # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\",\"email\":\"test@tes.com\"}" http://localhost:5000/register/
 from flask import Blueprint, request, jsonify
 from extensions import mysql
 from datetime import datetime
@@ -10,6 +6,11 @@ import bcrypt
 
 weave_register = Blueprint('weave_register', __name__)
 
+
+# # # # Backend code for user registration on Weave.
+# # Expects a POST request with a JSON object. Details are discussed in "/api/README.md".
+# # Call this route from the Windows Command Prompt with:
+#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\",\"email\":\"test@tes.com\"}" http://localhost:5000/register/
 @weave_register.route('/register/', methods=["GET", "POST"])
 def weave_register_user():
     

@@ -1,13 +1,12 @@
-# # # # # Backend code for Weave Profiles, that sends frontend
-# # the appropriate data to display a users profile page.
-#      
-
 from flask import Blueprint, request, jsonify
 from extensions import mysql
 import re
 
 weave_profile = Blueprint('weave_profile', __name__)
 
+
+# # # # Backend code for editing profiles on Weave. 
+# # DOES NOT expect a JSON but DOES expect a unique URL for the profile that needs to be displayed.
 @weave_profile.route("/profile/<username>", methods=["GET"])
 # @login_required
 def weave_profile_data(username):
@@ -27,10 +26,13 @@ def weave_profile_data(username):
         return (cursor.fetchall())[0]
 
 
-# # Expects a POST request with a JSON formatted like: {"username":"[username]","newusername":"[newusername]","firstname":"[firstname]","lastname":"[lastname]","biocontent":"[biocontent]","profilepic":"[profilepic]"}
-# # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"newusername\":\"newtestname\",\"firstname\":\"Bob\",\"lastname\":\"Banana\",\"biocontent\":\"Hi I am Bob, aren't I cool?\",\"profilepic\":\"\"}" http://localhost:5000/editprofile/
-# # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"newtestname\",\"newusername\":\"testname\",\"firstname\":\"Banana\",\"lastname\":\"Bob\",\"biocontent\":\"Hi I am Bob, aren't I cool?\",\"profilepic\":\"\"}" http://localhost:5000/editprofile/
+# # # # Backend code for editing profiles on Weave. 
+# # Expects a POST request with a JSON. Details are discussed in "/api/README.md".
+# # Call this route from the Windows Command Prompt with:
+#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"newusername\":\"newtestname\",\"firstname\":\"Bob\",\"lastname\":\"Banana\",\"biocontent\":\"Hi I am Bob, aren't I cool?\",\"profilepic\":\"\"}" http://localhost:5000/editprofile/
+#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"newtestname\",\"newusername\":\"testname\",\"firstname\":\"Banana\",\"lastname\":\"Bob\",\"biocontent\":\"Hi I am Bob, aren't I cool?\",\"profilepic\":\"\"}" http://localhost:5000/editprofile/
 @weave_profile.route('/editprofile/', methods=["GET", "POST"])
+# @login_required
 def weave_edit_profile():
 
     # The backend has recieved information that needs to go into the database.
