@@ -20,12 +20,12 @@ def weave_post_create():
 
     # Checks for JSON format.
     if (not request.is_json):
-        return "{\"error_message\":\"not_JSON\"}"
+        return jsonify({'error_message':'Request Error: Not JSON.'})
     post_info = request.get_json()
 
     # This horrific thing checks that the JSON has all the needed elements.
     if ("username" not in post_info or "topic" not in post_info or "type" not in post_info or "title" not in post_info or "content" not in post_info or "picpath" not in post_info or "anon" not in post_info):
-        return "{\"error_message\":\"missing_element\"}"
+        return jsonify({'error_message':'Request Error: Missing JSON Element'}) 
 
     # Don't have to validate the username because the frontend should send us it directly. (?)
     # May want to validate anon flag for safety, even though the backend will always send it to us without user input. (?)
@@ -94,7 +94,39 @@ def weave_post_data(post_id):
         return post_info
 
 
-# @weave_post.route("/save/<post_id>", methods=["POST"])
-# # @login_required
-# def save_weave_post():
+# # # # Backend code for saving posts on Weave
+# # Doesn't expect a unique URL right now, but this may be changed later.
+# # Does expect a POST request along with a JSON. Details will be in "/api/README.md". 
+@weave_post.route("/save/", methods=["POST"])
+# @login_required
+def save_weave_post():
+
+
+    # The backend has recieved information that needs to go into the database.
+    if request.method == "POST":
+
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message':'Request Error: Not JSON.'})
+        save_info = request.get_json()
+
+        # Checks for all needed elements in the JSON.
+        if ("username" not in save_info or "post" not in save_info):
+            return jsonify({'error_message':'Request Error: Missing JSON Element'}) 
+
+        # There shouldn't need to be any validation as the username and post_id are sent directly.
+        
+        # Gets the current date in "YYYY-MM-DD" format.
+        current_date = datetime.today().strftime("%Y-%m-%d")
+
+        # Saves the specific username-post save relation as a database entity.
+        save_query = "INSERT INTO SavedPost VALUES (%s, %s, %s);"
+        save_values = (save_info["username"], save_info["post"], current_date)
+        cursor.execute(save_query, save_values)
+        mysql.connection.commit()       
+
+        return "post has been saved"
 

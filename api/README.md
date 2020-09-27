@@ -41,3 +41,6 @@ POST requests to the following routes require JSON objects formatted as shown:
     * profilepic: \[path-to-profile-image\]
         * Note that if any of the above four items can be passed as empty strings.
 
+* Post Saving (`/save/`) requires a JSON object where JSON = 
+    * username: \[username-string\]
+    * post: \[post-id\]
