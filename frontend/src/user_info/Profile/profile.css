@@ -123,7 +123,7 @@
   }
 
   .profile-buttons {
-    display: block;
+    display: flex;
   }
 
   .profile-posts-button {
