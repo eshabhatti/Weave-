@@ -76,7 +76,7 @@ CREATE TABLE Post (
     anon_flag INT NOT NULL,
     moderation_status INT NOT NULL,
     PRIMARY KEY (post_id),
-    FOREIGN KEY (creator) REFERENCES UserAccount(username)    
+    FOREIGN KEY (creator) REFERENCES UserAccount(username) ON UPDATE CASCADE   
 );
 
 -- Initializes the SavedPost table.
@@ -91,8 +91,8 @@ CREATE TABLE SavedPost (
     post_id INT NOT NULL,
     date_saved DATE NOT NULL,
     PRIMARY KEY (username, post_id),
-    FOREIGN KEY (username) REFERENCES UserAccount(username),
-    FOREIGN KEY (post_id) REFERENCES Post(post_id)
+    FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE, 
+    FOREIGN KEY (post_id) REFERENCES Post(post_id) ON UPDATE CASCADE
 );
 
 -- Initializes the PostVote table.
@@ -106,6 +106,6 @@ CREATE TABLE PostVote (
     post_id INT NOT NULL,
     score INT NOT NULL,
     PRIMARY KEY (username, post_id),
-    FOREIGN KEY (username) REFERENCES UserAccount(username),
-    FOREIGN KEY (post_id) REFERENCES Post(post_id)
+    FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES Post(post_id) ON UPDATE CASCADE
 );

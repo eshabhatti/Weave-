@@ -42,6 +42,7 @@ def weave_edit_profile():
     if request.method == "POST":
         
         # Uploads a photo if attached
+        # This may need to be moved down? 
         new_filename = "" #currently no uploaded file will stil change the path, should change
         if 'file' in request.files:
             file = request.files['file']

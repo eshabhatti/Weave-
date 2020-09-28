@@ -14,6 +14,9 @@
 DELETE FROM PostVote WHERE username = "realuser1" AND post_id = 101;
 DELETE FROM SavedPost WHERE username = "realuser1" AND post_id = 101;
 
+-- For proper removal of votes, the Post table must also be updated.
+UPDATE Post SET downvote_count = downvote_count - 1 WHERE post_id = 101;
+
 -- Once all dependent entities are removed, users and posts can be removed.
 -- Note that posts ARE dependent upon users, so they must be removed before users are.
 -- To remove these entities, use the following statements but substitute the appropriate keys: 
