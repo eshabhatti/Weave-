@@ -31,7 +31,7 @@ POST requests to the following routes require JSON objects formatted as shown:
     * anon: \[anonymous-identifier\]
         * Note that the anon flag will be 0 if the post is not anonymous and 1 if the post is anonymous. 
 
-* Profile Editing (`/editprofile/`) requires a JSON object where JSON = 
+* Profile editing (`/editprofile/`) requires a JSON object where JSON = 
     * username: \[original-username\]
     * newusername: \[updated-username\]
         * Note that the new username will be the same as the old username if there is no change.
@@ -41,6 +41,14 @@ POST requests to the following routes require JSON objects formatted as shown:
     * profilepic: \[path-to-profile-image\]
         * Note that if any of the above four items can be passed as empty strings.
 
-* Post Saving (`/save/`) requires a JSON object where JSON = 
+* Post saving (`/save/`) requires a JSON object where JSON = 
     * username: \[username-string\]
     * post: \[post-id\]
+
+* Post voting (`/vote/`) requires a JSON object where JSON = 
+    * username: \[username-string\]
+    * type: \[post-or-comment\]
+        * Note that vote type will be 1 if the vote is for a post and 2 if the vote is for a comment.
+    * id: \[post-or-comment-id\]
+    * vote: \[vote-score\]
+        * Note that the score will be 1 if the vote is up, -1 if the vote is down, and 0 if the vote should be deleted.

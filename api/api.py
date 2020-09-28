@@ -15,6 +15,7 @@ from weave_post import weave_post
 from weave_register import weave_register
 from weave_login import weave_login
 from weave_profile import weave_profile
+from weave_vote import weave_vote
 
 # Initializes Flask
 app = Flask(__name__)
@@ -22,10 +23,11 @@ flask_cred = open("credentials/flaskcredentials.txt")
 app.secret_key = flask_cred.readline().strip("\n\r ").encode('utf8')
 
 # Configures saving path for photos
-saving_path = open ("credentials/savingpath.txt")
+saving_path = open("credentials/savingpath.txt")
 saving_path = saving_path.readline().strip("\n\r ")
 app.config['UPLOAD_FOLDER'] = saving_path
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
+# saving_path.close()
 
 # Configures and initializes JWT
 app.config['JWT_SECRET_KEY'] = flask_cred.readline().strip("\n\r ")
@@ -55,6 +57,7 @@ with app.app_context():
     app.register_blueprint(weave_register)
     app.register_blueprint(weave_login)
     app.register_blueprint(weave_profile)
+    app.register_blueprint(weave_vote)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

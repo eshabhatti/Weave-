@@ -101,7 +101,6 @@ def weave_post_data(post_id):
 # @login_required
 def save_weave_post():
 
-
     # The backend has recieved information that needs to go into the database.
     if request.method == "POST":
 
