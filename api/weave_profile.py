@@ -1,6 +1,9 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from extensions import mysql
+from os import path
 import re
+from werkzeug.utils import secure_filename
+import json
 
 weave_profile = Blueprint('weave_profile', __name__)
 
@@ -37,15 +40,29 @@ def weave_edit_profile():
 
     # The backend has recieved information that needs to go into the database.
     if request.method == "POST":
-
+        
+        # Uploads a photo if attached
+        new_filename = "" #currently no uploaded file will stil change the path, should change
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '':
+                new_filename = secure_filename(file.filename)
+                prefix = 0
+                #adjusts filename for duplicate names
+                while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
+                    prefix += 1
+                new_filename = str(prefix) + new_filename
+                file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
+        
         # Initializes MySQL cursor
         cursor = mysql.connection.cursor()
 
         # # # Validates JSON information.
-        # Checks for JSON format.
-        if (not request.is_json):
-            return jsonify({'error_message':'Request Error: Not JSON.'})  
-        mod_info = request.get_json()
+        # Checks for JSON format. (Possibly change, this is how i got it to work with sending both an image and json data)
+        mod_info = (request.form.to_dict())['json']
+        mod_info = json.loads(mod_info)
+        if type(mod_info) is not dict:
+            return jsonify({'error_message':'Request Error: Not JSON.'}) 
 
         # Checks that the JSON has all elements.
         if ("username" not in mod_info or "newusername" not in mod_info or "firstname" not in mod_info or "lastname" not in mod_info or "biocontent" not in mod_info or "profilepic" not in mod_info):
@@ -88,15 +105,10 @@ def weave_edit_profile():
         if (mod_info["biocontent"] != ""):
             final_biocontent = mod_info["biocontent"].replace("\\\"", "\\\\\\\"")
 
-        # I have no freaking idea how picture pathing will work yet so for now it will always be set as NULL
-        final_picpath = None
-        # if (mod_info["profilepic"] != ""):
-        #    final_picpath = mod_info["profilepic"]
-
         # # # End validation
         # Updates the database with the new information.
         mod_query = "UPDATE UserAccount SET username = %s, first_name = %s, last_name = %s, user_bio = %s, user_pic = %s WHERE username = %s;"
-        mod_values = (final_username, final_firstname, final_lastname, final_biocontent, final_picpath, mod_info["username"])
+        mod_values = (final_username, final_firstname, final_lastname, final_biocontent, new_filename, mod_info["username"])
         cursor.execute(mod_query, mod_values)
         mysql.connection.commit() 
 

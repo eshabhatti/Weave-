@@ -21,6 +21,12 @@ app = Flask(__name__)
 flask_cred = open("credentials/flaskcredentials.txt")
 app.secret_key = flask_cred.readline().strip("\n\r ").encode('utf8')
 
+# Configures saving path for photos
+saving_path = open ("credentials/savingpath.txt")
+saving_path = saving_path.readline().strip("\n\r ")
+app.config['UPLOAD_FOLDER'] = saving_path
+app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
+
 # Configures and initializes JWT
 app.config['JWT_SECRET_KEY'] = flask_cred.readline().strip("\n\r ")
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)

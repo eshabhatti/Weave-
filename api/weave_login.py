@@ -75,7 +75,7 @@ def weave_user_login():
 
 # # # # Backend code for logging out of Weave
 # # Needs to be implemented still. 
-@app.route("/logout")
+@weave_login.route("/logout")
 def weave_logout():
     # logs the user using flask_login's method
     # login_required to travel to this route
