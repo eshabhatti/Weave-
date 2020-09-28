@@ -9,6 +9,8 @@ import {
 
 import Login from "./auth/Login/Login";
 import Register from "./auth/Register/Register";
+import Profile from "./user_info/Profile/Profile"
+
 //import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 
 function AppRouter() {
@@ -23,6 +25,9 @@ function AppRouter() {
         </Route>
         <Route path="/login">
           <Login />
+        </Route>
+        <Route path="/profile">
+          <Profile />
         </Route>
         <Route path="/">
           <Login />

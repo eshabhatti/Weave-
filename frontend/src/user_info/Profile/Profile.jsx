@@ -7,20 +7,22 @@ export default function Profile() {
 
     const [postsOrInt, updatePostOrInt] = useState("");
 
-
+    {/*
     displayPost = () => {
-        updatePostOrInt(True);
+        updatePostOrInt(true);
     }
 
     displayInt = () => {
-        updatePostOrInt(False);
+        updatePostOrInt(false);
     }
+    */}
 
     return (
         <div className="profile-container">
             <Navbar expand="lg" bg="light" variant="light" sticky="top">
                 <Navbar.Brand>Weave</Navbar.Brand>
-                <Nav>
+                <img src="./img/weave-icon.svg" className="profile-icon" alt="" />
+                <Nav className="mr-auto">
                     <Nav.Link>Messages</Nav.Link>
                     <Nav.Link>Notifications</Nav.Link>
                     <Nav.Link>Help</Nav.Link>
@@ -30,7 +32,8 @@ export default function Profile() {
                 {/* pull user data */}
                 <h1 className="profile-name">Name</h1>
                 <p className="profile-username">Username</p>
-                <button type="button" className="profile-follow-button" onClick={}>Follow</button>
+                {/* toggle active depending on who is viewing the page */}
+                <button type="button" className="profile-follow-button">Follow</button>
                 <p className="profile-followers"># Followers</p>
                 <p className="profile-following"># Following</p>
                 <h1 className="profile-bio-title">Bio</h1>
@@ -40,13 +43,14 @@ export default function Profile() {
             </div>
             <div className="profile-choice">
                 <div className="profile-buttons">
-                    <button type="button" className="profile-posts-button" onClick={displayPost}>Posts</button>
-                    <button type="button" className="profile-interactions-button" onClick={displayInt}>Interactions</button>
+                    <button type="button" className="profile-posts-button">Posts</button>
+                    <button type="button" className="profile-interactions-button">Interactions</button>
                 </div>
                 <div className="profile-display">
-                    {/* toggle between posts and int */}
+                    {/* toggle between posts and int
                     <PostScreen active={postsOrInt} />
                     <InteractionScreen active={!postsOrInt} />
+                    */}
                 </div>
             </div>
         </div>
