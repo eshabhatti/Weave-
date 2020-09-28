@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import "./register.css";
 
-module.exports(isFormValid);
-module.exports(Login);
+//module.exports(isFormValid);
+//module.exports(Login);
 
 export default function Login() {
   const [loginName, updateLoginName] = useState("");
@@ -129,7 +129,7 @@ function isFormValid({ loginName, password, confirmPassword, isOverThirteen, ema
   return false;
 }
 
-module.exports(isFormValid);
+//module.exports(isFormValid);
 
 function ErrorBubble({ message }) {
   return (
