@@ -4,24 +4,29 @@
     margin: 0px auto;
   }
 
-  .profile-menu {
-    background: rgba(255, 255, 0, 0.91);
-    border-radius: 0px;
-    height: 100%;
-    width: 300px;
-    display: block;
-    margin: 0;
-    padding: 0;
-  }
+  .profile-side-bar {
+    height: 100% !important;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid;
+    border-radius: 0;
+    border-color: rgba(75, 15, 52, 0.693);
+    background-color: rgb(255, 255, 255);
+    transition: 0.8s ease;
+}
 
-  .profile-menu-title {
-    display: block;
-    font-family: 'Open Sans', sans-serif;
-    font-weight: bold;
-    font-size: 24px;
-    padding-left: 3px;
-    padding-bottom: 5px;
-  }
+  .profile-toggle-menu {
+    height: 50px;
+    border-top-right-radius: 10rem;
+    border-bottom-right-radius: 9rem;
+    width: 10px;
+    position: absolute;
+    outline: none;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.693);
+    border-color: rgba(0, 0, 0, 0.693);
+    border-left: 0;
+}
 
   .profile-icon {
     width: 100px;

@@ -6,6 +6,19 @@ import "./profile.css";
 export default function Profile() {
 
     const [postsOrInt, updatePostOrInt] = useState("");
+    const [xPosition, setX] = React.useState(-250);
+
+    const toggleMenu = () => {
+        if (xPosition < 0) {
+        setX(0);
+        } else {
+        setX(-250);
+        }
+    };
+
+    React.useEffect(() => {
+        setX(0);
+    }, []);
 
     {/*
     displayPost = () => {
@@ -38,12 +51,27 @@ export default function Profile() {
                 </Nav>
             </Navbar>
             <div className="profile-container">
-                <div className="profile-container">
-                    <div className="profile-menu">
-                        {/* need to fix */}
-                        <h1 className="profile-menu-title">Menu</h1>
+                <React.Fragment>
+                    <div
+                        className="profile-side-bar"
+                        style={{
+                        transform: `translatex(${xPosition}px)`,
+                        width: 250,
+                        minHeight: 800,
+                        }}
+                    >
+                        <button
+                        onClick={() => toggleMenu()}
+                        className="profile-toggle-menu"
+                        style={{
+                            transform: `translate(${250}px, 20vh)`
+                        }}
+                        ></button>
+                        <div>
+                            <h1>Menu</h1>
+                        </div>
                     </div>
-                </div>
+                </React.Fragment>
                 <div className="profile-container">
                     <div className="profile-info">
                         {/* pull user data */}
