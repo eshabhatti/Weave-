@@ -6,6 +6,7 @@ import "./profile.css";
 export default function Profile() {
 
     const [postsOrInt, updatePostOrInt] = useState("");
+    const [errorMessage, updateErrorMessage] = useState("");
     const [xPosition, setX] = React.useState(-250);
 
     const toggleMenu = () => {
@@ -19,6 +20,24 @@ export default function Profile() {
     React.useEffect(() => {
         setX(0);
     }, []);
+
+    {/* testing with user in sql tests */}
+    const endpoint = "http://localhost:5000/profile/realuser2";
+    fetch(endpoint, {
+    method: "GET",
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+    }).then(response => response.json()).then(data => {
+    if (data.error_message) {
+        updateErrorMessage(data.error_message);
+    }
+    const { user_bio, user_pic, follower_count, first_name, last_name, date_joined } = data;
+    }).catch(err => {
+    console.error(err);
+    alert("error: check console for details");
+    });
 
     {/*
     displayPost = () => {
@@ -39,6 +58,7 @@ export default function Profile() {
                 integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
                 crossorigin="anonymous"
             />
+            {/* Navbar */}
             <Navbar expand="lg" bg="dark" variant="dark" sticky="top">
                 <Navbar.Brand href="login">
                     <img src="./img/weave-icon.svg" width="50" height="50"
@@ -51,6 +71,7 @@ export default function Profile() {
                 </Nav>
             </Navbar>
             <div className="profile-container">
+                {/* Sidebar */}
                 <React.Fragment>
                     <div
                         className="profile-side-bar"
@@ -73,6 +94,7 @@ export default function Profile() {
                     </div>
                 </React.Fragment>
                 <div className="profile-container">
+                    {/* Contains all the info of user */}
                     <div className="profile-info">
                         {/* pull user data */}
                         <img src="./img/weave-icon.svg" classname="profile-icon" alt="" />
@@ -92,6 +114,7 @@ export default function Profile() {
                             <button type="button" className="profile-posts-button">Posts</button>
                             <button type="button" className="profile-interactions-button">Interactions</button>
                         </div>
+                        {/* will contain the toggle display of users */}
                         <div className="profile-display">
                             {/* toggle between posts and int
                             <PostScreen active={postsOrInt} />
