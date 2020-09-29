@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 
 import "./profile.css";
@@ -8,6 +8,7 @@ export default function Profile() {
     const [postsOrInt, updatePostOrInt] = useState("");
     const [errorMessage, updateErrorMessage] = useState("");
     const [xPosition, setX] = React.useState(-250);
+    const [userdata, setUserData] = useState([]);
 
     const toggleMenu = () => {
         if (xPosition < 0) {
@@ -24,21 +25,22 @@ export default function Profile() {
     {/* testing with user in sql tests */}
     const username = "realuser2";
     const endpoint = "http://localhost:5000/profile/" + username;
-    const userdata = {};
-    fetch(endpoint, {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-    }).then(response => response.json()).then(data => {
-        if (data.error_message) {
-            updateErrorMessage(data.error_message);
-        }
-        userdata = data;
-    }).catch(err => {
-        console.error(err);
-        alert("error: check console for details");
-    });
+    useEffect(() => {
+        fetch(endpoint, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(response => response.json()).then(data => {
+            if (data.error_message) {
+                updateErrorMessage(data.error_message);
+            }
+            setUserData(data);
+        }).catch(err => {
+            console.error(err);
+            alert("error: check console for details");
+        });
+    }, [])
     const { user_bio, user_pic, follower_count, first_name, last_name, date_joined } = userdata;
     console.log(user_bio);
     {/*
