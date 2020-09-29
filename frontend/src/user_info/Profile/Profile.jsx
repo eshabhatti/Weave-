@@ -22,22 +22,24 @@ export default function Profile() {
     }, []);
 
     {/* testing with user in sql tests */}
-    const endpoint = "http://localhost:5000/profile/realuser2";
+    const username = "realuser2";
+    const endpoint = "http://localhost:5000/profile/" + username;
+    const userdata;
     fetch(endpoint, {
     method: "GET",
     headers: {
         'Content-Type': 'application/json'
     },
-    body: JSON.stringify(body)
     }).then(response => response.json()).then(data => {
     if (data.error_message) {
         updateErrorMessage(data.error_message);
     }
-    const { user_bio, user_pic, follower_count, first_name, last_name, date_joined } = data;
+    userdata = data;
     }).catch(err => {
     console.error(err);
     alert("error: check console for details");
     });
+    const { user_bio, user_pic, follower_count, first_name, last_name, date_joined } = userdata;
 
     {/*
     displayPost = () => {
@@ -98,16 +100,16 @@ export default function Profile() {
                     <div className="profile-info">
                         {/* pull user data */}
                         <img src="./img/weave-icon.svg" classname="profile-icon" alt="" />
-                        <h1 className="profile-name">Name</h1>
-                        <p className="profile-username">Username</p>
+                        <h1 className="profile-name">{first_name} {last_name}</h1>
+                        <p className="profile-username">{username}</p>
                         {/* toggle active depending on who is viewing the page */}
                         <button type="button" className="profile-follow-button">Follow</button>
-                        <p className="profile-followers"># Followers</p>
+                        <p className="profile-followers">{follower_count} Followers</p>
                         <p className="profile-following"># Following</p>
                         <h1 className="profile-bio-title">Bio</h1>
-                        <p className="profile-bio">Actual Bio</p>
+                        <p className="profile-bio">{user_bio}</p>
                         <h1 className="profile-about-title">About</h1>
-                        <p className="profile-about">About info</p>
+                        <p className="profile-about">{date_joined}</p>
                     </div>
                     <div className="profile-choice">
                         <div className="profile-buttons">
