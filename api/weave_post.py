@@ -12,7 +12,7 @@ weave_post = Blueprint('weave_post', __name__)
 # # Call this route from the Windows Command Prompt with:
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"picpath\":\"none\",\"anon\":\"0\"}" http://localhost:5000/createpost/
 @weave_post.route("/createpost/", methods=["GET", "POST"])
-# @login_required
+# @jwt_required
 def weave_post_create():
 
     # Initializes MySQL cursor

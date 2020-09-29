@@ -20,7 +20,7 @@ from weave_vote import weave_vote
 # Initializes Flask
 app = Flask(__name__)
 flask_cred = open("credentials/flaskcredentials.txt")
-app.secret_key = flask_cred.readline().strip("\n\r ").encode('utf8')
+app.secret_key = flask_cred.readline().strip("\n\r ").encode('utf8') # I'm not sure we need this anymore. 
 
 # Configures saving path for photos
 saving_path = open("credentials/savingpath.txt")
@@ -32,6 +32,9 @@ app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
 # Configures and initializes JWT
 app.config['JWT_SECRET_KEY'] = flask_cred.readline().strip("\n\r ")
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
+app.config['JWT_REFRESH_TOKEN_EXPIRES'] = datetime.timedelta(days=7)
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 jwt = JWTManager(app)
 flask_cred.close()
 
