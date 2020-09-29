@@ -29,8 +29,10 @@ export default function Login() {
       }).then(response => response.json()).then(data => {
         if (data.error_message) {
           updateErrorMessage(data.error_message);
+        } else {
+          const { access_token, refresh_token } = data;
+          window.location = "profile/" + loginName;
         }
-        const { access_token, refresh_token } = data;
       }).catch(err => {
         console.error(err);
         alert("error: check console for details");
