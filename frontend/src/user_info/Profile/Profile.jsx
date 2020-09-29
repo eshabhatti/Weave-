@@ -24,23 +24,23 @@ export default function Profile() {
     {/* testing with user in sql tests */}
     const username = "realuser2";
     const endpoint = "http://localhost:5000/profile/" + username;
-    const userdata;
+    const userdata = {};
     fetch(endpoint, {
-    method: "GET",
-    headers: {
-        'Content-Type': 'application/json'
-    },
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json'
+        },
     }).then(response => response.json()).then(data => {
-    if (data.error_message) {
-        updateErrorMessage(data.error_message);
-    }
-    userdata = data;
+        if (data.error_message) {
+            updateErrorMessage(data.error_message);
+        }
+        userdata = data;
     }).catch(err => {
-    console.error(err);
-    alert("error: check console for details");
+        console.error(err);
+        alert("error: check console for details");
     });
     const { user_bio, user_pic, follower_count, first_name, last_name, date_joined } = userdata;
-
+    console.log(user_bio);
     {/*
     displayPost = () => {
         updatePostOrInt(true);
