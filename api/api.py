@@ -65,6 +65,17 @@ with app.app_context():
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+# # # # Backend code for token blacklist checking
+# # Looks for the token in the database of blacklisted tokens.
+@jwt.token_in_blacklist_loader
+def check_against_blacklist(passed_token):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT token FROM Blacklist WHERE token = %s;", (passed_token,))
+    if (cursor.rowcount == 0):
+        return False
+    else:
+        return True
+
 # # # # Backend code for TIME requests. 
 # # This is no longer implmented in the frontend, I believe.
 @app.route('/time')

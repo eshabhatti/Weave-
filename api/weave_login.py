@@ -74,13 +74,33 @@ def weave_user_login():
 
 
 # # # # Backend code for logging out of Weave
-# # Needs to be implemented still. 
-@weave_login.route("/logout")
+# # Right now this route blacklists access tokens, and another route blacklists refresh tokens.
+@weave_login.route("/logout", methods=["DELETE"])
+@jwt_required
 def weave_logout():
-    # logs the user using flask_login's method
-    # login_required to travel to this route
 
-    # travel to login page again
-    # return redirect(url_for("login"))
+    # Initializes MySQL cursor.
+    cursor = mysql.connection.cursor()
+    
+    # Blacklists access tokens by sending them to the database.
+    token = get_raw_jwt()["jti"]
+    cursor.execute("INSERT INTO Blacklist VALUES (%s);", (token,))
+    mysql.connection.commit()
 
-    return "Logged out successfuly"
+    return "Access token blacklisted"
+
+# # # # Backend code for logging out of Weave
+# # Right now this route blacklists access tokens, and another route blacklists refresh tokens.
+@weave_login.route("/logout2", methods=["DELETE"])
+@jwt_refresh_token_required
+def weave_logout2():
+    
+    # Initializes MySQL cursor.
+    cursor = mysql.connection.cursor()
+    
+    # Blacklists access tokens by sending them to the database.
+    token = get_raw_jwt()["jti"]
+    cursor.execute("INSERT INTO Blacklist VALUES (%s);", (token,))
+    mysql.connection.commit()
+
+    return "Refresh token blacklisted"

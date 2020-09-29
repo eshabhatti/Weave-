@@ -3,6 +3,9 @@
 -- Format is:
 -- 		DROP TABLE TableName ;
 
+-- Drops the Blacklist table.
+DROP TABLE Blacklist;
+
 -- Drops the PostVote table.
 DROP TABLE PostVote;
 

@@ -109,3 +109,11 @@ CREATE TABLE PostVote (
     FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE,
     FOREIGN KEY (post_id) REFERENCES Post(post_id) ON UPDATE CASCADE
 );
+
+-- Initializes the Blacklist table
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		token: The JWT token that needs to be blacklisted
+CREATE TABLE Blacklist (
+	token VARCHAR(256) NOT NULL,
+    PRIMARY KEY (token)
+);
