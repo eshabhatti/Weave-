@@ -23,7 +23,7 @@ def weave_profile_data(username):
         # Checks if username exists in db (need to grab more things eventually)
         cursor.execute("SELECT user_bio, user_pic, follower_count, first_name, last_name, date_joined FROM UserAccount WHERE username = %s;", (username,))
         if (cursor.rowcount == 0):
-            return jsonify({'error_message':'User does not exist'})
+            return jsonify({'error_message':'User does not exist'}), 404
         
         # Returns each needed item in one JSON object
         return (cursor.fetchall())[0]
@@ -63,18 +63,18 @@ def weave_edit_profile():
         mod_info = (request.form.to_dict())['json']
         mod_info = json.loads(mod_info)
         if type(mod_info) is not dict:
-            return jsonify({'error_message':'Request Error: Not JSON.'}) 
+            return jsonify({'error_message':'Request Error: Not JSON.'}), 400 
 
         # Checks that the JSON has all elements.
         if ("username" not in mod_info or "newusername" not in mod_info or "firstname" not in mod_info or "lastname" not in mod_info or "biocontent" not in mod_info or "profilepic" not in mod_info):
-            return jsonify({'error_message':'Request Error: Missing JSON Element'})
+            return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400
 
         # The original username should not need to be validated since it is not user input. (?)
         # If newusername is the same as the old one, then once again no validation needs to be done.
         # If there is a difference, however, then the new username needs to be checked for proper format.
         if (mod_info["username"] != mod_info["newusername"]):
             if (re.search("^[A-Za-z0-9_-]{6,20}$", mod_info["newusername"]) == None):
-                return jsonify({'error_message':'Your new username is invalid.'})
+                return jsonify({'error_message':'Your new username is invalid.'}), 400
         final_username = mod_info["newusername"]
 
         # There also cannot be repeated usernames, which should be checked for before we get a SQL error.    
@@ -82,7 +82,7 @@ def weave_edit_profile():
         cursor.execute(username_query)
         for row in cursor:
             if mod_info["newusername"] == row["username"]:
-                return jsonify({'error_message':'Your new username has already been taken.'})  
+                return jsonify({'error_message':'Your new username has already been taken.'}), 400  
 
         # If the name elements of the JSON are not empty strings, they also need to be checked.
         # Only capitals, lowercases, and numbers should be allow in names.
@@ -90,14 +90,14 @@ def weave_edit_profile():
         final_firstname = None
         if (mod_info["firstname"] != ""):
             if (re.search("^[A-Za-z0-9]{0,15}", mod_info["firstname"]) == None):
-                return jsonify({'error_message':'Your name is invalid.'})
+                return jsonify({'error_message':'Your name is invalid.'}), 400
             else:
                 final_firstname = mod_info["firstname"]
 
         final_lastname = None
         if (mod_info["lastname"] != ""):
             if (re.search("^[A-Za-z0-9]{0,15}", mod_info["lastname"]) == None):
-                return jsonify({'error_message':'Your name is invalid.'})
+                return jsonify({'error_message':'Your name is invalid.'}), 400
             else:
                 final_lastname = mod_info["lastname"]
 

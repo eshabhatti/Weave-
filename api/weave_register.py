@@ -23,54 +23,54 @@ def weave_register_user():
         # # # Validates JSON information.
         # Checks for JSON format.
         if (not request.is_json):
-            return jsonify({'error_message':'Request Error: Not JSON.'})  
+            return jsonify({'error_message':'Request Error: Not JSON.'}), 400  
         reg_info = request.get_json()
 
         # Checks that the JSON has all elements.
         if ("username" not in reg_info or "password" not in reg_info or "email" not in reg_info):
-            return jsonify({'error_message':'Request Error: Missing JSON Element'})  
+            return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400  
 
         # Checks for valid username format.
         # According to the backlog and the database, usernames should be between 6 and 20 characters.
         # Accepted characters are capital letters, lowercase letters, numerals, as well as: - _ 
         if (re.search("^[A-Za-z0-9_-]{6,20}$", reg_info["username"]) == None):
-            return jsonify({'error_message':'Your username is invalid.'})  
+            return jsonify({'error_message':'Your username is invalid.'}), 400  
 
         # There also cannot be repeated usernames, which should be checked for before we get a SQL error.    
         username_query = "SELECT username from UserAccount WHERE username = \"" + reg_info["username"] + "\";"
         cursor.execute(username_query)
         for row in cursor:
             if reg_info["username"] == row["username"]:
-                return jsonify({'error_message':'This username has already been used.'})  
+                return jsonify({'error_message':'This username has already been used.'}), 400  
 
         # Checks for valid email format. 
         # Currently, the conditional checks the email string against a regex. See https://regex101.com/ for explanation.
         # Email regex should be [standard_characters]@[address].[suffix]
         # Validation also needs to check email length. Max length is 50.
         if (re.search("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}$", reg_info["email"]) == None):
-            return jsonify({'error_message':'Your email address is invalid.'})  
+            return jsonify({'error_message':'Your email address is invalid.'}), 400  
         if (len(reg_info["email"]) > 50):
-            return jsonify({'error_message':'Your email address is invalid.'})  
+            return jsonify({'error_message':'Your email address is invalid.'}), 400  
 
         # There also cannot be repeated email, which should be checked for before we get a SQL error.    
         email_query = "SELECT email from UserAccount WHERE email = \"" + reg_info["email"] + "\";"
         cursor.execute(email_query)
         for row in cursor:
             if reg_info["email"] == row["email"]:
-                return jsonify({'error_message':'This email has already been used.'})  
+                return jsonify({'error_message':'This email has already been used.'}), 400  
         
         # Checks for valid password format.
         # According to the backlog and the database, passwords should be between 6 and 20 characters.
         # Accepted characters are capital letters, lowercase letters, numerals, as well as: ! @ # $ % & ? < > - _ +
         # They should also contain one capital, one lowercase, and one number.
         if (re.search("[A-Z]", reg_info["password"]) == None):
-            return jsonify({'error_message':'Passwords need an uppercase letter.'})  
+            return jsonify({'error_message':'Passwords need an uppercase letter.'}), 400  
         if (re.search("[a-z]", reg_info["password"]) == None):
-            return jsonify({'error_message':'Passwords need a lowercase letter.'})  
+            return jsonify({'error_message':'Passwords need a lowercase letter.'}), 400
         if (re.search("[0-9]", reg_info["password"]) == None):
-            return jsonify({'error_message':'Passwords need a number.'})        
+            return jsonify({'error_message':'Passwords need a number.'}), 400        
         if (re.search("^[A-Za-z0-9!@#$%&?<>-_+]{6,20}$", reg_info["password"]) == None):
-            return jsonify({'error_message':'Your password has an invalid character.'})
+            return jsonify({'error_message':'Your password has an invalid character.'}), 400
         
         # # # End validation
         # Hashes the password for security before storing it in the database (using bcrypt).
@@ -86,7 +86,7 @@ def weave_register_user():
         mysql.connection.commit()         
             
         # Will eventually return login credentials.
-        return jsonify({'anything':'anything'})
+        return jsonify({'anything':'anything'}), 201
 
     # Not a POST request.        
     else:

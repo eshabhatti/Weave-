@@ -82,7 +82,7 @@ def weave_post_data(post_id):
         # Checks if post exists in db
         cursor.execute("SELECT topic_name, date_created, post_type, title, content, pic_path, upvote_count, downvote_count, anon_flag FROM POST WHERE post_id = %s;", (post_id,))
         if (cursor.rowcount == 0):
-            return jsonify({'error_message':'User does not exist'})
+            return jsonify({'error_message':'Post does not exist'}), 404
         
         # Checks and updates return items if post is anonymous
         post_info = (cursor.fetchall())[0]
@@ -109,12 +109,12 @@ def save_weave_post():
 
         # Checks for JSON format.
         if (not request.is_json):
-            return jsonify({'error_message':'Request Error: Not JSON.'})
+            return jsonify({'error_message':'Request Error: Not JSON.'}), 400
         save_info = request.get_json()
 
         # Checks for all needed elements in the JSON.
         if ("username" not in save_info or "post" not in save_info):
-            return jsonify({'error_message':'Request Error: Missing JSON Element'}) 
+            return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400 
 
         # There shouldn't need to be any validation as the username and post_id are sent directly.
         

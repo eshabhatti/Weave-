@@ -23,12 +23,12 @@ def weave_user_login():
 
         # Checks for JSON format.
         if (not request.is_json):
-            return jsonify({'error_message':'Request Error: Not JSON.'})  
+            return jsonify({'error_message':'Request Error: Not JSON.'}), 400  
         login_info = request.get_json()
         
         # Checks for the correct credentials.
         if ("username" not in login_info or "password" not in login_info):
-            return jsonify({'error_message':'Request Error: Missing JSON Element'})  
+            return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400  
         
         # Get username and password from JSON.
         username = login_info["username"]
@@ -44,14 +44,14 @@ def weave_user_login():
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s;", (username,)) #args have to be a tuple
         if (cursor.rowcount == 0):
-            return jsonify({'error_message':'Username and password do not match.'}) 
+            return jsonify({'error_message':'Username and password do not match.'}), 401
         hashed_password = cursor.fetchall()
         hashed_password = (hashed_password[0])["encrypted_password"]
         
         # This will validate the user's password:
         valid_password = bcrypt.checkpw(password.encode('utf8'), hashed_password.encode('utf8')) #have to encode strings here
         if (not valid_password):
-            return jsonify({'error_message':'Username and password do not match.'}) 
+            return jsonify({'error_message':'Username and password do not match.'}), 401 
             
         # This will fetch the user's information from the database after validation (should it all be grabbed in the first execute?)
         cursor.execute("SELECT * FROM UserAccount WHERE " + username_type + " = %s", (username,))
@@ -66,7 +66,7 @@ def weave_user_login():
                 'refresh_token': create_refresh_token(identity=row["username"])
             }
             return jsonify(ret), 200
-        return jsonify({'error_message':'Username and password do not match.'})  
+        return jsonify({'error_message':'Username and password do not match.'}), 401
 
     # Not a POST request
     else:

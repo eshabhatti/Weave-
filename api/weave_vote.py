@@ -21,13 +21,13 @@ def weave_voting():
 
         # Checks for JSON format.
         if (not request.is_json):
-            return jsonify({'error_message':'Request Error: Not JSON.'})
+            return jsonify({'error_message':'Request Error: Not JSON.'}), 400
         vote_info = request.get_json()
         print(vote_info) # debugging
 
         # Checks for all needed elements in the JSON.
         if ("username" not in vote_info or "id" not in vote_info or "type" not in vote_info or "vote" not in vote_info):
-            return jsonify({'error_message':'Request Error: Missing JSON Element'}) 
+            return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400
 
         # There should be no real need for validation since the frontend will send the JSON without user input.
         # The check for repeated votes will be done within the conditionals below because they need to be handled differently in each context.
@@ -65,7 +65,7 @@ def weave_voting():
 
                     # If the old score was an upvote, we will not modify the post score.
                     if (oldvote == 1):
-                        return jsonify({'error_message':'User has already upvoted this post.'})
+                        return jsonify({'error_message':'User has already upvoted this post.'}), 400
 
                     # If the old score was a downvote, remove it and add an upvote instead.
                     else:
@@ -109,7 +109,7 @@ def weave_voting():
 
                     # If the old score was an downvote, we will not modify the post score.
                     if (oldvote == -1):
-                        return jsonify({'error_message':'User has already downvoted this post.'})
+                        return jsonify({'error_message':'User has already downvoted this post.'}), 400
 
                     # If the old score was a downvote, remove it and add an upvote instead.
                     else:
@@ -130,7 +130,7 @@ def weave_voting():
                 # So the first thing we do is pull the old vote entity out of the database.
                 cursor.execute("SELECT score FROM PostVote WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
                 if (cursor.rowcount == 0):
-                    return jsonify({'error_message':'User has not voted on this post.'}) 
+                    return jsonify({'error_message':'User has not voted on this post.'}), 400
                 oldvote = cursor.fetchall()
                 oldvote = (oldvote[0])["score"]
 
@@ -150,7 +150,7 @@ def weave_voting():
 
             # This should never happen. It catches bad vote errors. 
             else:
-                return jsonify({'error_message':'Invalid vote score.'})
+                return jsonify({'error_message':'Invalid vote score.'}), 400
 
         # Handles votes for comments.
         elif (vote_info["type"] == "2"):
@@ -158,7 +158,7 @@ def weave_voting():
 
         # This should never happen. It catches bad vote type errors.
         else:
-            return jsonify({'error_message':'Invalid vote type.'})
+            return jsonify({'error_message':'Invalid vote type.'}), 400
 
     else:
-        return jsonify({'error_message':'Not POST request.'})
+        return jsonify({'error_message':'Not POST request.'}), 400
