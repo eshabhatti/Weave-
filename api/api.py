@@ -96,14 +96,14 @@ def refresh():
 @jwt_required
 def protected():
     # Access the identity of current user
-    current_user = get_jwt_identity
+    current_user = get_jwt_identity()
     return jsonify(logged_in=current_user)
 
 @app.route("/partially_protected")
 @jwt_optional
 def partially_protected():
     # Access the identity of current user
-    current_user = get_jwt_identity
+    current_user = get_jwt_identity()
     if current_user:
         return jsonify(logged_in=current_user)
     else:

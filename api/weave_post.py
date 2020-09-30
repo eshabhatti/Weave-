@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import Blueprint, request, jsonify
 from extensions import mysql
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
 weave_post = Blueprint('weave_post', __name__)
 
 
@@ -12,7 +12,7 @@ weave_post = Blueprint('weave_post', __name__)
 # # Call this route from the Windows Command Prompt with:
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"picpath\":\"none\",\"anon\":\"0\"}" http://localhost:5000/createpost/
 @weave_post.route("/createpost/", methods=["GET", "POST"])
-# @jwt_required
+@jwt_required
 def weave_post_create():
 
     # Initializes MySQL cursor
@@ -71,6 +71,7 @@ def weave_post_create():
 # # # # # Backend code for viewing posts on Weave
 # # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
 @weave_post.route("/post/<post_id>", methods=["GET"])
+@jwt_required
 def weave_post_data(post_id):
     
     # The backend has received a profile GET request.
@@ -89,7 +90,8 @@ def weave_post_data(post_id):
         if (post_info["anon_flag"] == True):
             post_info.pop("creator", None)
         post_info.pop("anon_flag", None)
-        
+        # Adds identity of requester to the JSON
+        post_info["identity"] = get_jwt_identity();
         # Returns post info as JSON object
         return post_info
 
@@ -98,7 +100,7 @@ def weave_post_data(post_id):
 # # Doesn't expect a unique URL right now, but this may be changed later.
 # # Does expect a POST request along with a JSON. Details will be in "/api/README.md". 
 @weave_post.route("/save/", methods=["POST"])
-# @login_required
+@jwt_required
 def save_weave_post():
 
     # The backend has recieved information that needs to go into the database.

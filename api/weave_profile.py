@@ -3,6 +3,7 @@ from extensions import mysql
 from os import path
 import re
 from werkzeug.utils import secure_filename
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import json
 
 weave_profile = Blueprint('weave_profile', __name__)
@@ -11,9 +12,8 @@ weave_profile = Blueprint('weave_profile', __name__)
 # # # # Backend code for editing profiles on Weave. 
 # # DOES NOT expect a JSON but DOES expect a unique URL for the profile that needs to be displayed.
 @weave_profile.route("/profile/<username>", methods=["GET"])
-# @login_required
+@jwt_required
 def weave_profile_data(username):
-    
     # The backend has received a profile GET request.
     if request.method == "GET":
     
@@ -26,7 +26,9 @@ def weave_profile_data(username):
             return jsonify({'error_message':'User does not exist'}), 404
         
         # Returns each needed item in one JSON object
-        return (cursor.fetchall())[0]
+        profile_data = (cursor.fetchall())[0]
+        profile_data["identity"] = get_jwt_identity();
+        return profile_data
 
 
 # # # # Backend code for editing profiles on Weave. 
@@ -35,38 +37,24 @@ def weave_profile_data(username):
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"newusername\":\"newtestname\",\"firstname\":\"Bob\",\"lastname\":\"Banana\",\"biocontent\":\"Hi I am Bob, aren't I cool?\",\"profilepic\":\"\"}" http://localhost:5000/editprofile/
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"newtestname\",\"newusername\":\"testname\",\"firstname\":\"Banana\",\"lastname\":\"Bob\",\"biocontent\":\"Hi I am Bob, aren't I cool?\",\"profilepic\":\"\"}" http://localhost:5000/editprofile/
 @weave_profile.route('/editprofile/', methods=["GET", "POST"])
-# @login_required
+@jwt_required
 def weave_edit_profile():
 
     # The backend has recieved information that needs to go into the database.
     if request.method == "POST":
-        
-        # Uploads a photo if attached
-        # This may need to be moved down? 
-        new_filename = "" #currently no uploaded file will stil change the path, should change
-        if 'file' in request.files:
-            file = request.files['file']
-            if file.filename != '':
-                new_filename = secure_filename(file.filename)
-                prefix = 0
-                #adjusts filename for duplicate names
-                while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
-                    prefix += 1
-                new_filename = str(prefix) + new_filename
-                file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
+
         
         # Initializes MySQL cursor
         cursor = mysql.connection.cursor()
 
         # # # Validates JSON information.
         # Checks for JSON format. (Possibly change, this is how i got it to work with sending both an image and json data)
-        mod_info = (request.form.to_dict())['json']
-        mod_info = json.loads(mod_info)
-        if type(mod_info) is not dict:
-            return jsonify({'error_message':'Request Error: Not JSON.'}), 400 
+        if (not request.is_json):
+            return jsonify({'error_message':'Request Error: Not JSON.'})
+        mod_info = request.get_json()
 
         # Checks that the JSON has all elements.
-        if ("username" not in mod_info or "newusername" not in mod_info or "firstname" not in mod_info or "lastname" not in mod_info or "biocontent" not in mod_info or "profilepic" not in mod_info):
+        if ("username" not in mod_info or "newusername" not in mod_info or "firstname" not in mod_info or "lastname" not in mod_info or "biocontent" not in mod_info):
             return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400
 
         # The original username should not need to be validated since it is not user input. (?)
@@ -108,8 +96,8 @@ def weave_edit_profile():
 
         # # # End validation
         # Updates the database with the new information.
-        mod_query = "UPDATE UserAccount SET username = %s, first_name = %s, last_name = %s, user_bio = %s, user_pic = %s WHERE username = %s;"
-        mod_values = (final_username, final_firstname, final_lastname, final_biocontent, new_filename, mod_info["username"])
+        mod_query = "UPDATE UserAccount SET username = %s, first_name = %s, last_name = %s, user_bio = %s WHERE username = %s;"
+        mod_values = (final_username, final_firstname, final_lastname, final_biocontent, mod_info["username"])
         cursor.execute(mod_query, mod_values)
         mysql.connection.commit() 
 
@@ -121,3 +109,36 @@ def weave_edit_profile():
     # Not a POST request.        
     else:
         return "serve edit profile page"
+
+@weave_profile.route('/editprofilepic/', methods=["GET", "POST"])
+@jwt_required
+def weave_edit_profile_pic():
+    
+    # The backend has recieved information that needs to go into the database.
+    if request.method == "POST":
+        
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+        
+        # Uploads a photo if attached
+        new_filename = ""
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '':
+                new_filename = secure_filename(file.filename)
+                prefix = 0
+                #adjusts filename for duplicate names
+                while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
+                    prefix += 1
+                new_filename = str(prefix) + new_filename
+                file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
+        
+        # Grabbing identity of uploader
+        identity = get_jwt_identity();
+        
+        # Putting file path into database for user
+        mod_query = "UPDATE UserAccount SET user_pic = %s WHERE username = %s;"
+        mod_values = (new_filename, identity)
+        cursor.execute(mod_query, mod_values)
+        mysql.connection.commit() 
+        return "user has updated profile picture"
