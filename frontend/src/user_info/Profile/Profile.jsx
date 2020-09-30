@@ -65,7 +65,7 @@ export default function Profile() {
             {/* Navbar */}
             <Navbar expand="lg" bg="dark" variant="dark" sticky="top">
                 <Navbar.Brand href="/login">
-                    <img src="./img/weave-icon.svg" width="50" height="50"
+                    <img src="/img/weave-icon.svg" width="50" height="50"
                          className="d-inline-block align-top" alt="" />
                 </Navbar.Brand>
                 <Nav className="mr-auto">
@@ -101,7 +101,7 @@ export default function Profile() {
                     {/* Contains all the info of user */}
                     <div className="profile-info">
                         {/* pull user data */}
-                        <img src="./img/weave-icon.svg" classname="profile-icon" alt="" />
+                        <img src="/img/weave-icon.svg" classname="profile-icon" alt="" />
                         <h1 className="profile-name">{first_name} {last_name}</h1>
                         <p className="profile-username">{username}</p>
                         {/* toggle active depending on who is viewing the page */}
