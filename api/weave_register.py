@@ -1,4 +1,9 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import (
+    JWTManager, jwt_required, jwt_optional, get_jwt_identity,
+    create_access_token, create_refresh_token,
+    jwt_refresh_token_required, get_raw_jwt
+)
 from extensions import mysql
 from datetime import datetime
 import re
@@ -85,8 +90,12 @@ def weave_register_user():
         cursor.execute(register_query, register_values)
         mysql.connection.commit()         
             
-        # Will eventually return login credentials.
-        return jsonify({'anything':'anything'}), 201
+        # Creates access token and sends it back once user is confirmed to be created
+        ret = {
+                'access_token': create_access_token(identity=reg_info["username"]),
+                'refresh_token': create_refresh_token(identity=reg_info["username"])
+        }
+        return jsonify(ret), 201
 
     # Not a POST request.        
     else:
