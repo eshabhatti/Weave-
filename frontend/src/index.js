@@ -26,7 +26,7 @@ function AppRouter() {
         <Route path="/login">
           <Login />
         </Route>
-        <Route path="/profile">
+        <Route path="/profile/:username">
           <Profile />
         </Route>
         <Route path="/">

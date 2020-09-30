@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import { useParams, Route } from 'react-router-dom';
 
 import "./profile.css";
 
 export default function Profile() {
-
+	const {username} = useParams();
     const [postsOrInt, updatePostOrInt] = useState("");
     const [errorMessage, updateErrorMessage] = useState("");
     const [xPosition, setX] = React.useState(-250);
@@ -23,7 +24,6 @@ export default function Profile() {
     }, []);
 
     {/* testing with user in sql tests */}
-    const username = "realuser2";
     const endpoint = "http://localhost:5000/profile/" + username;
     useEffect(() => {
         fetch(endpoint, {
@@ -64,7 +64,7 @@ export default function Profile() {
             />
             {/* Navbar */}
             <Navbar expand="lg" bg="dark" variant="dark" sticky="top">
-                <Navbar.Brand href="login">
+                <Navbar.Brand href="/login">
                     <img src="./img/weave-icon.svg" width="50" height="50"
                          className="d-inline-block align-top" alt="" />
                 </Navbar.Brand>

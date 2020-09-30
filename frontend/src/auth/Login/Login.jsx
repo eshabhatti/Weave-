@@ -69,7 +69,7 @@ export default function Login() {
         </form>
         {errObject}
         <a href="register" className="login-link">create an account</a>
-        <a href="profile" className="login-link">forgot password</a>
+        <a href="profile/newuser2" className="login-link">forgot password</a>
       </div>
     </div>
   )
