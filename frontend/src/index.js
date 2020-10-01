@@ -12,7 +12,7 @@ import Register from "./auth/Register/Register";
 import Profile from "./user_info/Profile/Profile"
 import EditProfile from "./user_info/Profile/EditProfile"
 import NotFound from "./error_pages/NotFound"
-
+import Timeline from "./user_info/Timeline/Timeline"
 //import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 
 function AppRouter() {
@@ -36,6 +36,9 @@ function AppRouter() {
         </Route>
 		<Route path="/editprofile">
 		  <EditProfile />
+		</Route>
+		<Route path="/timeline">
+		  <Timeline />
 		</Route>
 		<Route>
 		  <NotFound />

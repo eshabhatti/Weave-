@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import "./editprofile.css";
 import { Navbar, Nav} from 'react-bootstrap';
+import "./editprofile.css";
+
 //module.exports(isFormValid);
 //module.exports(Login);
 

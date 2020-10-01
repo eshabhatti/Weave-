@@ -1,0 +1,52 @@
+.post-submit-btn {
+  width: 120px;
+  height: 32px;
+  background: #7448BA;
+  border-radius: 12px;
+  display: block;
+  margin: 0px auto;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 13px;
+  transition-duration: 0.3s;
+  font-family: 'Open Sans', sans-serif;
+  margin-bottom: 40px;
+  cursor: pointer;
+}
+
+.post-form {
+  padding: 40px;
+  padding-bottom: 0px;
+  margin-bottom: 30px;
+}
+
+.post-form-label {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+.post-form-input {
+  width: 100%;
+  margin-bottom: 20px;
+  border: none;
+  height: 32px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  outline: none;
+  padding-left: 10px;
+  color: grey;
+}
+
+.post-container {
+  background: rgba(247, 247, 251, 0.91);
+  border-radius: 30px;
+  min-height: 250px;
+  width: 400px;
+  display: block;
+  margin: 0px auto;
+  padding-bottom: 30px;
+}
