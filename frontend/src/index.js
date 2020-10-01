@@ -40,7 +40,7 @@ function AppRouter() {
 		<Route path="/timeline">
 		  <Timeline />
 		</Route>
-		<Route>
+		<Route path ="/">
 		  <NotFound />
 		</Route>
       </Switch>
