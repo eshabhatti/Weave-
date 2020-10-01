@@ -109,6 +109,7 @@ export default function Profile() {
                         <h1 className="profile-name">{first_name} {last_name}</h1>
                         <p className="profile-username">{username}</p>
                         {/* toggle active depending on who is viewing the page */}
+                        <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button>
                         <button type="button" className="profile-follow-button">Follow</button>
                         <p className="profile-followers">{follower_count} Followers</p>
                         <p className="profile-following"># Following</p>
