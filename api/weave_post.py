@@ -63,6 +63,7 @@ def weave_post_create():
     # # # Post is picture-caption
     else:
         print("picture-caption post")
+        # TODO: DO THIS
         # Validate picture path?
         # Do other stuff
         return "Error: Not implemented yet"

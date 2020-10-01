@@ -51,12 +51,22 @@
   width: 100%;
   margin-bottom: 20px;
   border: none;
-  height: 64px;
+  height: 126px;
   background: #FFFFFF;
   border-radius: 10px;
   outline: none;
   padding-left: 10px;
+  padding-top: 10px;
   color: grey;
+  font-size: 11pt;
+  resize: none;
+}
+
+.profile-pic-upload {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 25px;
 }
 
 .edit-update-btn {

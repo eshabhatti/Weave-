@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Navbar, Nav} from 'react-bootstrap';
+import ImageUploader from 'react-images-upload';
 import "./editprofile.css";
 
 //module.exports(isFormValid);
@@ -81,7 +82,7 @@ export default function EditProfile() {
             }} className="edit-form-input"
           />
 
-          <label className="edit-form-label">First Name</label>
+      <label className="edit-form-label">First Name</label>
           <input
             value={firstName}
             onChange={e => {
@@ -102,7 +103,7 @@ export default function EditProfile() {
 		  />
 		  
 		  <label className="edit-form-label">Bio</label>
-          <input
+          <textarea
             value={bio}
             onChange={e => {
               updateBio(e.target.value);
@@ -110,7 +111,17 @@ export default function EditProfile() {
             }}
             className="bio-form-input" 
 		  />
-          
+
+      <label className="edit-form-label">Profile Picture</label>
+        <ImageUploader 
+          withIcon={true}
+          imgExtension={['.jpg', 'jpeg', '.gif', '.png', '.gif']}
+          maxFileSize={10000000}
+          buttonText='Select your profile picture.'
+          className="profile-pic-upload"
+      />
+
+
 		  <button type="submit" className="edit-update-btn" onClick={(e) => onSubmit(e)}>Update</button>
 
         </form>
