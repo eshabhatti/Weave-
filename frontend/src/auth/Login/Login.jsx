@@ -5,8 +5,8 @@ import "./login.css";
 //module.exports(Login);
 
 export default function Login() {
-  const [loginName, updateLoginName] = useState("sahilkapur");
-  const [password, updatePassword] = useState("Online11");
+  const [loginName, updateLoginName] = useState("");
+  const [password, updatePassword] = useState("");
   const [errorMessage, updateErrorMessage] = useState("");
 
   const onSubmit = (event) => {
