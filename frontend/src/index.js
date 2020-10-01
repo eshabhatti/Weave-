@@ -11,6 +11,7 @@ import Login from "./auth/Login/Login";
 import Register from "./auth/Register/Register";
 import Profile from "./user_info/Profile/Profile"
 import EditProfile from "./user_info/Profile/EditProfile"
+import NotFound from "./error_pages/NotFound"
 
 //import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 
@@ -18,6 +19,9 @@ function AppRouter() {
   return (
     <Router>
       <Switch>
+	    <Route exact path="/">
+          <Login />
+        </Route>
         <Route path="/resetpassword">
           {/*<ForgotPassword />*/}
         </Route>
@@ -33,9 +37,9 @@ function AppRouter() {
 		<Route path="/editprofile">
 		  <EditProfile />
 		</Route>
-        <Route path="/">
-          <Login />
-        </Route>
+		<Route>
+		  <NotFound />
+		</Route>
       </Switch>
     </Router>
   )
