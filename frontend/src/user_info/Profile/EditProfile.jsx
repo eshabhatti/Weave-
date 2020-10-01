@@ -24,7 +24,6 @@ export default function EditProfile() {
         lastname: lastName,
         biocontent: bio,
       }
-      console.log(JSON.stringify(body));
       /*
        * post to backend
        */
@@ -42,7 +41,6 @@ export default function EditProfile() {
         } else {
           const { access_token, refresh_token } = data;
         }
-        alert("posted successfully!");
       }).catch(err => {
         console.error(err);
         alert("error: check console for details");
