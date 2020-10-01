@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import { useParams, Route } from 'react-router-dom';
+import NavBar from "../../Shared_Components/NavBar";
 
 import "./profile.css";
 
@@ -55,25 +56,13 @@ export default function Profile() {
 
     return (
         <div>
-            {/* Bootstrap Stylesheet */}
+            <NavBar />
             <link
                 rel="stylesheet"
                 href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
                 integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
                 crossorigin="anonymous"
             />
-            {/* Navbar */}
-            <Navbar expand="lg" bg="dark" variant="dark" sticky="top">
-                <Navbar.Brand href="/login">
-                    <img src="/img/weave-icon.svg" width="50" height="50"
-                         className="d-inline-block align-top" alt="" />
-                </Navbar.Brand>
-                <Nav className="mr-auto">
-                    <Nav.Link>Messages</Nav.Link>
-                    <Nav.Link>Notifications</Nav.Link>
-                    <Nav.Link>Help</Nav.Link>
-                </Nav>
-            </Navbar>
             <div className="profile-container">
                 {/* Sidebar */}
                 <React.Fragment>
