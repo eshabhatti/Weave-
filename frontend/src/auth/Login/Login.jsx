@@ -5,8 +5,8 @@ import "./login.css";
 //module.exports(Login);
 
 export default function Login() {
-  const [loginName, updateLoginName] = useState("");
-  const [password, updatePassword] = useState("");
+  const [loginName, updateLoginName] = useState("sahilkapur");
+  const [password, updatePassword] = useState("Online11");
   const [errorMessage, updateErrorMessage] = useState("");
 
   const onSubmit = (event) => {
@@ -31,7 +31,11 @@ export default function Login() {
           updateErrorMessage(data.error_message);
         } else {
           const { access_token, refresh_token } = data;
-          window.location = "profile/" + loginName;
+          console.log(access_token);
+          localStorage.setItem('data', data);
+          localStorage.setItem('access_token', access_token);
+          localStorage.setItem('refresh_token', refresh_token);
+          // window.location = "profile/" + loginName;
         }
       }).catch(err => {
         console.error(err);
