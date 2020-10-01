@@ -91,9 +91,47 @@ def weave_post_data(post_id):
             post_info.pop("creator", None)
         post_info.pop("anon_flag", None)
         # Adds identity of requester to the JSON
-        post_info["identity"] = get_jwt_identity();
+        post_info["identity"] = get_jwt_identity()
         # Returns post info as JSON object
         return post_info
+
+
+# # # # Backend code for pulling a user's posts on Weave
+# # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
+@weave_post.route("/userposts/", methods=["POST"])
+@jwt_required
+def weave_pull_userposts():
+
+    # The backend has received a saved post POST request.
+    if request.method == "POST":
+
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message':'Request Error: Not JSON.'}), 400
+        pull_info = request.get_json()
+
+        if ("username" not in pull_info or "start" not in pull_info or "end" not in pull_info):
+            return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400 
+
+        # Checks if username exists in database.
+        cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (pull_info["username"],))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message':'User does not exist'}), 404
+        cursor.fetchall()
+
+        # Pulls the user's most recent posts as specified by the range.
+        pull_query = "SELECT post_id FROM Post WHERE username = %s ORDER BY date_created DESC LIMIT %s, %s;"
+        pull_values = (pull_info["username"], pull_info["start"], pull_info["end"])
+        cursor.execute(pull_query, pull_values)
+
+        # Adds the user's posts to a list that will then be returned.
+        pull_list = []
+        for row in cursor:
+            pull_list.append(row["post_id"])
+        return pull_list
 
 
 # # # # Backend code for saving posts on Weave
@@ -131,3 +169,41 @@ def save_weave_post():
 
         return "post has been saved"
 
+
+# # # # Backend code for pulling a user's saved posts on Weave
+# # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
+@weave_post.route("/savedposts/", methods=["POST"])
+@jwt_required
+def weave_pull_saves():
+
+    # The backend has received a saved post POST request.
+    if request.method == "POST":
+
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message':'Request Error: Not JSON.'}), 400
+        save_info = request.get_json()
+
+        # Checks for all needed elements in the JSON.
+        if ("username" not in save_info or "start" not in save_info or "end" not in save_info):
+            return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400 
+
+        # Checks if username exists in database.
+        cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (save_info["username"],))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message':'User does not exist'}), 404
+        cursor.fetchall()
+
+        # Pulls the saved posts of the user as specified by the range.
+        save_query = "SELECT post_id FROM SavedPost WHERE username = %s ORDER BY date_saved DESC LIMIT %s, %s;"
+        save_values = (save_info["username"], save_info["start"], save_info["end"])
+        cursor.execute(save_query, save_values)
+
+        # Adds the saved posts to a list that will then be returned.
+        save_list = []
+        for row in cursor:
+            save_list.append(row["post_id"])
+        return save_list

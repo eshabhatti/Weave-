@@ -14,6 +14,7 @@ weave_profile = Blueprint('weave_profile', __name__)
 @weave_profile.route("/profile/<username>", methods=["GET"])
 @jwt_required
 def weave_profile_data(username):
+    
     # The backend has received a profile GET request.
     if request.method == "GET":
     
@@ -27,7 +28,7 @@ def weave_profile_data(username):
         
         # Returns each needed item in one JSON object
         profile_data = (cursor.fetchall())[0]
-        profile_data["identity"] = get_jwt_identity();
+        profile_data["identity"] = get_jwt_identity()
         return profile_data
 
 
@@ -43,7 +44,6 @@ def weave_edit_profile():
     # The backend has recieved information that needs to go into the database.
     if request.method == "POST":
 
-        
         # Initializes MySQL cursor
         cursor = mysql.connection.cursor()
 
