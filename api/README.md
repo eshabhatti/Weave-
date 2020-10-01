@@ -52,3 +52,15 @@ POST requests to the following routes require JSON objects formatted as shown:
     * id: \[post-or-comment-id\]
     * vote: \[vote-score\]
         * Note that the score will be 1 if the vote is up, -1 if the vote is down, and 0 if the vote should be deleted.
+
+* Saved post pulling (`/savedposts/`) requires a JSON object where JSON = 
+    * username: \[username-string\]
+    * start: \[begin-value\]
+    * end: \[end-value\]
+        * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).
+
+* Post pulling per user (`/userposts/`) requires a JSON object where JSON = 
+    * username: \[username-string\]
+    * start: \[begin-value\]
+    * end: \[end-value\]
+        * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).
