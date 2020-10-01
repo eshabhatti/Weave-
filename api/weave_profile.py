@@ -69,7 +69,7 @@ def weave_edit_profile():
         username_query = "SELECT username from UserAccount WHERE username = \"" + mod_info["newusername"] + "\";"
         cursor.execute(username_query)
         for row in cursor:
-            if mod_info["newusername"] == row["username"]:
+            if (mod_info["username"] != mod_info["newusername"]) and (mod_info["newusername"] == row["username"]):
                 return jsonify({'error_message':'Your new username has already been taken.'}), 400  
 
         # If the name elements of the JSON are not empty strings, they also need to be checked.

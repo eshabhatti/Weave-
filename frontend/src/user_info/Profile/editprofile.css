@@ -1,0 +1,113 @@
+.edit-page-title {
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  margin-top: 7vh;
+}
+
+.edit-container {
+  background: rgba(247, 247, 251, 0.91);
+  border-radius: 30px;
+  min-height: 450px;
+  width: 500px;
+  display: block;
+  margin: 0px auto;
+  padding-bottom: 30px;
+}
+
+.edit-icon {
+  width: 100px;
+  display: block;
+  margin: 0px auto;
+  padding-top: 30px;
+}
+
+.edit-form {
+  padding: 40px;
+  padding-bottom: 0px;
+  margin-bottom: 30px;
+}
+
+.edit-form-label {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+.edit-form-input {
+  width: 100%;
+  margin-bottom: 20px;
+  border: none;
+  height: 32px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  outline: none;
+  padding-left: 10px;
+  color: grey;
+}
+
+.bio-form-input {
+  width: 100%;
+  margin-bottom: 20px;
+  border: none;
+  height: 64px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  outline: none;
+  padding-left: 10px;
+  color: grey;
+}
+
+.edit-update-btn {
+  width: 120px;
+  height: 32px;
+  background: #7448BA;
+  border-radius: 12px;
+  display: block;
+  margin: 0px auto;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 13px;
+  transition-duration: 0.3s;
+  font-family: 'Open Sans', sans-serif;
+  margin-bottom: 40px;
+  cursor: pointer;
+}
+
+.edit-update-btn:hover {
+  background: #522a92;
+}
+
+.edit-link {
+  display: block;
+  text-align: center;
+  color: rgb(134, 134, 134);
+  text-decoration: none;
+  margin-top: 10px;
+  transition-duration: 0.1s;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+}
+
+.edit-link:hover {
+  color: black;
+}
+
+.edit-error-bubble {
+  background-color: rgba(248, 62, 62, 0.575);
+  width: 250px;
+  height: 30px;
+  display: block;
+  margin: 0px auto;
+  border-radius: 10px;
+}
+
+.edit-error-message {
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+  font-size: 12px;
+  padding-top: 6px;
+}
