@@ -6,11 +6,10 @@ weave_post = Blueprint('weave_post', __name__)
 
 
 # # # # # Backend code for creating posts on Weave.
-# # Will save a post to the database -- a text post if the type is 1, a picture-caption post if the type is 2.
-# # Eventually it may need to save a series of picture posts but let's not worry about that right now.
+# # Will save a "text post" to the database. If the post has a picture component, another server request will be needed.
 # # Expects a POST request with a JSON. Details are discussed in "/api/README.md".
 # # Call this route from the Windows Command Prompt with:
-#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"picpath\":\"none\",\"anon\":\"0\"}" http://localhost:5000/createpost/
+#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"anon\":\"0\"}" http://localhost:5000/createpost/
 @weave_post.route("/createpost/", methods=["GET", "POST"])
 @jwt_required
 def weave_post_create():
@@ -24,7 +23,7 @@ def weave_post_create():
     post_info = request.get_json()
 
     # This horrific thing checks that the JSON has all the needed elements.
-    if ("username" not in post_info or "topic" not in post_info or "type" not in post_info or "title" not in post_info or "content" not in post_info or "picpath" not in post_info or "anon" not in post_info):
+    if ("username" not in post_info or "topic" not in post_info or "type" not in post_info or "title" not in post_info or "content" not in post_info or "anon" not in post_info):
         return jsonify({'error_message':'Request Error: Missing JSON Element'}) 
 
     # Don't have to validate the username because the frontend should send us it directly. (?)
@@ -32,38 +31,70 @@ def weave_post_create():
     # Topic stuff is not implemented in this sprint, but when it IS implemented there will need to be more stuff here.
 
     # Validates the content information.
-    # Most strings will be fine. However, any \" phrase must be replaced with \\\".
+    # Most strings will be fine. Empty content will be saved as an empty string. Any \" phrase must be replaced with \\\".
     post_info["content"].replace("\\\"", "\\\\\\\"")
     
-    # # # Post is text.
-    if (post_info["type"] == "1"):
+    # The post will always be treated as a text post when it is being saved to the database. 
         
-        # Assigns the Post a new post_id by querying the most recent post and then adding one.
-        # The post_id is initialized to 1 because the first query should not return any posts.
-        post_id = 1 
-        id_query = "SELECT post_id FROM Post ORDER BY date_created DESC LIMIT 1;"
-        cursor.execute(id_query)
-        for row in cursor:
-            post_id = row["post_id"] + 1
+    # Assigns the Post a new post_id by querying the most recent post and then adding one.
+    # The post_id is initialized to 1 because the first query should not return any posts.
+    post_id = 1 
+    id_query = "SELECT post_id FROM Post ORDER BY date_created DESC LIMIT 1;"
+    cursor.execute(id_query)
+    for row in cursor:
+        post_id = row["post_id"] + 1
 
-        # Gets the current date in "YYYY-MM-DD" format.
-        current_date = datetime.today().strftime("%Y-%m-%d")
+    # Gets the current date in "YYYY-MM-DD" format.
+    current_date = datetime.today().strftime("%Y-%m-%d")
 
-        # Insert new text post into the database.
-        post_query = "INSERT INTO Post VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-        post_values = (post_id, post_info["topic"], post_info["username"], current_date, post_info["type"], post_info["title"], post_info["content"], None, 0, 0, post_info["anon"], 0)
-        cursor.execute(post_query, post_values)
-        mysql.connection.commit()   
+    # Insert new text post into the database.
+    post_query = "INSERT INTO Post VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+    post_values = (post_id, post_info["topic"], post_info["username"], current_date, post_info["type"], post_info["title"], post_info["content"], None, 0, 0, post_info["anon"], 0)
+    cursor.execute(post_query, post_values)
+    mysql.connection.commit()   
 
-        return "user has made a post"
+    return "user has made a post"
 
-    # # # Post is picture-caption
-    else:
-        print("picture-caption post")
-        # TODO: DO THIS
-        # Validate picture path?
-        # Do other stuff
-        return "Error: Not implemented yet"
+
+# # # # Backend code for uploading post images on Weave.
+# # Will save the picture image of a picture-caption post to the database.
+# # Expects a POST request with a header holding authorization and an attached image file. 
+@weave_post.route("/createimage/", methods=["GET", "POST"])
+@jwt_required
+def weave_post_upload_image():
+
+    # The backend has recieved information that needs to go into the database.
+    if request.method == "POST":
+
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+
+        # Uploads a photo if attached
+        new_filename = ""
+        if 'file' in request.files:
+            img_file = request.files['file']
+            # Checks to make sure an image is attached
+            if img_file.filename != '':
+                new_filename = secure_filename(img_file.filename)
+                prefix = 0
+                # Adjusts filename for duplicate names
+                while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
+                    prefix += 1
+                new_filename = str(prefix) + new_filename
+                img_file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
+            else:
+                return "no content"
+
+        # Grabbing identity of uploader
+        identity = get_jwt_identity()
+        
+        # Putting file path into database for user's most recent post.
+        # This should work as long as the database doesn't miss a request for some reason.
+        mod_query = "UPDATE Post SET pic_path = %s WHERE creator = %s ORDER BY date_created DESC LIMIT 1;"
+        mod_values = (new_filename, identity)
+        cursor.execute(mod_query, mod_values)
+        mysql.connection.commit() 
+        return "user has added post picture"
 
 
 # # # # # Backend code for viewing posts on Weave
@@ -88,8 +119,10 @@ def weave_post_data(post_id):
         if (post_info["anon_flag"] == True):
             post_info.pop("creator", None)
         post_info.pop("anon_flag", None)
+
         # Adds identity of requester to the JSON
         post_info["identity"] = get_jwt_identity()
+        
         # Returns post info as JSON object
         return post_info
 

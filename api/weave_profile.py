@@ -110,6 +110,9 @@ def weave_edit_profile():
     else:
         return "serve edit profile page"
 
+
+# # # # Backend code for updating user profile images on Weave.
+# # Expects a POST request with a header holding authorization and an attached image file.
 @weave_profile.route('/editprofilepic/', methods=["GET", "POST"])
 @jwt_required
 def weave_edit_profile_pic():
@@ -123,18 +126,18 @@ def weave_edit_profile_pic():
         # Uploads a photo if attached
         new_filename = ""
         if 'file' in request.files:
-            file = request.files['file']
-            if file.filename != '':
-                new_filename = secure_filename(file.filename)
+            img_file = request.files['file']
+            if img_file.filename != '':
+                new_filename = secure_filename(img_file.filename)
                 prefix = 0
                 #adjusts filename for duplicate names
                 while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
                     prefix += 1
                 new_filename = str(prefix) + new_filename
-                file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
+                img_file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
         
         # Grabbing identity of uploader
-        identity = get_jwt_identity();
+        identity = get_jwt_identity()
         
         # Putting file path into database for user
         mod_query = "UPDATE UserAccount SET user_pic = %s WHERE username = %s;"

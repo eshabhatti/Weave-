@@ -20,14 +20,13 @@ POST requests to the following routes require JSON objects formatted as shown:
     * username: \[username-or-email\]
     * password: \[plaintext-password\]
 
-* Post creation (`/createpost/`) requires a JSON object where JSON = 
+* The text portion of post creation (`/createpost/`) requires a JSON object where JSON = 
     * username: \[creator-username\]
     * topic: \[post-topic\]
     * type: \[post-type\]
         * Note that the post type will be 1 if the post is text and 2 if the post is picture-caption.
     * title: \[post-title\]
     * content: \[post-content-or-caption\]
-    * picpath: \[location-of-image\]
     * anon: \[anonymous-identifier\]
         * Note that the anon flag will be 0 if the post is not anonymous and 1 if the post is anonymous. 
 
