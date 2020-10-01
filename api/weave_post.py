@@ -34,9 +34,6 @@ def weave_post_create():
     # Validates the content information.
     # Most strings will be fine. However, any \" phrase must be replaced with \\\".
     post_info["content"].replace("\\\"", "\\\\\\\"")
-
-    # I have no idea how image pathing is going to work right now. Does the filepath even need to be validated?
-    # In any case, there's no point doing that unless the post is picture-caption, so we check for post type below first.
     
     # # # Post is text.
     if (post_info["type"] == "1"):

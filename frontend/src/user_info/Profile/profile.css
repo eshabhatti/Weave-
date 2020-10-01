@@ -1,204 +1,225 @@
-  .profile-container {
-    background: rgba(255, 255, 255, 0.91);
-    display: flex;
-    margin: 0px auto;
-  }
-
-  .profile-side-bar {
-    height: 100% !important;
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid;
-    border-radius: 0;
-    border-color: rgba(75, 15, 52, 0.693);
-    background-color: rgb(255, 255, 255);
-    transition: 0.8s ease;
+.profile-container {
+  background: rgba(255, 255, 255, 0.91);
+  display: flex;
+  margin: 0px auto;
 }
 
-  .profile-toggle-menu {
-    height: 50px;
-    border-top-right-radius: 10rem;
-    border-bottom-right-radius: 9rem;
-    width: 10px;
-    position: absolute;
-    outline: none;
-    z-index: 1;
-    background-color: rgba(0, 0, 0, 0.693);
-    border-color: rgba(0, 0, 0, 0.693);
-    border-left: 0;
+.profile-side-bar {
+  height: 100% !important;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid;
+  border-radius: 0;
+  border-color: rgba(75, 15, 52, 0.693);
+  background-color: rgba(224, 219, 228, 0.1);
+  transition: 0.8s ease;
 }
 
-  .profile-icon {
-    width: 100px;
-    display: block;
-    margin: 0px auto;
-    padding-top: 30px;
-  }
+.side-bar-menu {
+  padding-left: 5%;
+  padding-top: 20px;
+}
 
-  .profile-info {
-    background: rgba(255, 255, 255, 0.91);
-    border-radius: 30px;
-    height: 600px;
-    width: 400px;
-    display: block;
-    margin: 0px auto;
-    padding-bottom: 30px;
-    margin-bottom: 100px;
-    margin-top: 40px;
-  }
-  
-  .profile-name {
-    display: block;
-    font-family: 'Open Sans', sans-serif;
-    font-weight: bold;
-    font-size: 24px;
-    padding-left: 3px;
-    padding-bottom: 5px;
-  }
+.side-bar-heading {
+  font-size: 18pt;
+  padding-bottom: 12px;
+}
 
-  .profile-username {
+.side-bar-selection {
+  font-size: 16pt;
+  margin-left: 5%;
+  padding-bottom: 6pt;
+}
+
+.side-bar-logout {
+  font-size: 8pt;
+  padding-left: 0pt;
+  padding-top: 45px;
+}
+
+.profile-toggle-menu {
+  height: 50px;
+  border-top-right-radius: 10rem;
+  border-bottom-right-radius: 9rem;
+  width: 10px;
+  position: absolute;
+  outline: none;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.693);
+  border-color: rgba(0, 0, 0, 0.693);
+  border-left: 0;
+}
+
+.profile-icon {
+  width: 100px;
+  display: block;
+  margin: 0px auto;
+  padding-top: 30px;
+}
+
+.profile-info {
+  background: rgba(255, 255, 255, 0.91);
+  border-radius: 30px;
+  height: 600px;
+  width: 400px;
+  display: block;
+  margin: 0px auto;
+  padding-bottom: 30px;
+  margin-bottom: 100px;
+  margin-top: 40px;
+}
+
+.profile-name {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+  font-size: 24px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+.profile-username {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+.profile-follow-button {
+  width: 120px;
+  height: 32px;
+  background: #7448BA;
+  border-radius: 12px;
+  display: block;
+  margin: 0px auto;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 13px;
+  transition-duration: 0.3s;
+  font-family: 'Open Sans', sans-serif;
+  margin-bottom: 40px;
+  cursor: pointer;
+  margin-top: 30px;
+}
+
+.profile-follow-button:hover {
+  background: #522a92;
+}
+
+.profile-followers {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+.profile-following {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+.profile-bio-title {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+  font-size: 24px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+.profile-bio {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+.profile-about-title {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+  font-size: 24px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+.profile-about {
+  display: block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+.profile-choice {
+  background: rgba(227, 227, 238, 0.91);
+  border-radius: 30px;
+  height: 600px;
+  width: 600px;
+  margin-left: 200px;
+  display: block;
+  margin: 0px auto;
+  padding-bottom: 30px;
+  margin-bottom: 100px;
+  margin-top: 40px;
+}
+
+.profile-buttons {
+  display: flex;
+}
+
+.profile-posts-button {
+  width: 120px;
+  height: 32px;
+  background: #7448BA;
+  border-radius: 12px;
+  display: block;
+  margin: 0px auto;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 13px;
+  transition-duration: 0.3s;
+  font-family: 'Open Sans', sans-serif;
+  margin-bottom: 40px;
+  cursor: pointer;
+  margin-top: 30px;
+}
+
+.profile-posts-button:hover {
+  background: #522a92;
+}
+
+.profile-interactions-button {
+  width: 120px;
+  height: 32px;
+  background: #7448BA;
+  border-radius: 12px;
+  display: block;
+  margin: 0px auto;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 13px;
+  transition-duration: 0.3s;
+  font-family: 'Open Sans', sans-serif;
+  margin-bottom: 40px;
+  cursor: pointer;
+  margin-top: 30px;
+}
+
+.profile-interactions-button:hover {
+  background: #522a92;
+}
+
+.profile-display {
     display: block;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    padding-left: 3px;
-    padding-bottom: 5px;
-  }
+}
 
-  .profile-follow-button {
-    width: 120px;
-    height: 32px;
-    background: #7448BA;
-    border-radius: 12px;
-    display: block;
-    margin: 0px auto;
-    outline: none;
-    border: none;
-    color: white;
-    font-size: 13px;
-    transition-duration: 0.3s;
-    font-family: 'Open Sans', sans-serif;
-    margin-bottom: 40px;
-    cursor: pointer;
-    margin-top: 30px;
-  }
-  
-  .profile-follow-button:hover {
-    background: #522a92;
-  }
-
-  .profile-followers {
-    display: block;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    padding-left: 3px;
-    padding-bottom: 5px;
-  }
-
-  .profile-following {
-    display: block;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    padding-left: 3px;
-    padding-bottom: 5px;
-  }
-
-  .profile-bio-title {
-    display: block;
-    font-family: 'Open Sans', sans-serif;
-    font-weight: bold;
-    font-size: 24px;
-    padding-left: 3px;
-    padding-bottom: 5px;
-  }
-
-  .profile-bio {
-    display: block;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    padding-left: 3px;
-    padding-bottom: 5px;
-  }
-
-  .profile-about-title {
-    display: block;
-    font-family: 'Open Sans', sans-serif;
-    font-weight: bold;
-    font-size: 24px;
-    padding-left: 3px;
-    padding-bottom: 5px;
-  }
-
-  .profile-about {
-    display: block;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    padding-left: 3px;
-    padding-bottom: 5px;
-  }
-
-  .profile-choice {
-    background: rgba(227, 227, 238, 0.91);
-    border-radius: 30px;
-    height: 600px;
-    width: 600px;
-    margin-left: 200px;
-    display: block;
-    margin: 0px auto;
-    padding-bottom: 30px;
-    margin-bottom: 100px;
-    margin-top: 40px;
-  }
-
-  .profile-buttons {
-    display: flex;
-  }
-
-  .profile-posts-button {
-    width: 120px;
-    height: 32px;
-    background: #7448BA;
-    border-radius: 12px;
-    display: block;
-    margin: 0px auto;
-    outline: none;
-    border: none;
-    color: white;
-    font-size: 13px;
-    transition-duration: 0.3s;
-    font-family: 'Open Sans', sans-serif;
-    margin-bottom: 40px;
-    cursor: pointer;
-    margin-top: 30px;
-  }
-  
-  .profile-posts-button:hover {
-    background: #522a92;
-  }
-
-  .profile-interactions-button {
-    width: 120px;
-    height: 32px;
-    background: #7448BA;
-    border-radius: 12px;
-    display: block;
-    margin: 0px auto;
-    outline: none;
-    border: none;
-    color: white;
-    font-size: 13px;
-    transition-duration: 0.3s;
-    font-family: 'Open Sans', sans-serif;
-    margin-bottom: 40px;
-    cursor: pointer;
-    margin-top: 30px;
-  }
-  
-  .profile-interactions-button:hover {
-    background: #522a92;
-  }
-
-  .profile-display {
-      display: block;
-  }
-  
-  
