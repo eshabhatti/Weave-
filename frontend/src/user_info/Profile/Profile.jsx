@@ -27,10 +27,12 @@ export default function Profile() {
     {/* testing with user in sql tests */}
     const endpoint = "http://localhost:5000/profile/" + username;
     useEffect(() => {
+		const access_token = localStorage.getItem('access_token');
         fetch(endpoint, {
             method: "GET",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + access_token
             },
         }).then(response => response.json()).then(data => {
             if (data.error_message) {

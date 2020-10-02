@@ -35,7 +35,7 @@ export default function Login() {
           localStorage.setItem('data', data);
           localStorage.setItem('access_token', access_token);
           localStorage.setItem('refresh_token', refresh_token);
-          // window.location = "profile/" + loginName;
+          window.location = "profile/" + loginName;
         }
       }).catch(err => {
         console.error(err);
