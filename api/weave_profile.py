@@ -36,7 +36,7 @@ def weave_profile_data(username):
 # # # # Backend code for displaying profile pictures on Weave.
 # # DOES NOT expect a JSON but DOES expect a unique URL for the profile that needs to be displayed.
 # # This route will likely have to be called without explicitly navigating to this URL.
-@weave_profile.route("profilepic/<username>", methods=["GET"])
+@weave_profile.route("/profilepic/<username>", methods=["GET"])
 @jwt_required
 def weave_profile_image():
     
