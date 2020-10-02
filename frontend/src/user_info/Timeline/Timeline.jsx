@@ -9,7 +9,10 @@ export default function Timeline() {
 	const [postTitle, updatePostTitle] = useState("");
 	const [isAnon, updateIsAnon] = useState("");
 	const onSubmit = (event) => {}
-	
+	const access_token = localStorage.getItem('access_token');
+	if (access_token == null) {
+		window.location = "/login"
+	}
     return (
 		<div>
 			<div>
@@ -54,7 +57,7 @@ export default function Timeline() {
 				className="post-form-input-body" 
 				/>
 
-				<label className="post-form-label">Profile Picture</label>
+				<label className="post-form-label">Post Picture</label>
           		<ImageUploader
             	  withIcon={true}
                   imgExtension={['.jpg', 'jpeg', '.gif', '.png', '.gif']}

@@ -11,7 +11,11 @@ export default function Profile() {
     const [errorMessage, updateErrorMessage] = useState("");
     const [xPosition, setX] = React.useState(-250);
     const [userdata, setUserData] = useState([]);
-
+	const access_token = localStorage.getItem('access_token');
+	if (access_token == null) {
+		window.location = "/login"
+	}
+	
     const toggleMenu = () => {
         if (xPosition < 0) {
         setX(0);
@@ -27,7 +31,6 @@ export default function Profile() {
     {/* testing with user in sql tests */}
     const endpoint = "http://localhost:5000/profile/" + username;
     useEffect(() => {
-		const access_token = localStorage.getItem('access_token');
         fetch(endpoint, {
             method: "GET",
             headers: {
@@ -37,11 +40,16 @@ export default function Profile() {
         }).then(response => response.json()).then(data => {
             if (data.error_message) {
                 updateErrorMessage(data.error_message);
+				window.location = "/404"
             }
+			/* catches jwt errors that don't use the form "error_message:" */
+			if (data.msg) {
+				window.location = "/login"
+			}
             setUserData(data);
         }).catch(err => {
             console.error(err);
-            alert("error: check console for details");
+
         });
     }, [])
     const { user_bio, user_pic, follower_count, first_name, last_name, date_joined } = userdata;

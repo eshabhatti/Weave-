@@ -12,11 +12,13 @@ export default function EditProfile() {
   const [lastName, updateLastName] = useState("");
   const [bio, updateBio] = useState("");
   const [errorMessage, updateErrorMessage] = useState("");
-
+  const access_token = localStorage.getItem('access_token');
+  if (access_token == null) {
+	window.location = "/login"
+  }
+  
   const onSubmit = (event) => {
     event.preventDefault();
-    const access_token = localStorage.getItem('access_token');
-    console.log(access_token);
     if (isFormValid({ username, firstName, lastName, bio, access_token })) {
       const body = {
         newusername: username,
@@ -36,6 +38,9 @@ export default function EditProfile() {
         },
         body: JSON.stringify(body)
       }).then(response => response.json()).then(data => {
+		if (data.msg) {
+		  window.location = "/login"
+		}
         if (data.error_message) {
           updateErrorMessage(data.error_message);
         } else {
