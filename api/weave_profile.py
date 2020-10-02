@@ -109,7 +109,7 @@ def weave_edit_profile():
         print(cursor.fetchall())
         ret = {
             'access_token': create_access_token(identity=mod_info["newusername"]),
-            'refresh_token': create_refresh_token(identity=mod_info["newusername"])
+            'refresh_token': create_refresh_token(identity=mod_info["newusername"]),
             'username': mod_info["newusername"]
         }
         return jsonify(ret), 200
