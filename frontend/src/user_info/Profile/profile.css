@@ -28,7 +28,14 @@
 .side-bar-selection {
   font-size: 16pt;
   margin-left: 5%;
-  padding-bottom: 6pt;
+  padding-bottom: 25pt;
+  color: grey;
+}
+
+.side-bar-selection:hover {
+  color: black;
+  text-decoration: none;
+  transition-duration: 0.25s;
 }
 
 .side-bar-logout {

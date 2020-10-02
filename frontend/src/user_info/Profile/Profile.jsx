@@ -86,8 +86,8 @@ export default function Profile() {
                         <div className="side-bar-menu">
                             {/* These need to link to actual pages eventually */}
                             <h1 className="side-bar-heading">Explore your web:</h1>
-                            <h2 className="side-bar-selection">Your timeline</h2>
-                            <h2 className="side-bar-selection">Saved posts</h2>
+                            <a href="../timeline/" className="side-bar-selection">Your timeline</a> <br />
+                            <a href="" className="side-bar-selection">Saved posts</a>
                             <h3 className="side-bar-logout">Logout</h3>
                         </div>
                     </div>
