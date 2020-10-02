@@ -64,6 +64,7 @@ def weave_user_login():
             ret = {
                 'access_token': create_access_token(identity=row["username"]),
                 'refresh_token': create_refresh_token(identity=row["username"])
+                'username': row["username"]
             }
             return jsonify(ret), 200
         return jsonify({'error_message':'Username and password do not match.'}), 401

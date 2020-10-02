@@ -28,7 +28,7 @@ def weave_profile_data(username):
         
         # Returns each needed item in one JSON object
         profile_data = (cursor.fetchall())[0]
-        profile_data["identity"] = get_jwt_identity()
+        profile_data["username"] = get_jwt_identity()
         return profile_data
 
 
@@ -110,6 +110,7 @@ def weave_edit_profile():
         ret = {
             'access_token': create_access_token(identity=mod_info["newusername"]),
             'refresh_token': create_refresh_token(identity=mod_info["newusername"])
+            'username': mod_info["newusername"]
         }
         return jsonify(ret), 200
 
@@ -151,4 +152,7 @@ def weave_edit_profile_pic():
         mod_values = (new_filename, identity)
         cursor.execute(mod_query, mod_values)
         mysql.connection.commit() 
-        return "user has updated profile picture"
+        ret = {
+            'username': identity
+        }
+        return jsonify(ret), 200
