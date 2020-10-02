@@ -102,3 +102,20 @@
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
 }
+
+.post-error-bubble {
+  background-color: rgba(248, 62, 62, 0.575);
+  width: 250px;
+  height: 30px;
+  display: block;
+  margin: 0px auto;
+  border-radius: 10px;
+}
+
+.post-error-message {
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+  font-size: 12px;
+  padding-top: 6px;
+}

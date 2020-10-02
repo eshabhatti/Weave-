@@ -21,9 +21,10 @@ def weave_post_create():
     if (not request.is_json):
         return jsonify({'error_message':'Request Error: Not JSON.'})
     post_info = request.get_json()
+    post_info["username"] = get_jwt_identity()
 
     # This horrific thing checks that the JSON has all the needed elements.
-    if ("username" not in post_info or "topic" not in post_info or "type" not in post_info or "title" not in post_info or "content" not in post_info or "anon" not in post_info):
+    if ("username" not in post_info or "topic" not in post_info or "title" not in post_info or "content" not in post_info or "anon" not in post_info):
         return jsonify({'error_message':'Request Error: Missing JSON Element'}) 
 
     # Don't have to validate the username because the frontend should send us it directly. (?)
@@ -49,7 +50,7 @@ def weave_post_create():
 
     # Insert new text post into the database.
     post_query = "INSERT INTO Post VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-    post_values = (post_id, post_info["topic"], post_info["username"], current_date, post_info["type"], post_info["title"], post_info["content"], None, 0, 0, post_info["anon"], 0)
+    post_values = (post_id, post_info["topic"], post_info["username"], current_date, 0, post_info["title"], post_info["content"], None, 0, 0, post_info["anon"], 0)
     cursor.execute(post_query, post_values)
     mysql.connection.commit()   
 

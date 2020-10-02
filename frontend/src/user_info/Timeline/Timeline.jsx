@@ -8,12 +8,46 @@ export default function Timeline() {
 	const [postContent, updatePostContent] = useState("");
 	const [postTitle, updatePostTitle] = useState("");
 	const [isAnon, updateIsAnon] = useState("");
-	const onSubmit = (event) => {}
 	const access_token = localStorage.getItem('access_token');
+	const [errorMessage, updateErrorMessage] = useState("");
 	if (access_token == null) {
 		window.location = "/login"
 	}
-    return (
+	
+	const onSubmit = (event) => {
+		event.preventDefault();
+		/* More to be added for posts eventually */
+		if (isFormValid({ postTitle, postContent, updateErrorMessage})) {
+			const body = {
+				title: postTitle,
+				content: postContent,
+				anon: isAnon,
+				topic: "",
+			}
+			const endpoint = "http://localhost:5000/timeline";
+			fetch(endpoint, {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + access_token
+				},
+				body: JSON.stringify(body)
+			}).then(response => response.json()).then(data => {
+				if (data.error_message) {
+					updateErrorMessage(data.error_message);
+				} else {
+				
+				}
+			}).catch(err => {
+				console.error(err);
+				alert(err);
+			});
+		}
+	}
+	
+	const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;
+    
+	return (
 		<div>
 			<div>
 				{/* Bootstrap Stylesheet */}
@@ -76,7 +110,7 @@ export default function Timeline() {
 				  }}
 				/>
 				<label for="anon" className="post-check-label">Make this post anonymously</label>
-
+				{errObject}
 				<button type="submit" className="post-submit-btn" onClick={(e) => onSubmit(e)}>Create Post</button>
 			  </form>
 
@@ -84,4 +118,23 @@ export default function Timeline() {
 			</div>
 		</div>
     );
+}
+
+function isFormValid({ postTitle, postContent, updateErrorMessage}) {
+  if (postTitle === "") {
+    updateErrorMessage("Please enter a title for your post.");
+  } else if (postContent === "") {
+    updateErrorMessage("Post body cannot be empty.");
+  } else {
+    return true;
+  }
+  return false;
+}
+
+function ErrorBubble({ message }) {
+  return (
+    <div className="post-error-bubble">
+      <p className="post-error-message">{message}</p>
+    </div>
+  )
 }
