@@ -11,6 +11,7 @@ weave_profile = Blueprint('weave_profile', __name__)
 
 # # # # Backend code for editing profiles on Weave. 
 # # DOES NOT expect a JSON but DOES expect a unique URL for the profile that needs to be displayed.
+# # Needs to make a separate call to profilepic/<username> to get the profile picture
 @weave_profile.route("/profile/<username>", methods=["GET"])
 @jwt_required
 def weave_profile_data(username):
@@ -21,7 +22,7 @@ def weave_profile_data(username):
         # Initializes MySQL cursor
         cursor = mysql.connection.cursor()
 
-        # Checks if username exists in db (need to grab more things eventually)
+        # Checks if username exists in db and grabs relevant data
         cursor.execute("SELECT user_bio, user_pic, follower_count, first_name, last_name, date_joined FROM UserAccount WHERE username = %s;", (username,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message':'User does not exist'}), 404
@@ -30,6 +31,32 @@ def weave_profile_data(username):
         profile_data = (cursor.fetchall())[0]
         profile_data["username"] = get_jwt_identity()
         return profile_data
+
+
+# # # # Backend code for displaying profile pictures on Weave.
+# # DOES NOT expect a JSON but DOES expect a unique URL for the profile that needs to be displayed.
+# # This route will likely have to be called without explicitly navigating to this URL.
+@weave_profile.route("profilepic/<username>", methods=["GET"])
+@jwt_required
+def weave_profile_image():
+    
+    # The backend has received a profile GET request.
+    if request.method == "GET":
+    
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+
+        # Checks if username exists in db and grabs relevant data.
+        cursor.execute("SELECT user_pic FROM UserAccount WHERE username = %s;", (username,))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message':'User does not exist'}), 404
+
+        # Pulls the picture path out of the cursor. 
+        filename = cursor.fetchall()[0]["user_pic"]
+
+        # Sends the file back to the frontend. 
+        # Media file type detection should work automatically but may need to be updated if not. 
+        return send_file(filename)
 
 
 # # # # Backend code for editing profiles on Weave. 

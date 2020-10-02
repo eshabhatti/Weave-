@@ -67,18 +67,18 @@ def weave_post_upload_image():
     # The backend has recieved information that needs to go into the database.
     if request.method == "POST":
 
-        # Initializes MySQL cursor
+        # Initializes MySQL cursor.
         cursor = mysql.connection.cursor()
 
-        # Uploads a photo if attached
+        # Uploads a photo if attached.
         new_filename = ""
         if 'file' in request.files:
             img_file = request.files['file']
-            # Checks to make sure an image is attached
+            # Checks to make sure an image is attached.
             if img_file.filename != '':
                 new_filename = secure_filename(img_file.filename)
                 prefix = 0
-                # Adjusts filename for duplicate names
+                # Adjusts filename for duplicate names.
                 while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
                     prefix += 1
                 new_filename = str(prefix) + new_filename
@@ -86,7 +86,7 @@ def weave_post_upload_image():
             else:
                 return "no content"
 
-        # Grabbing identity of uploader
+        # Grabbing identity of uploader.
         identity = get_jwt_identity()
         
         # Putting file path into database for user's most recent post.
@@ -98,8 +98,9 @@ def weave_post_upload_image():
         return "user has added post picture"
 
 
-# # # # # Backend code for viewing posts on Weave
+# # # # # Backend code for viewing posts on Weave.
 # # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
+# # The frontend will need to make another call to /postimage/<post_id> to get any possible other image.
 @weave_post.route("/post/<post_id>", methods=["GET"])
 @jwt_required
 def weave_post_data(post_id):
@@ -107,25 +108,51 @@ def weave_post_data(post_id):
     # The backend has received a profile GET request.
     if request.method == "GET":
     
-        # Initializes MySQL cursor
+        # Initializes MySQL cursor.
         cursor = mysql.connection.cursor()
         
-        # Checks if post exists in db
-        cursor.execute("SELECT topic_name, date_created, post_type, title, content, pic_path, upvote_count, downvote_count, anon_flag FROM POST WHERE post_id = %s;", (post_id,))
+        # Checks if post exists in db and grabs relevant data.
+        cursor.execute("SELECT topic_name, date_created, post_type, title, content, upvote_count, downvote_count, anon_flag FROM POST WHERE post_id = %s;", (post_id,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message':'Post does not exist'}), 404
         
-        # Checks and updates return items if post is anonymous
+        # Checks and updates return items if post is anonymous.
         post_info = (cursor.fetchall())[0]
         if (post_info["anon_flag"] == True):
             post_info.pop("creator", None)
         post_info.pop("anon_flag", None)
 
-        # Adds identity of requester to the JSON
+        # Adds identity of requester to the JSON.
         post_info["identity"] = get_jwt_identity()
         
-        # Returns post info as JSON object
+        # Returns post info as JSON object.
         return post_info
+
+
+# # # # Backend code for a pulling a single post's image.
+# # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
+# # This route will likely have to be called without explicitly navigating to this URL.
+@weave_post.route("/postimage/<post_id>", methods=["GET"])
+@jwt_required
+def weave_post_image(post_id):
+
+    # The backend has received a profile GET request.
+    if request.method == "GET":
+    
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+
+        # Checks if post exists in db; may not need to be done if we know the post data route is visited first.
+        cursor.execute("SELECT pic_path FROM POST WHERE post_id = %s;", (post_id,))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message':'Post does not exist'}), 404
+        
+        # Pulls the picture path out of the cursor. 
+        filename = cursor.fetchall()[0]["pic_path"]
+
+        # Sends the file back to the frontend. 
+        # Media file type detection should work automatically but may need to be updated if not. 
+        return send_file(filename)
 
 
 # # # # Backend code for pulling a user's posts on Weave
@@ -137,7 +164,7 @@ def weave_pull_userposts():
     # The backend has received a saved post POST request.
     if request.method == "POST":
 
-        # Initializes MySQL cursor
+        # Initializes MySQL cursor.
         cursor = mysql.connection.cursor()
 
         # Checks for JSON format.
@@ -176,7 +203,7 @@ def save_weave_post():
     # The backend has recieved information that needs to go into the database.
     if request.method == "POST":
 
-        # Initializes MySQL cursor
+        # Initializes MySQL cursor.
         cursor = mysql.connection.cursor()
 
         # Checks for JSON format.
@@ -211,7 +238,7 @@ def weave_pull_saves():
     # The backend has received a saved post POST request.
     if request.method == "POST":
 
-        # Initializes MySQL cursor
+        # Initializes MySQL cursor.
         cursor = mysql.connection.cursor()
 
         # Checks for JSON format.
