@@ -3,7 +3,7 @@ from extensions import mysql
 from os import path
 import re
 from werkzeug.utils import secure_filename
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
 import json
 
 weave_profile = Blueprint('weave_profile', __name__)
@@ -54,16 +54,19 @@ def weave_edit_profile():
         mod_info = request.get_json()
 
         # Checks that the JSON has all elements.
-        if ("username" not in mod_info or "newusername" not in mod_info or "firstname" not in mod_info or "lastname" not in mod_info or "biocontent" not in mod_info):
+        if ("newusername" not in mod_info or "firstname" not in mod_info or "lastname" not in mod_info or "biocontent" not in mod_info):
             return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400
-
+        
+        mod_info["username"] = get_jwt_identity();
         # The original username should not need to be validated since it is not user input. (?)
         # If newusername is the same as the old one, then once again no validation needs to be done.
         # If there is a difference, however, then the new username needs to be checked for proper format.
-        if (mod_info["username"] != mod_info["newusername"]):
+        if (mod_info["username"] != mod_info["newusername"] and mod_info["newusername"] != ""):
             if (re.search("^[A-Za-z0-9_-]{6,20}$", mod_info["newusername"]) == None):
                 return jsonify({'error_message':'Your new username is invalid.'}), 400
-        final_username = mod_info["newusername"]
+            final_username = mod_info["newusername"]
+        else:
+            final_username = mod_info["username"]
 
         # There also cannot be repeated usernames, which should be checked for before we get a SQL error.    
         username_query = "SELECT username from UserAccount WHERE username = \"" + mod_info["newusername"] + "\";"
@@ -102,9 +105,13 @@ def weave_edit_profile():
         mysql.connection.commit() 
 
         # Prints new database row for debugging
-        cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (mod_info["newusername"],))
+        cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (mod_info["username"],))
         print(cursor.fetchall())
-        return "user has updated account"
+        ret = {
+            'access_token': create_access_token(identity=mod_info["newusername"]),
+            'refresh_token': create_refresh_token(identity=mod_info["newusername"])
+        }
+        return jsonify(ret), 200
 
     # Not a POST request.        
     else:
