@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import Blueprint, request, jsonify
 from extensions import mysql
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
 weave_post = Blueprint('weave_post', __name__)
 
 
@@ -40,7 +40,7 @@ def weave_post_create():
     # Assigns the Post a new post_id by querying the most recent post and then adding one.
     # The post_id is initialized to 1 because the first query should not return any posts.
     post_id = 1 
-    id_query = "SELECT post_id FROM Post ORDER BY date_created DESC LIMIT 1;"
+    id_query = "SELECT post_id FROM Post ORDER BY post_id DESC LIMIT 1;"
     cursor.execute(id_query)
     for row in cursor:
         post_id = row["post_id"] + 1
@@ -54,7 +54,12 @@ def weave_post_create():
     cursor.execute(post_query, post_values)
     mysql.connection.commit()   
 
-    return "user has made a post"
+    ret = {
+            'access_token': create_access_token(identity=post_info["username"]),
+            'refresh_token': create_refresh_token(identity=post_info["username"]),
+            'username': post_info["username"]
+    }
+    return jsonify(ret), 200
 
 
 # # # # Backend code for uploading post images on Weave.

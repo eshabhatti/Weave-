@@ -7,7 +7,7 @@ import "./timeline.css";
 export default function Timeline() {
 	const [postContent, updatePostContent] = useState("");
 	const [postTitle, updatePostTitle] = useState("");
-	const [isAnon, updateIsAnon] = useState("");
+	const [isAnon, updateIsAnon] = useState("0");
 	const access_token = localStorage.getItem('access_token');
 	const [errorMessage, updateErrorMessage] = useState("");
 	if (access_token == null) {
@@ -22,9 +22,9 @@ export default function Timeline() {
 				title: postTitle,
 				content: postContent,
 				anon: isAnon,
-				topic: "",
+				topic: "test"
 			}
-			const endpoint = "http://localhost:5000/timeline";
+			const endpoint = "http://localhost:5000/createpost/";
 			fetch(endpoint, {
 				method: "POST",
 				headers: {
