@@ -53,7 +53,7 @@ export default function Profile() {
         });
     }, [])
     const { user_bio, user_pic, follower_count, first_name, last_name, date_joined } = userdata;
-    console.log(user_bio);
+
     {/*
     displayPost = () => {
         updatePostOrInt(true);
