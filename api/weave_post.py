@@ -181,7 +181,7 @@ def weave_pull_userposts():
             return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400 
 
         # Checks if username exists in database.
-        cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (pull_info["username"],))
+        cursor.execute("SELECT * FROM UserAccount WHERE username = %s AND anon_flag = 0;", (pull_info["username"],))
         if (cursor.rowcount == 0):
             return jsonify({'error_message':'User does not exist'}), 404
         cursor.fetchall()

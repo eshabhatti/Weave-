@@ -90,8 +90,9 @@ def weave_logout():
 
     return "Access token blacklisted"
 
+
 # # # # Backend code for logging out of Weave
-# # Right now this route blacklists access tokens, and another route blacklists refresh tokens.
+# # Right now this route blacklists refresh tokens, and another route blacklists access tokens.
 @weave_login.route("/logout2", methods=["DELETE"])
 @jwt_refresh_token_required
 def weave_logout2():
