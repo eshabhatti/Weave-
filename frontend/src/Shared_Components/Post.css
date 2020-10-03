@@ -1,0 +1,42 @@
+.post-container {
+    display: flex
+}
+
+.post-vote-container {
+    background: rgba(227, 227, 238, 0.91);
+}
+
+.post-content-container {
+    display: flex
+}
+
+.post-vote-pic {
+    width: 10px;
+    display: block;
+    margin: 0px auto;
+    padding-top: 10px;
+}
+
+.post-title {
+    display: block;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    font-size: 24px;
+    padding-left: 3px;
+    padding-bottom: 5px;
+}
+
+.post-text {
+    display: block;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    padding-left: 3px;
+    padding-bottom: 5px;
+  }
+
+.post-pic {
+    width: 100px;
+    display: block;
+    margin: 0px auto;
+    padding-top: 30px;
+  }
