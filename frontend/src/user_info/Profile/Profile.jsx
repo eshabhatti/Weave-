@@ -28,6 +28,51 @@ export default function Profile() {
         setX(0);
     }, []);
 
+    const logout = () => {
+        
+        /* The frontend needs to blacklist the refresh tokens and access tokens. */
+        /* This request blacklists access tokens. */
+        const access_token = localStorage.getItem('access_token');
+        const endpoint1 = "http://localhost:5000/logout";
+        fetch(endpoint1, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token
+            },
+        }).then(response => response.json()).then(data => {
+            const { access_token } = data;
+            console.log(access_token);
+            localStorage.setItem('data', data);
+            localStorage.setItem('access_token', access_token);
+            /* This request blacklists refresh tokens. */
+            const refresh_token = localStorage.getItem('refresh_token');
+            const endpoint2 = "http://localhost:5000/logout2";
+            fetch(endpoint2, {
+                method: "DELETE",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + refresh_token
+                },
+            }).then(response => response.json()).then(data => {
+                const { refresh_token } = data;
+                console.log(refresh_token);
+                localStorage.setItem('data', data);
+                localStorage.setItem('refresh_token', refresh_token);
+                window.location = "../"
+            }).catch(err => {
+                console.error(err);
+                alert("error: check console for details");
+            });
+            // localStorage.setItem('refresh_token', null); // May have to call /logout2
+            // window.location = "../"
+        }).catch(err => {
+            console.error(err);
+            alert("error: check console for details");
+        });
+
+    };
+
     {/* testing with user in sql tests */}
     const endpoint = "http://localhost:5000/profile/" + username;
     useEffect(() => {
@@ -49,7 +94,6 @@ export default function Profile() {
             setUserData(data);
         }).catch(err => {
             console.error(err);
-
         });
     }, [])
     const { user_bio, user_pic, follower_count, first_name, last_name, date_joined } = userdata;
@@ -95,8 +139,8 @@ export default function Profile() {
                             {/* These need to link to actual pages eventually */}
                             <h1 className="side-bar-heading">Explore your web:</h1>
                             <a href="../timeline/" className="side-bar-selection">Your timeline</a> <br />
-                            <a href="" className="side-bar-selection">Saved posts</a>
-                            <h3 className="side-bar-logout">Logout</h3>
+                            <a href="" className="side-bar-selection">Saved posts</a> <br />
+                            <button className="side-bar-logout" onClick={(e) => logout(e)}>Logout</button>
                         </div>
                     </div>
                 </React.Fragment>

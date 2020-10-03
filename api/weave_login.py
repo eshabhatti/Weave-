@@ -83,12 +83,25 @@ def weave_logout():
     # Initializes MySQL cursor.
     cursor = mysql.connection.cursor()
     
-    # Blacklists access tokens by sending them to the database.
+    # Gets the current JWT token.
     token = get_raw_jwt()["jti"]
+
+    # Checks to see if the token already exists in the database.
+    # This shouldn't ever happen BUT it's useful during debugging since the database commits before return to frontend.
+    cursor.execute("SELECT token FROM Blacklist WHERE token = %s;", (token,))
+    if (cursor.rowcount != 0):
+        return jsonify({'error_message':'Token already blacklisted.'}), 400
+
+    # Blacklists access tokens by sending them to the database.
     cursor.execute("INSERT INTO Blacklist VALUES (%s);", (token,))
     mysql.connection.commit()
 
-    return "Access token blacklisted"
+    # Returns empty access token, 
+    blacklist_ret = {
+        'access_token': None,
+        'username': get_jwt_identity()
+    }
+    return jsonify(blacklist_ret), 200
 
 
 # # # # Backend code for logging out of Weave
@@ -99,10 +112,23 @@ def weave_logout2():
     
     # Initializes MySQL cursor.
     cursor = mysql.connection.cursor()
-    
-    # Blacklists access tokens by sending them to the database.
+
+    # Gets the current JWT token.
     token = get_raw_jwt()["jti"]
+
+    # Checks to see if the token already exists in the database.
+    # This shouldn't ever happen BUT it's useful during debugging since the database commits before return to frontend.
+    cursor.execute("SELECT token FROM Blacklist WHERE token = %s;", (token,))
+    if (cursor.rowcount != 0):
+        return jsonify({'error_message':'Token already blacklisted.'}), 400
+    
+    # Blacklists refresh tokens by sending them to the database.
     cursor.execute("INSERT INTO Blacklist VALUES (%s);", (token,))
     mysql.connection.commit()
 
-    return "Refresh token blacklisted"
+    # Returns empty refresh token, 
+    blacklist_ret = {
+        'refresh_token': None,
+        'username': get_jwt_identity()
+    }
+    return jsonify(blacklist_ret), 200
