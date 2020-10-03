@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Route } from 'react-router-dom';
 
-export default function Post() {
-    const {userName} = userParams();
-    const {postId} = useParams();
+export default function Post({
+    postId, userName
+}) {
+
     const [errorMessage, updateErrorMessage] = useState("");
     const [userdata, setUserData] = useState([]);
+    const access_token = localStorage.getItem('access_token');
+	if (access_token == null) {
+		window.location = "/login"
+	}
 
     const endpoint = "http://localhost:5000/post/" + postId;
     const votepoint = "http://localhost:5000/vote/"
@@ -34,7 +38,7 @@ export default function Post() {
         });
     }, [])
 
-    upvote(() => {
+    const upvote = () => {
         const body = {
             username: userName,
             type: '1',
@@ -62,10 +66,9 @@ export default function Post() {
             console.error(err);
 
         });
-        }
-    )
+    };
 
-    downvote(() => {
+    const downvote = () => {
         const body = {
             username: userName,
             type: '1',
@@ -93,10 +96,9 @@ export default function Post() {
             console.error(err);
 
         });
-        }
-    )
+    };
 
-    savePost(() => {
+    const savePost = () => {
         const body = {
             username: userName,
             post: postId,
@@ -122,8 +124,7 @@ export default function Post() {
             console.error(err);
 
         });
-        }
-    )
+    };
 
     const { topic_name, date_created, post_type, title, content, upvoteCount, downvoteCount, anon_flag } = userdata;
 
@@ -131,10 +132,10 @@ export default function Post() {
         <div className="post-container">
             <div className="post-vote-container">
                 {/* replace with upvote and downvote */}
-                <img src="/img/weave-icon.svg" classname="post-vote-pic" alt="" onClick={upvote()} />
+                <img src="/img/weave-icon.svg" classname="post-vote-pic" alt="" onClick={() => upvote()} />
                 <p>{upvoteCount}</p>
                 <p>{downvoteCount}</p>
-                <img src="/img/weave-icon.svg" classname="post-vote-pic" alt="" onClick={downvote()}/>
+                <img src="/img/weave-icon.svg" classname="post-vote-pic" alt="" onClick={() => downvote()}/>
             </div>
             <div className="post-content-container">
                 <div className="post-text-container">
@@ -144,7 +145,7 @@ export default function Post() {
                     <p className="post-text">{topic_name}</p>
                     <h1 className="post-title">{title}</h1>
                     <p className="post-text">{content}</p>
-                    <p className="post-text" onClick={savePost()}>Save</p>
+                    <p className="post-text" onClick={() => savePost()}>Save</p>
                 </div>
                 <div className="post-pic-container">
                     <img src="/img/weave-icon.svg" classname="post-pic" alt="" />

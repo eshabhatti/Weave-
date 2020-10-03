@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import { useParams, Route } from 'react-router-dom';
 import NavBar from "../../Shared_Components/NavBar";
+import Post from "../../Shared_Components/Post";
 
 import "./profile.css";
 
@@ -168,6 +169,7 @@ export default function Profile() {
                         </div>
                         {/* will contain the toggle display of users */}
                         <div className="profile-display">
+                            <Post postId="2" userName="realuser2"/>
                             {/* toggle between posts and int
                             <PostScreen active={postsOrInt} />
                             <InteractionScreen active={!postsOrInt} />
