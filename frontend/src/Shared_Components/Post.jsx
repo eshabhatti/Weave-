@@ -61,6 +61,7 @@ export default function Post() {
         }).catch(err => {
             console.error(err);
 
+        });
         }
     )
 
@@ -91,6 +92,7 @@ export default function Post() {
         }).catch(err => {
             console.error(err);
 
+        });
         }
     )
 
@@ -119,6 +121,7 @@ export default function Post() {
         }).catch(err => {
             console.error(err);
 
+        });
         }
     )
 
