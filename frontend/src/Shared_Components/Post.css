@@ -12,9 +12,9 @@
 
 .post-vote-pic {
     width: 10px;
+    height: 10px;
     display: block;
     margin: 0px auto;
-    padding-top: 10px;
 }
 
 .post-title {

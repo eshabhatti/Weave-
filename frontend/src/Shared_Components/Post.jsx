@@ -132,10 +132,10 @@ export default function Post({
         <div className="post-container">
             <div className="post-vote-container">
                 {/* replace with upvote and downvote */}
-                <img src="/img/weave-icon.svg" classname="post-vote-pic" alt="" onClick={() => upvote()} />
+                <img src="/img/weave-icon.svg" width="50" height="50" alt="" onClick={() => upvote()} />
                 <p>{upvoteCount}</p>
                 <p>{downvoteCount}</p>
-                <img src="/img/weave-icon.svg" classname="post-vote-pic" alt="" onClick={() => downvote()}/>
+                <img src="/img/weave-icon.svg" width="50" height="50" alt="" onClick={() => downvote()}/>
             </div>
             <div className="post-content-container">
                 <div className="post-text-container">

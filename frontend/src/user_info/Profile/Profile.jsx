@@ -169,7 +169,7 @@ export default function Profile() {
                         </div>
                         {/* will contain the toggle display of users */}
                         <div className="profile-display">
-                            <Post postId="2" userName="realuser2"/>
+                            <Post postId="002" userName="realuser2"/>
                             {/* toggle between posts and int
                             <PostScreen active={postsOrInt} />
                             <InteractionScreen active={!postsOrInt} />
