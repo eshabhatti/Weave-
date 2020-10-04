@@ -7,21 +7,21 @@ import Post from "../../Shared_Components/Post";
 import "./profile.css";
 
 export default function Profile() {
-	const {username} = useParams();
+    const { username } = useParams();
     const [postsOrInt, updatePostOrInt] = useState("");
     const [errorMessage, updateErrorMessage] = useState("");
     const [xPosition, setX] = React.useState(-250);
     const [userdata, setUserData] = useState([]);
-	const access_token = localStorage.getItem('access_token');
-	if (access_token == null) {
-		window.location = "/login"
-	}
-	
+    const access_token = localStorage.getItem('access_token');
+    if (access_token == null) {
+        window.location = "/login"
+    }
+
     const toggleMenu = () => {
         if (xPosition < 0) {
-        setX(0);
+            setX(0);
         } else {
-        setX(-250);
+            setX(-250);
         }
     };
 
@@ -30,7 +30,7 @@ export default function Profile() {
     }, []);
 
     const logout = () => {
-        
+
         /* The frontend needs to blacklist the refresh tokens and access tokens. */
         /* This request blacklists access tokens. */
         const access_token = localStorage.getItem('access_token');
@@ -74,24 +74,24 @@ export default function Profile() {
 
     };
 
-    {/* testing with user in sql tests */}
+    {/* testing with user in sql tests */ }
     const endpoint = "http://localhost:5000/profile/" + username;
     useEffect(() => {
         fetch(endpoint, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + access_token
+                'Authorization': 'Bearer ' + access_token
             },
         }).then(response => response.json()).then(data => {
             if (data.error_message) {
                 updateErrorMessage(data.error_message);
-				window.location = "/404"
+                window.location = "/404"
             }
-			/* catches jwt errors that don't use the form "error_message:" */
-			if (data.msg) {
-				window.location = "/login"
-			}
+            /* catches jwt errors that don't use the form "error_message:" */
+            if (data.msg) {
+                window.location = "/login"
+            }
             setUserData(data);
         }).catch(err => {
             console.error(err);
@@ -124,17 +124,17 @@ export default function Profile() {
                     <div
                         className="profile-side-bar"
                         style={{
-                        transform: `translatex(${xPosition}px)`,
-                        width: 250,
-                        minHeight: 800,
+                            transform: `translatex(${xPosition}px)`,
+                            width: 250,
+                            minHeight: 800,
                         }}
                     >
                         <button
-                        onClick={() => toggleMenu()}
-                        className="profile-toggle-menu"
-                        style={{
-                            transform: `translate(${250}px, 20vh)`
-                        }}
+                            onClick={() => toggleMenu()}
+                            className="profile-toggle-menu"
+                            style={{
+                                transform: `translate(${250}px, 20vh)`
+                            }}
                         ></button>
                         <div className="side-bar-menu">
                             {/* These need to link to actual pages eventually */}
@@ -169,7 +169,7 @@ export default function Profile() {
                         </div>
                         {/* will contain the toggle display of users */}
                         <div className="profile-display">
-                            <Post postId="002" userName="realuser2"/>
+                            <Post postId="002" userName="realuser2" />
                             {/* toggle between posts and int
                             <PostScreen active={postsOrInt} />
                             <InteractionScreen active={!postsOrInt} />

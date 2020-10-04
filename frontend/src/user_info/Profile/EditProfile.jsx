@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navbar, Nav } from 'react-bootstrap';
+import { Navbar, Nav, Form } from 'react-bootstrap';
 import ImageUploader from 'react-images-upload';
 import "./editprofile.css";
 
@@ -12,11 +12,12 @@ export default function EditProfile() {
   const [lastName, updateLastName] = useState("");
   const [bio, updateBio] = useState("");
   const [errorMessage, updateErrorMessage] = useState("");
+  const [image, saveImage] = useState(null);
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
-	window.location = "/login"
+    window.location = "/login"
   }
-  
+
   const onSubmit = (event) => {
     event.preventDefault();
     if (isFormValid({ username, firstName, lastName, bio, access_token })) {
@@ -38,9 +39,9 @@ export default function EditProfile() {
         },
         body: JSON.stringify(body)
       }).then(response => response.json()).then(data => {
-		if (data.msg) {
-		  window.location = "/login"
-		}
+        if (data.msg) {
+          window.location = "/login"
+        }
         if (data.error_message) {
           updateErrorMessage(data.error_message);
         } else {
@@ -50,6 +51,18 @@ export default function EditProfile() {
         console.error(err);
         alert("error: check console for details");
       });
+
+      if (image !== null) {
+        const formData = new FormData();
+        formData.append('image', image);
+        console.log(formData);
+        fetch("http://localhost:5000/saveProfile", {
+          method: "POST",
+          body: formData
+        }).then(response => response.json()).then(data => {
+          console.log(data);
+        });
+      }
     }
   }
 
@@ -125,6 +138,7 @@ export default function EditProfile() {
             maxFileSize={10000000}
             buttonText='Select your profile picture.'
             className="profile-pic-upload"
+            onChange={saveImage}
           />
 
 

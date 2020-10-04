@@ -19,7 +19,7 @@ function AppRouter() {
   return (
     <Router>
       <Switch>
-	    <Route exact path="/">
+        <Route exact path="/">
           <Login />
         </Route>
         <Route path="/resetpassword">
@@ -34,15 +34,15 @@ function AppRouter() {
         <Route path="/profile/:username">
           <Profile />
         </Route>
-		<Route path="/editprofile">
-		  <EditProfile />
-		</Route>
-		<Route path="/timeline">
-		  <Timeline />
-		</Route>
-		<Route path ="/">
-		  <NotFound />
-		</Route>
+        <Route path="/editprofile">
+          <EditProfile />
+        </Route>
+        <Route path="/timeline">
+          <Timeline />
+        </Route>
+        <Route path="/">
+          <NotFound />
+        </Route>
       </Switch>
     </Router>
   )
