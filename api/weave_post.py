@@ -217,20 +217,26 @@ def save_weave_post():
         save_info = request.get_json()
 
         # Checks for all needed elements in the JSON.
-        if ("username" not in save_info or "post" not in save_info):
+        if ("username" not in save_info or "post" not in save_info or "type"):
             return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400 
 
         # There shouldn't need to be any validation as the username and post_id are sent directly.
         
         # Gets the current date in "YYYY-MM-DD" format.
         current_date = datetime.today().strftime("%Y-%m-%d")
-
-        # Saves the specific username-post save relation as a database entity.
-        save_query = "INSERT INTO SavedPost VALUES (%s, %s, %s);"
-        save_values = (save_info["username"], save_info["post"], current_date)
-        cursor.execute(save_query, save_values)
-        mysql.connection.commit()       
-
+        if (save_info["type"] == 1):
+            # Saves the specific username-post save relation as a database entity.
+            save_query = "INSERT INTO SavedPost VALUES (%s, %s, %s);"
+            save_values = (save_info["username"], save_info["post"], current_date)
+            cursor.execute(save_query, save_values)
+            mysql.connection.commit()       
+        elif (save_info["type"] == -1):
+            # Unsaves the specifice username-post save relation
+            unsave_query = "DELETE FROM SavedPost WHERE username = %s AND post_id = %s;"
+            unsave_values = (save_info["username"], save_info["post"])
+            cursor.execute(unsave_query, unsave_values)
+            mysql.connection.commit()  
+        
         return "post has been saved"
 
 
