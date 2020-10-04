@@ -12,6 +12,9 @@ export default function Profile() {
     const [errorMessage, updateErrorMessage] = useState("");
     const [xPosition, setX] = React.useState(-250);
     const [userdata, setUserData] = useState([]);
+
+    const canUserEditProfile = (userdata !== [] && userdata.username === username);
+
     const access_token = localStorage.getItem('access_token');
     if (access_token == null) {
         window.location = "/login"
@@ -109,6 +112,8 @@ export default function Profile() {
     }
     */}
 
+    const editProfileBtn = canUserEditProfile ? <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : null;
+
     return (
         <div>
             <NavBar />
@@ -153,7 +158,7 @@ export default function Profile() {
                         <h1 className="profile-name">{first_name} {last_name}</h1>
                         <p className="profile-username">{username}</p>
                         {/* toggle active depending on who is viewing the page */}
-                        <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button>
+                        {editProfileBtn}
                         <button type="button" className="profile-follow-button">Follow</button>
                         <p className="profile-followers">{follower_count} Followers</p>
                         <p className="profile-following"># Following</p>
@@ -169,7 +174,7 @@ export default function Profile() {
                         </div>
                         {/* will contain the toggle display of users */}
                         <div className="profile-display">
-                            <Post postId="002" userName="realuser2" />
+                            {/* <Post postId="002" userName="realuser2" /> */}
                             {/* toggle between posts and int
                             <PostScreen active={postsOrInt} />
                             <InteractionScreen active={!postsOrInt} />
