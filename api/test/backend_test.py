@@ -69,7 +69,7 @@ test_output = open("test_output.txt", "r")
 line = test_output.readline()
 failed_profile1 = True
 while line:
-	if failed_profile1 and line and line.find('user has updated account') != -1:
+	if failed_profile1 and line and (line.find('user has updated account') != -1 or line.find('username') != -1):
 		profile_test1 = "PASSED: Edit Profile Test (profile names changed)"
 		failed_profile1 = False
 		break
@@ -96,7 +96,7 @@ test_output = open("test_output.txt", "r")
 line = test_output.readline()
 failed_profile2 = True
 while line:
-	if failed_profile2 and line and line.find('user has updated account') != -1:
+	if failed_profile2 and line and (line.find('user has updated account') != -1 or line.find('username') != -1):
 		profile_test2 = "PASSED: Revert Profile Edits Test (profile names changed)"
 		failed_profile2 = False
 		break
@@ -104,6 +104,7 @@ while line:
 		profile_test2 = "PASSED: Revert Profile Edits Test (profile name already taken)"
 		failed_profile2 = False
 		break
+	
 	line = test_output.readline()
 if failed_profile2:
 	profile_test2 = "FAILED: Revert Profile Edits Test"
@@ -111,7 +112,7 @@ test_output.close()
 
 
 # post curl
-# curl -i -X POST -H "Authorization: Bearer <access_token>" -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"anon\":\"0\"}" http://localhost:5000/createpost/
+#curl -i -X POST -H "Authorization: Bearer <access_token>" -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"anon\":\"0\"}" http://localhost:5000/createpost/
 
 #Missing Authorization Header
 #Missing JSON Element (???)
