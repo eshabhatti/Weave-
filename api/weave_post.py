@@ -133,7 +133,47 @@ def weave_post_data(post_id):
         # Returns post info as JSON object.
         return post_info
 
-
+@weave_post.route("/poststates/", methods=["POST"])
+@jwt_required
+def weave_post_state():
+    if request.method == "POST":
+    
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+        
+        saved = 0
+        voted = 0
+        
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message':'Request Error: Not JSON.'}), 400
+        post_info = request.get_json()
+        post_info["username"] = get_jwt_identity()
+        
+        if ("username" not in post_info or "post_id" not in post_info):
+            return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400 
+        
+        # Checks if upvoted/downvoted
+        vote_query = "SELECT score FROM PostVote WHERE username = %s and post_id = %s;"
+        vote_values = (post_info["username"], post_info["post_id"])
+        cursor.execute(vote_query, vote_values)
+        if (cursor.rowcount > 0):
+            voted = (cursor.fetchall())[0]["score"]
+        
+        # Checks is saved or not
+        save_query = "SELECT * FROM SavedPost WHERE username = %s and post_id = %s;"
+        save_values = (post_info["username"], post_info["post_id"])
+        cursor.execute(save_query, save_values)
+        if (cursor.rowcount > 0):
+            saved = 1
+        
+        # Returns states
+        ret_states = {
+            "saved": saved,
+            "voted": voted
+        }
+        return jsonify(ret_states)
+        
 # # # # Backend code for a pulling a single post's image.
 # # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
 # # This route will likely have to be called without explicitly navigating to this URL.
