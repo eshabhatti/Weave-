@@ -56,7 +56,7 @@ export default function EditProfile() {
         const formData = new FormData();
         formData.append('image', image);
         console.log(formData);
-        fetch("http://localhost:5000/saveProfile", {
+        fetch("http://localhost:5000/editprofilepic", {
           method: "POST",
           body: formData
         }).then(response => response.json()).then(data => {
