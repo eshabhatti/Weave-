@@ -128,7 +128,7 @@ def weave_post_data(post_id):
         post_info.pop("anon_flag", None)
 
         # Adds identity of requester to the JSON.
-        post_info["identity"] = get_jwt_identity()
+        post_info["username"] = get_jwt_identity()
         
         # Returns post info as JSON object.
         return post_info

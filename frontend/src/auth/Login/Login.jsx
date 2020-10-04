@@ -30,12 +30,12 @@ export default function Login() {
         if (data.error_message) {
           updateErrorMessage(data.error_message);
         } else {
-          const { access_token, refresh_token } = data;
+          const { access_token, refresh_token, username } = data;
           console.log(access_token);
           localStorage.setItem('data', data);
           localStorage.setItem('access_token', access_token);
           localStorage.setItem('refresh_token', refresh_token);
-          window.location = "profile/" + loginName;
+          window.location = "profile/" + username;
         }
       }).catch(err => {
         console.error(err);
