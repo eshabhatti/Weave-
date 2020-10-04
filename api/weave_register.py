@@ -93,7 +93,8 @@ def weave_register_user():
         # Creates access token and sends it back once user is confirmed to be created
         ret = {
                 'access_token': create_access_token(identity=reg_info["username"]),
-                'refresh_token': create_refresh_token(identity=reg_info["username"])
+                'refresh_token': create_refresh_token(identity=reg_info["username"]),
+                'username': reg_info["username"]
         }
         return jsonify(ret), 201
 

@@ -3,7 +3,7 @@ from extensions import mysql
 from os import path
 import re
 from werkzeug.utils import secure_filename
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
 import json
 
 weave_profile = Blueprint('weave_profile', __name__)
@@ -11,24 +11,52 @@ weave_profile = Blueprint('weave_profile', __name__)
 
 # # # # Backend code for editing profiles on Weave. 
 # # DOES NOT expect a JSON but DOES expect a unique URL for the profile that needs to be displayed.
+# # Needs to make a separate call to profilepic/<username> to get the profile picture
 @weave_profile.route("/profile/<username>", methods=["GET"])
 @jwt_required
 def weave_profile_data(username):
+    
     # The backend has received a profile GET request.
     if request.method == "GET":
     
         # Initializes MySQL cursor
         cursor = mysql.connection.cursor()
 
-        # Checks if username exists in db (need to grab more things eventually)
+        # Checks if username exists in db and grabs relevant data
         cursor.execute("SELECT user_bio, user_pic, follower_count, first_name, last_name, date_joined FROM UserAccount WHERE username = %s;", (username,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message':'User does not exist'}), 404
         
         # Returns each needed item in one JSON object
         profile_data = (cursor.fetchall())[0]
-        profile_data["identity"] = get_jwt_identity();
+        profile_data["username"] = get_jwt_identity()
         return profile_data
+
+
+# # # # Backend code for displaying profile pictures on Weave.
+# # DOES NOT expect a JSON but DOES expect a unique URL for the profile that needs to be displayed.
+# # This route will likely have to be called without explicitly navigating to this URL.
+@weave_profile.route("/profilepic/<username>", methods=["GET"])
+@jwt_required
+def weave_profile_image():
+    
+    # The backend has received a profile GET request.
+    if request.method == "GET":
+    
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+
+        # Checks if username exists in db and grabs relevant data.
+        cursor.execute("SELECT user_pic FROM UserAccount WHERE username = %s;", (username,))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message':'User does not exist'}), 404
+
+        # Pulls the picture path out of the cursor. 
+        filename = cursor.fetchall()[0]["user_pic"]
+
+        # Sends the file back to the frontend. 
+        # Media file type detection should work automatically but may need to be updated if not. 
+        return send_file(filename)
 
 
 # # # # Backend code for editing profiles on Weave. 
@@ -43,7 +71,6 @@ def weave_edit_profile():
     # The backend has recieved information that needs to go into the database.
     if request.method == "POST":
 
-        
         # Initializes MySQL cursor
         cursor = mysql.connection.cursor()
 
@@ -54,22 +81,25 @@ def weave_edit_profile():
         mod_info = request.get_json()
 
         # Checks that the JSON has all elements.
-        if ("username" not in mod_info or "newusername" not in mod_info or "firstname" not in mod_info or "lastname" not in mod_info or "biocontent" not in mod_info):
+        if ("newusername" not in mod_info or "firstname" not in mod_info or "lastname" not in mod_info or "biocontent" not in mod_info):
             return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400
-
+        
+        mod_info["username"] = get_jwt_identity();
         # The original username should not need to be validated since it is not user input. (?)
         # If newusername is the same as the old one, then once again no validation needs to be done.
         # If there is a difference, however, then the new username needs to be checked for proper format.
-        if (mod_info["username"] != mod_info["newusername"]):
+        if (mod_info["username"] != mod_info["newusername"] and mod_info["newusername"] != ""):
             if (re.search("^[A-Za-z0-9_-]{6,20}$", mod_info["newusername"]) == None):
                 return jsonify({'error_message':'Your new username is invalid.'}), 400
-        final_username = mod_info["newusername"]
+            final_username = mod_info["newusername"]
+        else:
+            final_username = mod_info["username"]
 
         # There also cannot be repeated usernames, which should be checked for before we get a SQL error.    
         username_query = "SELECT username from UserAccount WHERE username = \"" + mod_info["newusername"] + "\";"
         cursor.execute(username_query)
         for row in cursor:
-            if mod_info["newusername"] == row["username"]:
+            if (mod_info["username"] != mod_info["newusername"]) and (mod_info["newusername"] == row["username"]):
                 return jsonify({'error_message':'Your new username has already been taken.'}), 400  
 
         # If the name elements of the JSON are not empty strings, they also need to be checked.
@@ -102,14 +132,22 @@ def weave_edit_profile():
         mysql.connection.commit() 
 
         # Prints new database row for debugging
-        cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (mod_info["newusername"],))
+        cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (mod_info["username"],))
         print(cursor.fetchall())
-        return "user has updated account"
+        ret = {
+            'access_token': create_access_token(identity=mod_info["newusername"]),
+            'refresh_token': create_refresh_token(identity=mod_info["newusername"]),
+            'username': mod_info["newusername"]
+        }
+        return jsonify(ret), 200
 
     # Not a POST request.        
     else:
         return "serve edit profile page"
 
+
+# # # # Backend code for updating user profile images on Weave.
+# # Expects a POST request with a header holding authorization and an attached image file.
 @weave_profile.route('/editprofilepic/', methods=["GET", "POST"])
 @jwt_required
 def weave_edit_profile_pic():
@@ -123,22 +161,25 @@ def weave_edit_profile_pic():
         # Uploads a photo if attached
         new_filename = ""
         if 'file' in request.files:
-            file = request.files['file']
-            if file.filename != '':
-                new_filename = secure_filename(file.filename)
+            img_file = request.files['file']
+            if img_file.filename != '':
+                new_filename = secure_filename(img_file.filename)
                 prefix = 0
                 #adjusts filename for duplicate names
                 while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
                     prefix += 1
                 new_filename = str(prefix) + new_filename
-                file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
+                img_file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
         
         # Grabbing identity of uploader
-        identity = get_jwt_identity();
+        identity = get_jwt_identity()
         
         # Putting file path into database for user
         mod_query = "UPDATE UserAccount SET user_pic = %s WHERE username = %s;"
         mod_values = (new_filename, identity)
         cursor.execute(mod_query, mod_values)
         mysql.connection.commit() 
-        return "user has updated profile picture"
+        ret = {
+            'username': identity
+        }
+        return jsonify(ret), 200

@@ -36,6 +36,8 @@ export default function Login() {
           updateErrorMessage(data.error_message);
         } else {
           const { access_token, refresh_token } = data;
+          localStorage.setItem('access_token', access_token);
+          localStorage.setItem('access_token', refresh_token);
           window.location = "profile/" + loginName;
         }
       }).catch(err => {

@@ -20,14 +20,13 @@ POST requests to the following routes require JSON objects formatted as shown:
     * username: \[username-or-email\]
     * password: \[plaintext-password\]
 
-* Post creation (`/createpost/`) requires a JSON object where JSON = 
+* The text portion of post creation (`/createpost/`) requires a JSON object where JSON = 
     * username: \[creator-username\]
     * topic: \[post-topic\]
     * type: \[post-type\]
         * Note that the post type will be 1 if the post is text and 2 if the post is picture-caption.
     * title: \[post-title\]
     * content: \[post-content-or-caption\]
-    * picpath: \[location-of-image\]
     * anon: \[anonymous-identifier\]
         * Note that the anon flag will be 0 if the post is not anonymous and 1 if the post is anonymous. 
 
@@ -52,3 +51,15 @@ POST requests to the following routes require JSON objects formatted as shown:
     * id: \[post-or-comment-id\]
     * vote: \[vote-score\]
         * Note that the score will be 1 if the vote is up, -1 if the vote is down, and 0 if the vote should be deleted.
+
+* Saved post pulling (`/savedposts/`) requires a JSON object where JSON = 
+    * username: \[username-string\]
+    * start: \[begin-value\]
+    * end: \[end-value\]
+        * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).
+
+* Post pulling per user (`/userposts/`) requires a JSON object where JSON = 
+    * username: \[username-string\]
+    * start: \[begin-value\]
+    * end: \[end-value\]
+        * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).
