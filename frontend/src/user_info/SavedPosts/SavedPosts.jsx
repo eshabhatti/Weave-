@@ -4,10 +4,24 @@ import Post from "../../Shared_Components/Post";
 
 export default function SavedPosts() {
   const [postIdList, updatePosts] = useState([]);
-
+  const access_token = localStorage.getItem('access_token');
+  if (access_token == null) {
+    window.location = "/login"
+  }
   useEffect(() => {
     const endpoint = "https://localhost:5000/savedposts/"
-    fetch(endpoint).then(response => response.json()).then(data => {
+    fetch(endpoint, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + access_token
+      },
+      body: JSON.stringify({
+        username: "", //should this be ID'ed by the access token
+        start: 0,
+        end: 0
+      })
+    }).then(response => response.json()).then(data => {
       updatePosts(data);
     }).catch(err => {
       console.log(err);
