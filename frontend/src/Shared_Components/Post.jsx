@@ -81,7 +81,7 @@ export default function Post({
 
     
 
-    const { topic_name, date_created, post_type, title, content, upvoteCount, downvoteCount, anon_flag } = postdata;
+    const { topic_name, date_created, post_type, title, content, upvoteCount, downvoteCount, creator } = postdata;
     {/*const { saved, voted } = statedata;*/}
 
     const vote = (value) => {
@@ -166,7 +166,7 @@ export default function Post({
                 <div className="post-text-container">
                     <h1>{voteCheck}</h1>
                     {/* align these better later */}
-                    <p className="post-text">Creator</p>
+                    <p className="post-text">{creator}</p>
                     <p className="post-text">{date_created}</p>
                     <p className="post-text">{topic_name}</p>
                     <h1 className="post-title">{title}</h1>

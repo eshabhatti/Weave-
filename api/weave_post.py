@@ -125,7 +125,7 @@ def weave_post_data(post_id):
         post_info = (cursor.fetchall())[0]
         print(post_info)
         if (post_info["anon_flag"] == True):
-            post_info.pop("creator", None)
+            post_info["creator"] = "anonymous"
         post_info.pop("anon_flag", None)
 
         # Adds identity of requester to the JSON.
