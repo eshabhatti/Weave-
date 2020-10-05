@@ -73,12 +73,12 @@ export default function Post({
     const { topic_name, date_created, post_type, title, content, upvoteCount, downvoteCount, anon_flag } = postdata;
     const { saved, voted } = statedata;
 
-    const upvote = () => {
+    const vote = (value) => {
         const body = {
             username: userName,
             type: '1',
             id: postId,
-            vote: '1',
+            vote: value,
         }
         fetch(votepoint, {
             method: "POST",
@@ -103,41 +103,11 @@ export default function Post({
         });
     };
 
-    const downvote = () => {
-        const body = {
-            username: userName,
-            type: '1',
-            id: postId,
-            vote: '-1',
-        }
-        fetch(votepoint, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + access_token
-            },
-            body: JSON.stringify(body)
-        }).then(response => response.json()).then(data => {
-            if (data.error_message) {
-                updateErrorMessage(data.error_message);
-				window.location = "/404"
-            }
-			/* catches jwt errors that don't use the form "error_message:" */
-			if (data.msg) {
-				window.location = "/login"
-			}
-            
-        }).catch(err => {
-            console.error(err);
-
-        });
-    };
-
-    const savePost = () => {
+    const savePost = (value) => {
         const body = {
             username: userName,
             post: postId,
-            type: "1",
+            type: value,
         }
         fetch(savepoint, {
             method: "POST",
@@ -161,46 +131,25 @@ export default function Post({
 
         });
     };
-
-    const unsavePost = () => {
-        const body = {
-            username: userName,
-            post: postId,
-            type: "-1"
-        }
-        fetch(savepoint, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + access_token
-            },
-            body: JSON.stringify(body)
-        }).then(response => response.json()).then(data => {
-            if (data.error_message) {
-                updateErrorMessage(data.error_message);
-				window.location = "/404"
-            }
-			/* catches jwt errors that don't use the form "error_message:" */
-			if (data.msg) {
-				window.location = "/login"
-			}
-        }).catch(err => {
-            console.error(err);
-
-        });
-    };
-
-    
 
     return (
         <div>
             <div className="post-content-container">
                 <div className="post-vote-container">
                     {/* replace with upvote and downvote */}
-                    <button>U<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => upvote()} /></button>
+                    {voted > 0 ? (
+                        <button>Un<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('0')} /></button>
+                    
+                    ) : (
+                        <button>U<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('1')} /></button>
+                    )}
                     <p>{upvoteCount}</p>
                     <p>{downvoteCount}</p>
-                    <button>D<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => downvote()}/></button>
+                    {voted < 0 ? (
+                        <button>Dn<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('0')} /></button>
+                    ) : (
+                        <button>D<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('-1')} /></button>
+                    )}
                 </div>
                 <div className="post-text-container">
                     {/* align these better later */}
@@ -210,9 +159,9 @@ export default function Post({
                     <h1 className="post-title">{title}</h1>
                     <p className="post-text">{content}</p>
                     {saved === 0 ? (
-                        <button className="post-save-button" onClick={() => savePost()}>Save</button>
+                        <button className="post-save-button" onClick={() => savePost('1')}>Save</button>
                     ) : (
-                        <button className="post-save-button" onClick={() => unsavePost()}>Unsave</button>
+                        <button className="post-save-button" onClick={() => savePost('-1')}>Unsave</button>
                     )}
                 </div>
                 <div className="post-pic-container">

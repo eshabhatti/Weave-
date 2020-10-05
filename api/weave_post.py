@@ -123,6 +123,7 @@ def weave_post_data(post_id):
         
         # Checks and updates return items if post is anonymous.
         post_info = (cursor.fetchall())[0]
+        print(post_info)
         if (post_info["anon_flag"] == True):
             post_info.pop("creator", None)
         post_info.pop("anon_flag", None)
@@ -175,6 +176,7 @@ def weave_post_state():
             "saved": saved,
             "voted": voted
         }
+        print(ret_states)
         return jsonify(ret_states)
         
 # # # # Backend code for a pulling a single post's image.
@@ -266,7 +268,7 @@ def save_weave_post():
         save_info = request.get_json()
 
         # Checks for all needed elements in the JSON.
-        if ("username" not in save_info or "post" not in save_info or "type"):
+        if ("username" not in save_info or "post" not in save_info or "type" not in save_info):
             return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400 
 
         # There shouldn't need to be any validation as the username and post_id are sent directly.
