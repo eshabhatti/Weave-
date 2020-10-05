@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import "./Post.css";
+import "./post.css";
 
 export default function Post({
     postId, userName
