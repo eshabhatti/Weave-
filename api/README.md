@@ -63,3 +63,7 @@ POST requests to the following routes require JSON objects formatted as shown:
     * start: \[begin-value\]
     * end: \[end-value\]
         * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).
+
+* Special per-user post data pulling (`/poststates/`) requires a JSON object where JSON = 
+    * username: \[username-string\]
+    * post_id: \[post-id\]

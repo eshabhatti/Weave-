@@ -133,6 +133,9 @@ def weave_post_data(post_id):
         # Returns post info as JSON object.
         return post_info
 
+
+# # # # Backend code for getting a post's special qualities according to a specific user.
+# # Expects a JSON with details defined in "api/README.md".
 @weave_post.route("/poststates/", methods=["POST"])
 @jwt_required
 def weave_post_state():
