@@ -66,7 +66,6 @@ def weave_voting():
                     # If the old score was an upvote, we will not modify the post score.
                     if (oldvote == 1):
                         return jsonify({'error_message':'User has already upvoted this post.'}), 400
-
                     # If the old score was a downvote, remove it and add an upvote instead.
                     else:
 

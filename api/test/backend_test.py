@@ -69,8 +69,9 @@ test_output = open("test_output.txt", "r")
 line = test_output.readline()
 failed_profile1 = True
 while line:
-	if failed_profile1 and line and (line.find('user has updated account') != -1 or line.find('username') != -1):
+	if failed_profile1 and line and line.find('token') != -1:
 		profile_test1 = "PASSED: Edit Profile Test (profile names changed)"
+		access_token = line[line.find('token') + 9:len(line) - 4]
 		failed_profile1 = False
 		break
 	if failed_profile1 and line and line.find('Your new username has already been taken') != -1:
@@ -96,15 +97,15 @@ test_output = open("test_output.txt", "r")
 line = test_output.readline()
 failed_profile2 = True
 while line:
-	if failed_profile2 and line and (line.find('user has updated account') != -1 or line.find('username') != -1):
+	if failed_profile2 and line and line.find('token') != -1:
 		profile_test2 = "PASSED: Revert Profile Edits Test (profile names changed)"
+		access_token = line[line.find('token') + 9:len(line) - 4]
 		failed_profile2 = False
 		break
 	if failed_profile2 and line and line.find('Your new username has already been taken') != -1:
 		profile_test2 = "PASSED: Revert Profile Edits Test (profile name already taken)"
 		failed_profile2 = False
 		break
-	
 	line = test_output.readline()
 if failed_profile2:
 	profile_test2 = "FAILED: Revert Profile Edits Test"
@@ -114,14 +115,60 @@ test_output.close()
 # post curl
 #curl -i -X POST -H "Authorization: Bearer <access_token>" -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"anon\":\"0\"}" http://localhost:5000/createpost/
 
-#Missing Authorization Header
-#Missing JSON Element (???)
+new_post_test = open('post_test.cmd', 'r+')
+new_post_test.seek(0)
+new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"type\\":\\"1\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"hello hello hello hello\\",\\"anon\\":\\"0\\"}" http://localhost:5000/createpost/""")
+new_post_test.truncate()
+new_post_test.close()
+
+subprocess.call([r'post_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_post = True
+while line:
+
+	print(line)
+
+	if failed_post and line and line.find('token') != -1:
+		post_test = "PASSED: Post Test"
+		access_token = line[line.find('token') + 9:len(line) - 4]
+		failed_post = False
+		#break
+	line = test_output.readline()
+if failed_login:
+	login_test = "FAILED: Post Test"
+test_output.close()
 
 
 # vote curl
 #curl -i -X POST -H "Authorization: Bearer <access_token>" -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"type\":\"1\",\"id\":\"1\",\"vote\":\"1\"}" http://localhost:5000/vote/
 
+new_post_test = open('vote_test.cmd', 'r+')
+new_post_test.seek(0)
+new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\":\\"testname\\",\\"type\\":\\"1\\",\\"id\\":\\"1\\",\\"vote\\":\\"1\\"}" http://localhost:5000/vote/""")
+new_post_test.truncate()
+new_post_test.close()
+
+subprocess.call([r'vote_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_vote = True
+while line:	
+	if failed_vote and line and line.find('token') != -1:
+		vote_test = "PASSED: Vote Test"
+		access_token = line[line.find('token') + 9:len(line) - 4]
+		failed_vote = False
+		break
+	line = test_output.readline()
+if failed_vote:
+	vote_test = "FAILED: Vote Test"
+test_output.close()
+
 print(reg_test)
 print(login_test)
 print(profile_test1)
 print(profile_test2)
+print(post_test)
+print(vote_test)
