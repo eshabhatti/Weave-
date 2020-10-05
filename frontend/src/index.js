@@ -13,6 +13,7 @@ import Profile from "./user_info/Profile/Profile"
 import EditProfile from "./user_info/Profile/EditProfile"
 import NotFound from "./error_pages/NotFound"
 import Timeline from "./user_info/Timeline/Timeline"
+import SavedPosts from './user_info/SavedPosts/SavedPosts';
 //import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 
 function AppRouter() {
@@ -24,6 +25,9 @@ function AppRouter() {
         </Route>
         <Route path="/resetpassword">
           {/*<ForgotPassword />*/}
+        </Route>
+        <Route path="/savedposts">
+          <SavedPosts />
         </Route>
         <Route path="/register">
           <Register />
