@@ -115,6 +115,7 @@ export default function Post({
     };
 
     const savePost = (value) => {
+        setSaved(value);
         const body = {
             username: userName,
             post: postId,
@@ -136,7 +137,6 @@ export default function Post({
 			if (data.msg) {
 				window.location = "/login"
             }
-            setSaved(value);
         }).catch(err => {
             console.error(err);
 
@@ -170,7 +170,8 @@ export default function Post({
                     <p className="post-text">{topic_name}</p>
                     <h1 className="post-title">{title}</h1>
                     <p className="post-text">{content}</p>
-                    {saveCheck === 0 ? (
+                    <h1>{saveCheck}</h1>
+                    {saveCheck === -1 ? (
                         <button className="post-save-button" onClick={() => savePost(1)}>Save</button>
                     ) : (
                         <button className="post-save-button" onClick={() => savePost(-1)}>Unsave</button>

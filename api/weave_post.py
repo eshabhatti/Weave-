@@ -170,6 +170,8 @@ def weave_post_state():
         cursor.execute(save_query, save_values)
         if (cursor.rowcount > 0):
             saved = 1
+        else:
+            saved = -1
         
         # Returns states
         ret_states = {
