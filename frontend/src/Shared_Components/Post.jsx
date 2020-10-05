@@ -9,6 +9,9 @@ export default function Post({
     const [errorMessage, updateErrorMessage] = useState("");
     const [postdata, setPostData] = useState([]);
     const [statedata, setStateData] = useState([]);
+    const [saveCount, changeSave] = useState(0);
+    const [voteCount, changeVote] = useState(0);
+    
     const access_token = localStorage.getItem('access_token');
 	if (access_token == null) {
 		window.location = "/login"
@@ -40,7 +43,9 @@ export default function Post({
             console.error(err);
 
         });
-        
+    }, [])
+
+    useEffect(() => {
         const body = {
             username: userName,
             post_id: postId,
@@ -68,7 +73,9 @@ export default function Post({
             alert(err);
 
         });
-    }, [])
+    }, [saveCount, voteCount])
+
+    
 
     const { topic_name, date_created, post_type, title, content, upvoteCount, downvoteCount, anon_flag } = postdata;
     const { saved, voted } = statedata;
@@ -131,6 +138,7 @@ export default function Post({
 
         });
     };
+    
 
     return (
         <div>
@@ -138,30 +146,30 @@ export default function Post({
                 <div className="post-vote-container">
                     {/* replace with upvote and downvote */}
                     {voted > 0 ? (
-                        <button>Un<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('0')} /></button>
+                        <button>Un<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('0'), () => changeVote(voteCount + 1)} /></button>
                     
                     ) : (
-                        <button>U<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('1')} /></button>
+                        <button>U<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('1'), () => changeVote(voteCount + 1)} /></button>
                     )}
                     <p>{upvoteCount}</p>
                     <p>{downvoteCount}</p>
                     {voted < 0 ? (
-                        <button>Dn<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('0')} /></button>
+                        <button>Dn<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('0'), () => changeVote(voteCount + 1)} /></button>
                     ) : (
-                        <button>D<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('-1')} /></button>
+                        <button>D<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('-1'), () => changeVote(voteCount + 1)} /></button>
                     )}
                 </div>
                 <div className="post-text-container">
                     {/* align these better later */}
-                    <p className="post-text">{userName}</p>
+                    <p className="post-text">Creator</p>
                     <p className="post-text">{date_created}</p>
                     <p className="post-text">{topic_name}</p>
                     <h1 className="post-title">{title}</h1>
                     <p className="post-text">{content}</p>
                     {saved === 0 ? (
-                        <button className="post-save-button" onClick={() => savePost('1')}>Save</button>
+                        <button className="post-save-button" onClick={() => savePost('1'), () => changeSave(saveCount + 1)}>Save</button>
                     ) : (
-                        <button className="post-save-button" onClick={() => savePost('-1')}>Unsave</button>
+                        <button className="post-save-button" onClick={() => savePost('-1'), () => changeSave(saveCount + 1)}>Unsave</button>
                     )}
                 </div>
                 <div className="post-pic-container">

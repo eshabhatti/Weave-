@@ -110,7 +110,7 @@ def weave_voting():
                     if (oldvote == -1):
                         return jsonify({'error_message':'User has already downvoted this post.'}), 400
 
-                    # If the old score was a downvote, remove it and add an upvote instead.
+                    # If the old score was a upvote, remove it and add an downvote instead.
                     else:
 
                         # Modifies the PostVote entity.
