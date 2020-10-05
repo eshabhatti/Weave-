@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 
-import "./Post.css";
+import "./post.css";
 
 export default function Post({
     postId, userName
 }) {
 
     const [errorMessage, updateErrorMessage] = useState("");
-    const [userdata, setUserData] = useState([]);
+    const [postdata, setPostData] = useState([]);
+    const [statedata, setStateData] = useState([]);
     const access_token = localStorage.getItem('access_token');
 	if (access_token == null) {
 		window.location = "/login"
@@ -16,6 +17,7 @@ export default function Post({
     const endpoint = "http://localhost:5000/post/" + postId;
     const votepoint = "http://localhost:5000/vote/"
     const savepoint = "http://localhost:5000/save/"
+    const statepoint = "http://localhost:5000/poststates/"
 
     useEffect(() => {
         fetch(endpoint, {
@@ -33,12 +35,42 @@ export default function Post({
 			if (data.msg) {
 				window.location = "/login"
 			}
-            setUserData(data);
+            setPostData(data);
+        }).catch(err => {
+            console.error(err);
+
+        });
+        
+        const body = {
+            username: userName,
+            id: postId,
+        }
+
+        fetch(statepoint, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + access_token
+            },
+            body: JSON.stringify(body)
+        }).then(response => response.json()).then(data => {
+            if (data.error_message) {
+                updateErrorMessage(data.error_message);
+				window.location = "/404"
+            }
+			/* catches jwt errors that don't use the form "error_message:" */
+			if (data.msg) {
+				window.location = "/login"
+			}
+            setStateData(data);
         }).catch(err => {
             console.error(err);
 
         });
     }, [])
+
+    const { topic_name, date_created, post_type, title, content, upvoteCount, downvoteCount, anon_flag } = postdata;
+    const { saved, voted } = statedata;
 
     const upvote = () => {
         const body = {
@@ -104,6 +136,7 @@ export default function Post({
         const body = {
             username: userName,
             post: postId,
+            type: "1",
         }
         fetch(savepoint, {
             method: "POST",
@@ -128,7 +161,35 @@ export default function Post({
         });
     };
 
-    const { topic_name, date_created, post_type, title, content, upvoteCount, downvoteCount, anon_flag } = userdata;
+    const unsavePost = () => {
+        const body = {
+            username: userName,
+            post: postId,
+            type: "-1"
+        }
+        fetch(savepoint, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + access_token
+            },
+            body: JSON.stringify(body)
+        }).then(response => response.json()).then(data => {
+            if (data.error_message) {
+                updateErrorMessage(data.error_message);
+				window.location = "/404"
+            }
+			/* catches jwt errors that don't use the form "error_message:" */
+			if (data.msg) {
+				window.location = "/login"
+			}
+        }).catch(err => {
+            console.error(err);
+
+        });
+    };
+
+    
 
     return (
         <div>
@@ -147,7 +208,12 @@ export default function Post({
                     <p className="post-text">{topic_name}</p>
                     <h1 className="post-title">{title}</h1>
                     <p className="post-text">{content}</p>
-                    <button className="post-save-button" onClick={() => savePost()}>Save</button>
+                    if (saved === "0") {
+                        <button className="post-save-button" onClick={() => savePost()}>Save</button>
+                    }
+                    else {
+                        <button className="post-save-button" onClick={() => unsavePost()}>Unsave</button>
+                    }
                 </div>
                 <div className="post-pic-container">
                     <img src="/img/weave-icon.svg" classname="post-pic" alt="" />
