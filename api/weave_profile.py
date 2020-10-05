@@ -165,7 +165,7 @@ def weave_edit_profile_pic():
             if img_file.filename != '':
                 new_filename = secure_filename(img_file.filename)
                 prefix = 0
-                #adjusts filename for duplicate names
+                # Adjusts filename for duplicate names
                 while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
                     prefix += 1
                 new_filename = str(prefix) + new_filename
