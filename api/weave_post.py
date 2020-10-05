@@ -224,21 +224,27 @@ def weave_pull_userposts():
             return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400 
 
         # Checks if username exists in database.
-        cursor.execute("SELECT * FROM UserAccount WHERE username = %s AND anon_flag = 0;", (pull_info["username"],))
+        cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (pull_info["username"],))
         if (cursor.rowcount == 0):
             return jsonify({'error_message':'User does not exist'}), 404
         cursor.fetchall()
 
         # Pulls the user's most recent posts as specified by the range.
-        pull_query = "SELECT post_id FROM Post WHERE username = %s ORDER BY date_created DESC LIMIT %s, %s;"
-        pull_values = (pull_info["username"], pull_info["start"], pull_info["end"])
+        pull_query = "SELECT post_id FROM Post WHERE creator = %s AND anon_flag = 0 ORDER BY date_created DESC;" # LIMIT %s OFFSET %s;"
+        pull_values = (pull_info["username"],) # , pull_info["end"], pull_info["start"])
         cursor.execute(pull_query, pull_values)
 
         # Adds the user's posts to a list that will then be returned.
         pull_list = []
         for row in cursor:
             pull_list.append(row["post_id"])
-        return pull_list
+
+        # List needs to be rewritten as a string that frontend will have to parse.
+        pull_string = ""
+        for element in range(len(pull_list)):
+            pull_string += str(pull_list[element])
+            pull_string += ","   
+        return jsonify({'pull_list':pull_string}), 200
 
 
 # # # # Backend code for saving posts on Weave
@@ -285,6 +291,7 @@ def save_weave_post():
 
 # # # # Backend code for pulling a user's saved posts on Weave
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
+# curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"realuser1\",\"start\":\"0\",\"end\":\"10\"}" http://localhost:5000/savedposts/
 @weave_post.route("/savedposts/", methods=["POST"])
 @jwt_required
 def weave_pull_saves():
@@ -311,12 +318,18 @@ def weave_pull_saves():
         cursor.fetchall()
 
         # Pulls the saved posts of the user as specified by the range.
-        save_query = "SELECT post_id FROM SavedPost WHERE username = %s ORDER BY date_saved DESC LIMIT %s, %s;"
-        save_values = (save_info["username"], save_info["start"], save_info["end"])
+        save_query = "SELECT post_id FROM SavedPost WHERE username = %s ORDER BY date_saved DESC;" # LIMIT %s OFFSET %s;"
+        save_values = (save_info["username"],) # save_info["end"]), save_info["start"])
         cursor.execute(save_query, save_values)
 
         # Adds the saved posts to a list that will then be returned.
         save_list = []
         for row in cursor:
             save_list.append(row["post_id"])
-        return save_list
+        
+        # List needs to be rewritten as a string that frontend will have to parse.
+        save_string = ""
+        for element in range(len(save_list)):
+            save_string += str(save_list[element])
+            save_string += ","
+        return jsonify({'save_list':save_string}), 200
