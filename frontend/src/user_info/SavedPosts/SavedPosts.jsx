@@ -9,7 +9,7 @@ export default function SavedPosts() {
     window.location = "/login"
   }
   useEffect(() => {
-    const endpoint = "https://localhost:5000/savedposts/"
+    const endpoint = "http://localhost:5000/savedposts/"
     fetch(endpoint, {
       method: "POST",
       headers: {
