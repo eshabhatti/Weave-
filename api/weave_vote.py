@@ -36,7 +36,7 @@ def weave_voting():
         if (vote_info["type"] == "1"):
 
             # Adds an upvote to the post.
-            if (vote_info["vote"] == "1"):
+            if (vote_info["vote"] == 1):
 
                 # Checks for repeated votes.
                 cursor.execute("SELECT score FROM PostVote WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
@@ -79,7 +79,7 @@ def weave_voting():
                         return "upvote recorded"
 
             # Adds a downvote to the post.
-            elif (vote_info["vote"] == "-1"):
+            elif (vote_info["vote"] == -1):
 
                 # Checks for repeated votes.
                 cursor.execute("SELECT score FROM PostVote WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
@@ -123,7 +123,7 @@ def weave_voting():
                         return "downvote recorded"
 
             # Removes a vote from the post.
-            elif (vote_info["vote"] == "0"):
+            elif (vote_info["vote"] == 0):
 
                 # The backend needs to know whether the vote was up or down to update the Post table correctly.
                 # So the first thing we do is pull the old vote entity out of the database.
