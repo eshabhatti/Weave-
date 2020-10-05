@@ -8,9 +8,8 @@ export default function Post({
 
     const [errorMessage, updateErrorMessage] = useState("");
     const [postdata, setPostData] = useState([]);
-    const [statedata, setStateData] = useState([]);
-    const [saveCount, changeSave] = useState(0);
-    const [voteCount, changeVote] = useState(0);
+    const [saveCheck, setSaved] = useState(0);
+    const [voteCheck, setVoted] = useState(0);
     
     const access_token = localStorage.getItem('access_token');
 	if (access_token == null) {
@@ -43,9 +42,7 @@ export default function Post({
             console.error(err);
 
         });
-    }, [])
 
-    useEffect(() => {
         const body = {
             username: userName,
             post_id: postId,
@@ -67,18 +64,25 @@ export default function Post({
 			if (data.msg) {
 				window.location = "/login"
 			}
-            setStateData(data);
+            /* setStateData(data); */
+            const { saved, voted } = data;
+            setSaved(saved);
+            setVoted(voted);
         }).catch(err => {
             console.error(err);
             alert(err);
 
         });
-    }, [saveCount, voteCount])
+    }, [])
+
+    {/*useEffect(() => {
+        
+    }, [saveCount, voteCount])*/}
 
     
 
     const { topic_name, date_created, post_type, title, content, upvoteCount, downvoteCount, anon_flag } = postdata;
-    const { saved, voted } = statedata;
+    {/*const { saved, voted } = statedata;*/}
 
     const vote = (value) => {
         const body = {
@@ -102,8 +106,8 @@ export default function Post({
 			/* catches jwt errors that don't use the form "error_message:" */
 			if (data.msg) {
 				window.location = "/login"
-			}
-            
+            }
+            setVoted(value);
         }).catch(err => {
             console.error(err);
 
@@ -126,13 +130,13 @@ export default function Post({
         }).then(response => response.json()).then(data => {
             if (data.error_message) {
                 updateErrorMessage(data.error_message);
-				window.location = "/404"
+                window.location = "/404"
             }
 			/* catches jwt errors that don't use the form "error_message:" */
 			if (data.msg) {
 				window.location = "/login"
-			}
-            
+            }
+            setSaved(value);
         }).catch(err => {
             console.error(err);
 
@@ -145,18 +149,18 @@ export default function Post({
             <div className="post-content-container">
                 <div className="post-vote-container">
                     {/* replace with upvote and downvote */}
-                    {voted > 0 ? (
-                        <button>Un<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('0'), () => changeVote(voteCount + 1)} /></button>
+                    {voteCheck > 0 ? (
+                        <button>Un<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote(0)} /></button>
                     
                     ) : (
-                        <button>U<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('1'), () => changeVote(voteCount + 1)} /></button>
+                        <button>U<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote(1)} /></button>
                     )}
                     <p>{upvoteCount}</p>
                     <p>{downvoteCount}</p>
-                    {voted < 0 ? (
-                        <button>Dn<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('0'), () => changeVote(voteCount + 1)} /></button>
+                    {voteCheck < 0 ? (
+                        <button>Dn<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote(0)} /></button>
                     ) : (
-                        <button>D<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote('-1'), () => changeVote(voteCount + 1)} /></button>
+                        <button>D<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" onClick={() => vote(-1)} /></button>
                     )}
                 </div>
                 <div className="post-text-container">
@@ -166,10 +170,10 @@ export default function Post({
                     <p className="post-text">{topic_name}</p>
                     <h1 className="post-title">{title}</h1>
                     <p className="post-text">{content}</p>
-                    {saved === 0 ? (
-                        <button className="post-save-button" onClick={() => savePost('1'), () => changeSave(saveCount + 1)}>Save</button>
+                    {saveCheck === 0 ? (
+                        <button className="post-save-button" onClick={() => savePost(1)}>Save</button>
                     ) : (
-                        <button className="post-save-button" onClick={() => savePost('-1'), () => changeSave(saveCount + 1)}>Unsave</button>
+                        <button className="post-save-button" onClick={() => savePost(-1)}>Unsave</button>
                     )}
                 </div>
                 <div className="post-pic-container">

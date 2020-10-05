@@ -266,6 +266,7 @@ def save_weave_post():
         if (not request.is_json):
             return jsonify({'error_message':'Request Error: Not JSON.'}), 400
         save_info = request.get_json()
+        print(save_info)
 
         # Checks for all needed elements in the JSON.
         if ("username" not in save_info or "post" not in save_info or "type" not in save_info):
