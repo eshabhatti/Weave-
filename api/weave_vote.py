@@ -138,11 +138,11 @@ def weave_voting():
 
                 # If the old vote was an upvote, it must be removed.
                 if (oldvote == 1):
-                    cursor.execute("UPDATE Post SET upvote_count = upvote_count - 1 WHERE post_id = %s", (vote_info["id"]))
+                    cursor.execute("UPDATE Post SET upvote_count = upvote_count - 1 WHERE post_id = %s", (vote_info["id"],))
 
                 # If the old vote was an downvote, it must be removed.
                 else:
-                    cursor.execute("UPDATE Post SET downvote_count = downvote_count - 1 WHERE post_id = %s", (vote_info["id"]))
+                    cursor.execute("UPDATE Post SET downvote_count = downvote_count - 1 WHERE post_id = %s", (vote_info["id"],))
 
                 mysql.connection.commit()
                 return "vote deleted" 
