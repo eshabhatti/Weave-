@@ -146,25 +146,25 @@ export default function Post({
 
     return (
         <div>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
             <div className="post-content-container">
                 <div className="post-vote-container">
                     {/* replace with upvote and downvote */}
                     {voteCheck > 0 ? (
-                        <button onClick={() => vote(0)} >Un<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" /></button>
+                        <i class="fa fa-arrow-circle-up" style={{fontSize : '36px', color : 'red'}} onClick={() => vote(0)} ></i>
                     
                     ) : (
-                        <button onClick={() => vote(1)} >U<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" /></button>
+                        <i class="fa fa-arrow-circle-up" style={{fontSize : '36px'}} onClick={() => vote(1)} ></i>
                     )}
                     <p>{upvoteCount}</p>
                     <p>{downvoteCount}</p>
                     {voteCheck < 0 ? (
-                        <button onClick={() => vote(0)}>Dn<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" /></button>
+                        <i class="fa fa-arrow-circle-down" style={{fontSize : '36px', color : 'red'}} onClick={() => vote(0)} ></i>
                     ) : (
-                        <button onClick={() => vote(-1)}>D<img src="/img/weave-icon.svg" className="post-vote-pic" alt="" /></button>
+                        <i class="fa fa-arrow-circle-down" style={{fontSize : '36px'}} onClick={() => vote(-1)} ></i>
                     )}
                 </div>
                 <div className="post-text-container">
-                    <h1>{voteCheck}</h1>
                     {/* align these better later */}
                     <p className="post-text">{creator}</p>
                     <p className="post-text">{date_created}</p>
