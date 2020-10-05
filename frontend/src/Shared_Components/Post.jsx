@@ -43,7 +43,7 @@ export default function Post({
         
         const body = {
             username: userName,
-            id: postId,
+            post_id: postId,
         }
 
         fetch(statepoint, {
@@ -65,6 +65,7 @@ export default function Post({
             setStateData(data);
         }).catch(err => {
             console.error(err);
+            alert(err);
 
         });
     }, [])
@@ -208,12 +209,11 @@ export default function Post({
                     <p className="post-text">{topic_name}</p>
                     <h1 className="post-title">{title}</h1>
                     <p className="post-text">{content}</p>
-                    if (saved === "0") {
+                    {saved === 0 ? (
                         <button className="post-save-button" onClick={() => savePost()}>Save</button>
-                    }
-                    else {
+                    ) : (
                         <button className="post-save-button" onClick={() => unsavePost()}>Unsave</button>
-                    }
+                    )}
                 </div>
                 <div className="post-pic-container">
                     <img src="/img/weave-icon.svg" classname="post-pic" alt="" />
