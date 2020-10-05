@@ -206,7 +206,7 @@ def weave_post_image(post_id):
 # # # # Backend code for pulling a user's posts on Weave
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
 @weave_post.route("/userposts/", methods=["POST"])
-@jwt_required
+# @jwt_required
 def weave_pull_userposts():
 
     # The backend has received a saved post POST request.
@@ -230,9 +230,9 @@ def weave_pull_userposts():
         cursor.fetchall()
 
         # Pulls the user's most recent posts as specified by the range.
-        pull_query = "SELECT post_id FROM Post WHERE creator = %s AND anon_flag = 0 ORDER BY date_created DESC;" # LIMIT %s OFFSET %s;"
-        pull_values = (pull_info["username"],) # , pull_info["end"], pull_info["start"])
-        cursor.execute(pull_query, pull_values)
+        # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
+        pull_query = "SELECT post_id FROM Post WHERE creator = \"" + pull_info["username"] + "\" AND anon_flag = 0 ORDER BY date_created DESC LIMIT " + pull_info["start"] + ", " + pull_info["end"] + ";"
+        cursor.execute(pull_query)
 
         # Adds the user's posts to a list that will then be returned.
         pull_list = []
@@ -291,9 +291,9 @@ def save_weave_post():
 
 # # # # Backend code for pulling a user's saved posts on Weave
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
-# curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"realuser1\",\"start\":\"0\",\"end\":\"10\"}" http://localhost:5000/savedposts/
+#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"realuser1\",\"start\":\"0\",\"end\":\"10\"}" http://localhost:5000/savedposts/
 @weave_post.route("/savedposts/", methods=["POST"])
-@jwt_required
+# @jwt_required
 def weave_pull_saves():
 
     # The backend has received a saved post POST request.
@@ -318,9 +318,9 @@ def weave_pull_saves():
         cursor.fetchall()
 
         # Pulls the saved posts of the user as specified by the range.
-        save_query = "SELECT post_id FROM SavedPost WHERE username = %s ORDER BY date_saved DESC;" # LIMIT %s OFFSET %s;"
-        save_values = (save_info["username"],) # save_info["end"]), save_info["start"])
-        cursor.execute(save_query, save_values)
+        # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
+        save_query = "SELECT post_id FROM SavedPost WHERE username = \"" + save_info["username"] + "\" ORDER BY date_saved DESC LIMIT " + save_info["start"] + ", " + save_info["end"] + ";"
+        cursor.execute(save_query)
 
         # Adds the saved posts to a list that will then be returned.
         save_list = []
