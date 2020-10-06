@@ -131,6 +131,9 @@ def weave_post_data(post_id):
         # Adds identity of requester to the JSON.
         post_info["username"] = get_jwt_identity()
         
+        # Adds easily computed score to the JSON.
+        post_info["score"] = post_info["upvote_count"] - post_info["downvote_count"]
+        
         # Returns post info as JSON object.
         return post_info
 
