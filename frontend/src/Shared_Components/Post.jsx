@@ -9,8 +9,10 @@ export default function Post({
 
     const [errorMessage, updateErrorMessage] = useState("");
     const [postdata, setPostData] = useState([]);
+    {/* keeps track if user has saved or voted */}
     const [saveCheck, setSaved] = useState(0);
     const [voteCheck, setVoted] = useState(0);
+    {/* current score of post */}
     const [votes, setVotes] = useState(0);
     
     const access_token = localStorage.getItem('access_token');
@@ -23,6 +25,7 @@ export default function Post({
     const savepoint = "http://localhost:5000/save/"
     const statepoint = "http://localhost:5000/poststates/"
 
+    {/* renders the post with fetch data and the states of the save and voting buttons */}
     useEffect(() => {
         fetch(endpoint, {
             method: "GET",
@@ -78,16 +81,10 @@ export default function Post({
 
         });
     }, [])
-
-    {/*useEffect(() => {
-        
-    }, [saveCount, voteCount])*/}
-
     
-
     const { topic_name, date_created, post_type, title, content, creator } = postdata;
-    {/*const { saved, voted } = statedata;*/}
 
+    {/* sends the votes to the server and receives the change in score */}
     const vote = (value) => {
         setVoted(value);
         const body = {
@@ -120,6 +117,7 @@ export default function Post({
         });
     };
 
+    {/* sends the saved/unsaved postId to the server */}
     const savePost = (value) => {
         setSaved(value);
         const body = {
