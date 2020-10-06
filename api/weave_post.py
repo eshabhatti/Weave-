@@ -208,7 +208,7 @@ def weave_post_image(post_id):
 # # # # Backend code for pulling a user's posts on Weave
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
 @weave_post.route("/userposts/", methods=["POST"])
-# @jwt_required
+@jwt_required
 def weave_pull_userposts():
 
     # The backend has received a saved post POST request.
@@ -252,8 +252,9 @@ def weave_pull_userposts():
 # # # # Backend code for saving posts on Weave
 # # Doesn't expect a unique URL right now, but this may be changed later.
 # # Does expect a POST request along with a JSON. Details will be in "/api/README.md". 
+#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"realuser1\",\"post\":\"4\",\"type\":\"1\"}" http://localhost:5000/save/
 @weave_post.route("/save/", methods=["POST"])
-@jwt_required
+# @jwt_required
 def save_weave_post():
 
     # The backend has recieved information that needs to go into the database.
@@ -295,7 +296,7 @@ def save_weave_post():
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"realuser1\",\"start\":\"0\",\"end\":\"10\"}" http://localhost:5000/savedposts/
 @weave_post.route("/savedposts/", methods=["POST"])
-# @jwt_required
+@jwt_required
 def weave_pull_saves():
 
     # The backend has received a saved post POST request.
