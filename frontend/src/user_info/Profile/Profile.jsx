@@ -47,7 +47,7 @@ export default function Profile() {
         }).then(response => response.json()).then(data => {
             const { access_token } = data;
             console.log(access_token);
-            localStorage.setItem('data', data);
+            //localStorage.setItem('data', data);
             localStorage.setItem('access_token', access_token);
             /* This request blacklists refresh tokens. */
             const refresh_token = localStorage.getItem('refresh_token');
@@ -61,7 +61,7 @@ export default function Profile() {
             }).then(response => response.json()).then(data => {
                 const { refresh_token } = data;
                 console.log(refresh_token);
-                localStorage.setItem('data', data);
+                //localStorage.setItem('data', data);
                 localStorage.setItem('refresh_token', refresh_token);
                 window.location = "../"
             }).catch(err => {
@@ -103,14 +103,14 @@ export default function Profile() {
     const { user_bio, user_pic, follower_count, first_name, last_name, date_joined } = userdata;
 
     {/*
-    displayPost = () => {
-        updatePostOrInt(true);
-    }
+  displayPost = () => {
+    updatePostOrInt(true);
+  }
 
-    displayInt = () => {
-        updatePostOrInt(false);
-    }
-    */}
+  displayInt = () => {
+    updatePostOrInt(false);
+  }
+  */}
 
     const editProfileBtn = canUserEditProfile ? <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : null;
 
@@ -154,7 +154,7 @@ export default function Profile() {
                     {/* Contains all the info of user */}
                     <div className="profile-info">
                         {/* pull user data */}
-                        <img src="/img/weave-icon.svg" classname="profile-icon" alt="" />
+                        <img src={user_pic} className="profile-icon" alt="" />
                         <h1 className="profile-name">{first_name} {last_name}</h1>
                         <p className="profile-username">{username}</p>
                         {/* toggle active depending on who is viewing the page */}
@@ -177,9 +177,9 @@ export default function Profile() {
                             <Post userName={username} postId="002"></Post>
                             {/* <Post postId="002" userName="realuser2" /> */}
                             {/* toggle between posts and int
-                            <PostScreen active={postsOrInt} />
-                            <InteractionScreen active={!postsOrInt} />
-                            */}
+              <PostScreen active={postsOrInt} />
+              <InteractionScreen active={!postsOrInt} />
+              */}
                         </div>
                     </div>
                 </div>
