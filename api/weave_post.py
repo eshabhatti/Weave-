@@ -117,7 +117,7 @@ def weave_post_data(post_id):
         cursor = mysql.connection.cursor()
         
         # Checks if post exists in db and grabs relevant data.
-        cursor.execute("SELECT topic_name, date_created, post_type, title, content, upvote_count, downvote_count, anon_flag, creator FROM POST WHERE post_id = %s;", (post_id,))
+        cursor.execute("SELECT topic_name, date_created, post_type, title, content, upvote_count, downvote_count, anon_flag FROM POST WHERE post_id = %s;", (post_id,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message':'Post does not exist'}), 404
         
