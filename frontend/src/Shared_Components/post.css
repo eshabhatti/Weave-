@@ -1,18 +1,3 @@
-.post-container {
-    background: rgba(255, 255, 1, 0.91);
-    display: flex;
-    margin: 0px auto;
-}
-
-.post-header{
-    cursor: pointer;
-    border: solid 1px #f2f2f2;
-    padding: 15px;
-    background-color: #0089CC;
-    color: #FFF;
-    font-family: verdana;
-  }
-
 .post-vote-container {
     height: 100px;
     width: 50px;

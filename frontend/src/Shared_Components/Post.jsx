@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Collapsible from 'react-collapsible';
 
 import "./post.css";
 
@@ -10,7 +11,6 @@ export default function Post({
     const [postdata, setPostData] = useState([]);
     const [saveCheck, setSaved] = useState(0);
     const [voteCheck, setVoted] = useState(0);
-    const [open, setOpen] = useState(false);
     const [votes, setVotes] = useState(0);
     
     const access_token = localStorage.getItem('access_token');
@@ -40,6 +40,8 @@ export default function Post({
 				window.location = "/login"
 			}
             setPostData(data);
+            const { score } = data;
+            setVotes(score);
         }).catch(err => {
             console.error(err);
 
@@ -83,7 +85,7 @@ export default function Post({
 
     
 
-    const { topic_name, date_created, post_type, title, content, upvote_count, downvote_count, creator } = postdata;
+    const { topic_name, date_created, post_type, title, content, creator } = postdata;
     {/*const { saved, voted } = statedata;*/}
 
     const vote = (value) => {
@@ -110,6 +112,8 @@ export default function Post({
 			if (data.msg) {
 				window.location = "/login"
             }
+            const { change } = data;
+            setVotes(votes + change);
         }).catch(err => {
             console.error(err);
 
@@ -146,17 +150,10 @@ export default function Post({
     };
     
 
-    const togglePanel = (e) => {
-        setOpen(!open);
-    };
-
     return (
         <div>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-            <div onClick={(e) => togglePanel(e)} className='post-header'>
-                <h1 className="post-title">{title}</h1>
-            </div>
-            {open ? (
+            <Collapsible trigger={title}>
                 <div className="post-content-container">
                     <div className="post-vote-container">
                         {/* replace with upvote and downvote */}
@@ -166,7 +163,7 @@ export default function Post({
                         ) : (
                             <i class="fa fa-arrow-circle-up" style={{fontSize : '36px'}} onClick={() => vote(1)} ></i>
                         )}
-                        <p>{upvote_count - downvote_count}</p>
+                        <p>{votes}</p>
                         {voteCheck < 0 ? (
                             <i class="fa fa-arrow-circle-down" style={{fontSize : '36px', color : 'red'}} onClick={() => vote(0)} ></i>
                         ) : (
@@ -178,6 +175,7 @@ export default function Post({
                         <p className="post-text">{creator}</p>
                         <p className="post-text">{date_created}</p>
                         <p className="post-text">{topic_name}</p>
+                        <h1 className="post-title">{title}</h1>
                         <p className="post-text">{content}</p>
                         {saveCheck === -1 ? (
                             <button className="post-save-button" onClick={() => savePost(1)}>Save</button>
@@ -189,7 +187,7 @@ export default function Post({
                         <img src="/img/weave-icon.svg" classname="post-pic" alt="" />
                     </div>
                 </div>
-            ) : null}
+            </Collapsible>
         </div>
     );
 }
