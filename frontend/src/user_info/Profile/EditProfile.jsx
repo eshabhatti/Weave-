@@ -52,9 +52,10 @@ export default function EditProfile() {
         alert("error: check console for details");
       });
 
-      if (image !== null) {
+      if (image !== null && image.length > 0) {
         const formData = new FormData();
-        formData.append('image', image);
+        const lastImg = image[image.length - 1];
+        formData.append('image', lastImg, lastImg.name);
         console.log(formData);
         fetch("http://localhost:5000/editprofilepic/", {
           method: "POST",

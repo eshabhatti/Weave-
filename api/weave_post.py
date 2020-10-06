@@ -117,7 +117,7 @@ def weave_post_data(post_id):
         cursor = mysql.connection.cursor()
         
         # Checks if post exists in db and grabs relevant data.
-        cursor.execute("SELECT topic_name, date_created, post_type, title, content, upvote_count, downvote_count, anon_flag FROM POST WHERE post_id = %s;", (post_id,))
+        cursor.execute("SELECT topic_name, date_created, post_type, title, content, upvote_count, downvote_count, anon_flag, creator FROM POST WHERE post_id = %s;", (post_id,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message':'Post does not exist'}), 404
         
@@ -125,11 +125,14 @@ def weave_post_data(post_id):
         post_info = (cursor.fetchall())[0]
         print(post_info)
         if (post_info["anon_flag"] == True):
-            post_info.pop("creator", None)
+            post_info["creator"] = "anonymous"
         post_info.pop("anon_flag", None)
 
         # Adds identity of requester to the JSON.
         post_info["username"] = get_jwt_identity()
+        
+        # Adds easily computed score to the JSON.
+        post_info["score"] = post_info["upvote_count"] - post_info["downvote_count"]
         
         # Returns post info as JSON object.
         return post_info
@@ -170,6 +173,8 @@ def weave_post_state():
         cursor.execute(save_query, save_values)
         if (cursor.rowcount > 0):
             saved = 1
+        else:
+            saved = -1
         
         # Returns states
         ret_states = {
@@ -267,6 +272,7 @@ def save_weave_post():
         if (not request.is_json):
             return jsonify({'error_message':'Request Error: Not JSON.'}), 400
         save_info = request.get_json()
+        print(save_info)
 
         # Checks for all needed elements in the JSON.
         if ("username" not in save_info or "post" not in save_info or "type" not in save_info):
