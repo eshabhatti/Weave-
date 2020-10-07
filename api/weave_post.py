@@ -1,7 +1,9 @@
 from datetime import datetime
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app, send_file
 from extensions import mysql
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
+from werkzeug.utils import secure_filename
+from os import path
 weave_post = Blueprint('weave_post', __name__)
 
 
@@ -78,11 +80,16 @@ def weave_post_upload_image():
 
         # Uploads a photo if attached.
         new_filename = ""
-        if 'file' in request.files:
-            img_file = request.files['file']
+        print(request.files)
+        print('up here')
+        if 'image' in request.files:
+            img_file = request.files['image']
+            print('here')
             # Checks to make sure an image is attached.
             if img_file.filename != '':
+                print('down here')
                 new_filename = secure_filename(img_file.filename)
+                print(new_filename)
                 prefix = 0
                 # Adjusts filename for duplicate names.
                 while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
@@ -98,6 +105,7 @@ def weave_post_upload_image():
 
         # Putting file path into database for user's most recent post.
         # This should work as long as the database doesn't miss a request for some reason.
+        # TO-DO: ensure this is added on the right post
         mod_query = "UPDATE Post SET pic_path = %s WHERE creator = %s ORDER BY date_created DESC LIMIT 1;"
         mod_values = (new_filename, identity)
         cursor.execute(mod_query, mod_values)
@@ -120,7 +128,7 @@ def weave_post_data(post_id):
 
         # Checks if post exists in db and grabs relevant data.
         cursor.execute(
-            "SELECT topic_name, date_created, post_type, title, content, upvote_count, downvote_count, anon_flag, creator FROM POST WHERE post_id = %s;", (post_id,))
+            "SELECT topic_name, date_created, post_type, title, content, upvote_count, downvote_count, anon_flag, creator, pic_path FROM POST WHERE post_id = %s;", (post_id,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'Post does not exist'}), 404
 
@@ -133,6 +141,8 @@ def weave_post_data(post_id):
 
         # Adds identity of requester to the JSON.
         post_info["username"] = get_jwt_identity()
+        if (post_info["pic_path"] is not None):
+            post_info["pic_path"] = "http://localhost:5000/postimage/"+str(post_id)
 
         # Adds easily computed score to the JSON.
         post_info["score"] = post_info["upvote_count"] - \
@@ -191,8 +201,10 @@ def weave_post_state():
 # # # # Backend code for a pulling a single post's image.
 # # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
 # # This route will likely have to be called without explicitly navigating to this URL.
+
+# TODO: remove auth from this route
+
 @weave_post.route("/postimage/<post_id>", methods=["GET"])
-@jwt_required
 def weave_post_image(post_id):
 
     # The backend has received a profile GET request.
@@ -212,7 +224,7 @@ def weave_post_image(post_id):
 
         # Sends the file back to the frontend.
         # Media file type detection should work automatically but may need to be updated if not.
-        return send_file(filename)
+        return send_file(str(current_app.config['UPLOAD_FOLDER']) + filename)
 
 
 # # # # Backend code for pulling a user's posts on Weave

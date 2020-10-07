@@ -54,7 +54,6 @@ def weave_profile_picture(username):
 
         # Returns each needed item in one JSON object
         filename = (cursor.fetchall())[0]["user_pic"]
-        print(filename)
         return send_file(str(current_app.config['UPLOAD_FOLDER']) + filename)
 
 
@@ -128,7 +127,8 @@ def weave_edit_profile():
         # # # End validation
         # Updates the database with the new information.
         mod_query = "UPDATE UserAccount SET username = %s, first_name = %s, last_name = %s, user_bio = %s WHERE username = %s;"
-        mod_values = (final_username, final_firstname, final_lastname, final_biocontent, mod_info["username"])
+        mod_values = (final_username, final_firstname,
+                      final_lastname, final_biocontent, mod_info["username"])
         cursor.execute(mod_query, mod_values)
         mysql.connection.commit()
 
@@ -164,6 +164,7 @@ def weave_edit_profile_pic():
         new_filename = ""
         if 'image' in request.files:
             img_file = request.files['image']
+            # Checks to make sure an image is attached.
             if img_file.filename != '':
                 new_filename = secure_filename(img_file.filename)
                 prefix = 0
@@ -171,7 +172,8 @@ def weave_edit_profile_pic():
                 while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
                     prefix += 1
                 new_filename = str(prefix) + new_filename
-                img_file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
+                img_file.save(
+                    str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
 
         # Grabbing identity of uploader
         identity = get_jwt_identity()
