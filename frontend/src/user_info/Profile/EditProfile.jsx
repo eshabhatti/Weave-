@@ -153,7 +153,7 @@ export default function EditProfile() {
 
         </form>
         {errObject}
-        <a href="login" className="edit-link">go back</a>
+        <a href="javascript:history.back()" className="edit-link">go back</a>
       </div>
     </div>
   )

@@ -143,7 +143,7 @@ export default function Timeline() {
 					{successObject}
 				</form>
 
-				<a href="../../login" className="return-link">go back</a>
+				<a href="javascript:history.back()" className="return-link">go back</a>
 			</div>
 		</div>
 	);
