@@ -12,6 +12,7 @@ export default function Profile() {
     const [errorMessage, updateErrorMessage] = useState("");
     const [xPosition, setX] = React.useState(-250);
     const [userdata, setUserData] = useState([]);
+    const [postdata, setPostData] = useState([])
 
     const canUserEditProfile = (userdata !== [] && userdata.username === username);
 
@@ -77,6 +78,7 @@ export default function Profile() {
 
     };
 
+    const postpoint = "http://localhost:5000/userposts/";
     {/* testing with user in sql tests */ }
     const endpoint = "http://localhost:5000/profile/" + username;
     useEffect(() => {
@@ -96,6 +98,35 @@ export default function Profile() {
                 window.location = "/login"
             }
             setUserData(data);
+        }).catch(err => {
+            console.error(err);
+        });
+
+        const body = {
+            username: username,
+            start: 0,
+            end: 5,
+        }
+
+        fetch(postpoint, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token
+            },
+            body: JSON.stringify(body)
+        }).then(response => response.json()).then(data => {
+            if (data.error_message) {
+                updateErrorMessage(data.error_message);
+                window.location = "/404"
+            }
+            /* catches jwt errors that don't use the form "error_message:" */
+            if (data.msg) {
+                window.location = "/login"
+            }
+            const { pull_list } = data;
+            let post_ids = pull_list.split(",");
+            setPostData(post_ids);
         }).catch(err => {
             console.error(err);
         });
@@ -154,7 +185,11 @@ export default function Profile() {
                     {/* Contains all the info of user */}
                     <div className="profile-info">
                         {/* pull user data */}
+						{user_pic == null ? (
+						<img src="/img/weave-icon.svg" className="profile-icon" alt="" />
+						) : (
                         <img src={user_pic} className="profile-icon" alt="" />
+						)}
                         <h1 className="profile-name">{first_name} {last_name}</h1>
                         <p className="profile-username">{username}</p>
                         {/* toggle active depending on who is viewing the page */}
@@ -177,9 +212,9 @@ export default function Profile() {
                             <Post userName={username} postId="002"></Post>
                             {/* <Post postId="002" userName="realuser2" /> */}
                             {/* toggle between posts and int
-              <PostScreen active={postsOrInt} />
-              <InteractionScreen active={!postsOrInt} />
-              */}
+                                <PostScreen active={postsOrInt} />
+                                <InteractionScreen active={!postsOrInt} />
+                            */}
                         </div>
                     </div>
                 </div>
