@@ -151,7 +151,7 @@ export default function Post({
     return (
         <div>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-            <Collapsible trigger={title}>
+            <Collapsible className="post-content-header" openedClassName="post-content-header-open" triggerClassName="post-trigger" triggerOpenedClassName="post-trigger-open" trigger={title}>
                 <div className="post-content-container">
                     <div className="post-vote-container">
                         {/* replace with upvote and downvote */}
@@ -161,7 +161,7 @@ export default function Post({
                         ) : (
                             <i class="fa fa-arrow-circle-up" style={{fontSize : '36px'}} onClick={() => vote(1)} ></i>
                         )}
-                        <p>{votes}</p>
+                        <p className="post-vote-score">{votes}</p>
                         {voteCheck < 0 ? (
                             <i class="fa fa-arrow-circle-down" style={{fontSize : '36px', color : 'red'}} onClick={() => vote(0)} ></i>
                         ) : (
@@ -174,7 +174,7 @@ export default function Post({
                         <p className="post-text">{date_created}</p>
                         <p className="post-text">{topic_name}</p>
                         <h1 className="post-title">{title}</h1>
-                        <p className="post-text">{content}</p>
+                        <p className="post-content">{content}</p>
                         {saveCheck === -1 ? (
                             <button className="post-save-button" onClick={() => savePost(1)}>Save</button>
                         ) : (
@@ -182,7 +182,7 @@ export default function Post({
                         )}
                     </div>
                     <div className="post-pic-container">
-                        <img src="/img/weave-icon.svg" classname="post-pic" alt="" />
+                        <img src="/img/weave-icon.svg" className="post-pic" alt="" />
                     </div>
                 </div>
             </Collapsible>

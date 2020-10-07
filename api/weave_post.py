@@ -259,7 +259,7 @@ def weave_pull_userposts():
 # # Does expect a POST request along with a JSON. Details will be in "/api/README.md". 
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"realuser1\",\"post\":\"4\",\"type\":\"1\"}" http://localhost:5000/save/
 @weave_post.route("/save/", methods=["POST"])
-# @jwt_required
+@jwt_required
 def save_weave_post():
 
     # The backend has recieved information that needs to go into the database.

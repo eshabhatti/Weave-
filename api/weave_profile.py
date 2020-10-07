@@ -128,8 +128,7 @@ def weave_edit_profile():
         # # # End validation
         # Updates the database with the new information.
         mod_query = "UPDATE UserAccount SET username = %s, first_name = %s, last_name = %s, user_bio = %s WHERE username = %s;"
-        mod_values = (final_username, final_firstname,
-                      final_lastname, final_biocontent, mod_info["username"])
+        mod_values = (final_username, final_firstname, final_lastname, final_biocontent, mod_info["username"])
         cursor.execute(mod_query, mod_values)
         mysql.connection.commit()
 
