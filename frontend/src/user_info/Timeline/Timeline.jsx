@@ -12,6 +12,7 @@ export default function Timeline() {
 	const [image, saveImage] = useState(null);
 
 	const [errorMessage, updateErrorMessage] = useState("");
+	const [successMessage, updateSuccessMessage] = useState("");
 	if (access_token == null) {
 		window.location = "/login"
 	}
@@ -19,7 +20,7 @@ export default function Timeline() {
 	const onSubmit = (event) => {
 		event.preventDefault();
 		/* More to be added for posts eventually */
-		if (isFormValid({ postTitle, postContent, updateErrorMessage })) {
+		if (isFormValid({ postTitle, postContent, updateErrorMessage, updateSuccessMessage })) {
 			const body = {
 				title: postTitle,
 				content: postContent,
@@ -38,7 +39,7 @@ export default function Timeline() {
 				if (data.error_message) {
 					updateErrorMessage(data.error_message);
 				} else {
-
+					updateSuccessMessage("Post Created!")
 				}
 			}).catch(err => {
 				console.error(err);
@@ -65,6 +66,7 @@ export default function Timeline() {
 	}
 
 	const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;
+	const successObject = successMessage != "" ? <SuccessBubble message={successMessage} /> : null;
 
 	return (
 		<div>
@@ -130,8 +132,10 @@ export default function Timeline() {
 						}}
 					/>
 					<label className="post-check-label">Make this post anonymously</label>
-					{errObject}
+
 					<button type="submit" className="post-submit-btn" onClick={(e) => onSubmit(e)}>Create Post</button>
+					{errObject}
+					{successObject}
 				</form>
 
 				<a href="../../login" className="return-link">go back</a>
@@ -140,7 +144,9 @@ export default function Timeline() {
 	);
 }
 
-function isFormValid({ postTitle, postContent, updateErrorMessage }) {
+function isFormValid({ postTitle, postContent, updateErrorMessage, updateSuccessMessage }) {
+	updateSuccessMessage("")
+	updateErrorMessage("")
 	if (postTitle === "") {
 		updateErrorMessage("Please enter a title for your post.");
 	} else if (postContent === "") {
@@ -154,6 +160,14 @@ function isFormValid({ postTitle, postContent, updateErrorMessage }) {
 function ErrorBubble({ message }) {
 	return (
 		<div className="post-error-bubble">
+			<p className="post-error-message">{message}</p>
+		</div>
+	)
+}
+
+function SuccessBubble({ message }) {
+	return (
+		<div className="success-error-bubble">
 			<p className="post-error-message">{message}</p>
 		</div>
 	)
