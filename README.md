@@ -38,3 +38,9 @@ To disable the virtual environment after running, run `deactivate`.
 Download Python 3.5.8 from `https://www.python.org/downloads/`
 
 Download Node.JS (npm) from `https://nodejs.org/en/`
+
+## Database Installation and Initialization
+
+1. Download MySQL Community Workbench and Server from `https://dev.mysql.com/downloads/installer/`
+2. Once your community server is initialized locally, add a file `\api\credentials\dbcredentials.txt` with your database username on the first line and your database password on the second.
+3. Run the file `db\init\createtables.sql` in MySQL workbench to create all the tables needed to run Weave. 

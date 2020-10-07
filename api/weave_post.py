@@ -201,9 +201,6 @@ def weave_post_state():
 # # # # Backend code for a pulling a single post's image.
 # # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
 # # This route will likely have to be called without explicitly navigating to this URL.
-
-# TODO: remove auth from this route
-
 @weave_post.route("/postimage/<post_id>", methods=["GET"])
 def weave_post_image(post_id):
 
