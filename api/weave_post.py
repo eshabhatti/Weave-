@@ -106,7 +106,7 @@ def weave_post_upload_image():
         # Putting file path into database for user's most recent post.
         # This should work as long as the database doesn't miss a request for some reason.
         # TO-DO: ensure this is added on the right post
-        mod_query = "UPDATE Post SET pic_path = %s WHERE creator = %s ORDER BY date_created DESC LIMIT 1;"
+        mod_query = "UPDATE Post SET pic_path = %s WHERE creator = %s ORDER BY post_id DESC LIMIT 1;"
         mod_values = (new_filename, identity)
         cursor.execute(mod_query, mod_values)
         mysql.connection.commit()
