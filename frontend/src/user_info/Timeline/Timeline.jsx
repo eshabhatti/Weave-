@@ -7,11 +7,12 @@ import "./timeline.css";
 export default function Timeline() {
 	const [postContent, updatePostContent] = useState("");
 	const [postTitle, updatePostTitle] = useState("");
-	const [isAnon, updateIsAnon] = useState("0");
+	const [isAnon, updateIsAnon] = useState(0);
 	const access_token = localStorage.getItem('access_token');
 	const [image, saveImage] = useState(null);
 
 	const [errorMessage, updateErrorMessage] = useState("");
+	const [successMessage, updateSuccessMessage] = useState("");
 	if (access_token == null) {
 		window.location = "/login"
 	}
@@ -19,7 +20,7 @@ export default function Timeline() {
 	const onSubmit = (event) => {
 		event.preventDefault();
 		/* More to be added for posts eventually */
-		if (isFormValid({ postTitle, postContent, updateErrorMessage })) {
+		if (isFormValid({ postTitle, postContent, updateErrorMessage, updateSuccessMessage })) {
 			const body = {
 				title: postTitle,
 				content: postContent,
@@ -38,20 +39,25 @@ export default function Timeline() {
 				if (data.error_message) {
 					updateErrorMessage(data.error_message);
 				} else {
-
+					updateSuccessMessage("Post Created!")
 				}
 			}).catch(err => {
 				console.error(err);
 				alert(err);
 			});
 
-			if (image !== null) {
+			//TO-DO: make sure this is being sent on the right post
+			console.log(image);
+			if (image !== null && image.length > 0) {
 				const formData = new FormData();
-				formData.append('image', image);
-				console.log(formData);
-				fetch("http://localhost:5000/editprofilepic", {
+				const lastImg = image[image.length - 1];
+				formData.append('image', lastImg, lastImg.name);
+				fetch("http://localhost:5000/createimage/", {
 					method: "POST",
-					body: formData
+					headers: {
+						'Authorization': 'Bearer ' + access_token
+					},
+					body: formData,
 				}).then(response => response.json()).then(data => {
 					console.log(data);
 				});
@@ -60,10 +66,7 @@ export default function Timeline() {
 	}
 
 	const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;
-
-	function addImage(image) {
-		addImage(image);
-	}
+	const successObject = successMessage != "" ? <SuccessBubble message={successMessage} /> : null;
 
 	return (
 		<div>
@@ -123,14 +126,21 @@ export default function Timeline() {
 						type="checkbox"
 						id="anon"
 						className="post-check-box"
-						checked={isAnon}
 						onChange={e => {
-							updateIsAnon(!isAnon);
+							if (isAnon == 0){
+								updateIsAnon(1);
+							}
+							else {
+								updateIsAnon(0);
+							}
+
 						}}
 					/>
-					<label for="anon" className="post-check-label">Make this post anonymously</label>
-					{errObject}
+					<label className="post-check-label">Make this post anonymously</label>
+
 					<button type="submit" className="post-submit-btn" onClick={(e) => onSubmit(e)}>Create Post</button>
+					{errObject}
+					{successObject}
 				</form>
 
 				<a href="../../login" className="return-link">go back</a>
@@ -139,7 +149,9 @@ export default function Timeline() {
 	);
 }
 
-function isFormValid({ postTitle, postContent, updateErrorMessage }) {
+function isFormValid({ postTitle, postContent, updateErrorMessage, updateSuccessMessage }) {
+	updateSuccessMessage("")
+	updateErrorMessage("")
 	if (postTitle === "") {
 		updateErrorMessage("Please enter a title for your post.");
 	} else if (postContent === "") {
@@ -153,6 +165,14 @@ function isFormValid({ postTitle, postContent, updateErrorMessage }) {
 function ErrorBubble({ message }) {
 	return (
 		<div className="post-error-bubble">
+			<p className="post-error-message">{message}</p>
+		</div>
+	)
+}
+
+function SuccessBubble({ message }) {
+	return (
+		<div className="success-error-bubble">
 			<p className="post-error-message">{message}</p>
 		</div>
 	)

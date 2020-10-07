@@ -13,7 +13,7 @@ export default function EditProfile() {
   const [bio, updateBio] = useState("");
   const [errorMessage, updateErrorMessage] = useState("");
   const [image, saveImage] = useState(null);
-  const access_token = localStorage.getItem('access_token');
+  const [access_token, updateToken] = useState(localStorage.getItem('access_token'));
   if (access_token == null) {
     window.location = "/login"
   }
@@ -46,28 +46,31 @@ export default function EditProfile() {
           updateErrorMessage(data.error_message);
         } else {
           const { access_token, refresh_token } = data;
+		  localStorage.setItem('access_token', access_token);
+          localStorage.setItem('refresh_token', refresh_token);
+		  updateToken(localStorage.getItem('access_token'));
         }
       }).catch(err => {
         console.error(err);
         alert("error: check console for details");
       });
 
-      if (image !== null && image.length > 0) {
-        const formData = new FormData();
-        const lastImg = image[image.length - 1];
-        formData.append('image', lastImg, lastImg.name);
-        console.log(formData);
-        fetch("http://localhost:5000/editprofilepic/", {
-          method: "POST",
-          headers: {
-            'Authorization': 'Bearer ' + access_token
-          },
-          body: formData
-        }).then(response => response.json()).then(data => {
-          console.log(data);
-        });
-      }
-    }
+	}
+	
+	if (image !== null && image.length > 0) {
+	  const formData = new FormData();
+	  const lastImg = image[image.length - 1];
+	  formData.append('image', lastImg, lastImg.name);
+	  fetch("http://localhost:5000/editprofilepic/", {
+		method: "POST",
+		headers: {
+		  'Authorization': 'Bearer ' + access_token
+		},
+		body: formData
+	  }).then(response => response.json()).then(data => {
+		console.log(data);
+	  });
+	}
   }
 
   const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;

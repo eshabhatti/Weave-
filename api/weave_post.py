@@ -106,7 +106,7 @@ def weave_post_upload_image():
         # Putting file path into database for user's most recent post.
         # This should work as long as the database doesn't miss a request for some reason.
         # TO-DO: ensure this is added on the right post
-        mod_query = "UPDATE Post SET pic_path = %s WHERE creator = %s ORDER BY date_created DESC LIMIT 1;"
+        mod_query = "UPDATE Post SET pic_path = %s WHERE creator = %s ORDER BY post_id DESC LIMIT 1;"
         mod_values = (new_filename, identity)
         cursor.execute(mod_query, mod_values)
         mysql.connection.commit()
@@ -135,7 +135,7 @@ def weave_post_data(post_id):
         # Checks and updates return items if post is anonymous.
         post_info = (cursor.fetchall())[0]
         print(post_info)
-        if (post_info["anon_flag"] == True):
+        if (post_info["anon_flag"] == 1):
             post_info["creator"] = "anonymous"
         post_info.pop("anon_flag", None)
 
@@ -254,7 +254,7 @@ def weave_pull_userposts():
         # Pulls the user's most recent posts as specified by the range.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
         pull_query = "SELECT post_id FROM Post WHERE creator = \"" + \
-            pull_info["username"] + "\" AND anon_flag = 0 ORDER BY date_created DESC LIMIT " + \
+            pull_info["username"] + "\" AND anon_flag = 0 ORDER BY post_id DESC LIMIT " + \
             str(pull_info["start"]) + ", " + str(pull_info["end"]) + ";"
         cursor.execute(pull_query)
 
