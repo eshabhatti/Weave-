@@ -218,10 +218,14 @@ def weave_post_image(post_id):
 
         # Pulls the picture path out of the cursor.
         filename = cursor.fetchall()[0]["pic_path"]
-
+        if (filename is not ""):
         # Sends the file back to the frontend.
         # Media file type detection should work automatically but may need to be updated if not.
-        return send_file(str(current_app.config['UPLOAD_FOLDER']) + filename)
+            print('"' + filename + '"')
+            print('HERE ' + str(current_app.config['UPLOAD_FOLDER']) + filename)
+            return send_file(str(current_app.config['UPLOAD_FOLDER']) + filename)
+        else:
+            return {}
 
 
 # # # # Backend code for pulling a user's posts on Weave
