@@ -29,7 +29,7 @@ export default function Profile() {
         }
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         setX(0);
     }, []);
 
@@ -108,8 +108,9 @@ export default function Profile() {
             end: 5,
         }
 
+        //    const postpoint = "http://localhost:5000/userposts/";
         fetch(postpoint, {
-            method: "GET",
+            method: "POST",
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + access_token
@@ -124,8 +125,9 @@ export default function Profile() {
             if (data.msg) {
                 window.location = "/login"
             }
-            const { pull_list } = data;
-            let post_ids = pull_list.split(",");
+            const { pull_list: post_ids } = data;
+            //let post_ids = pull_list.split(",");
+            console.log(post_ids)
             setPostData(post_ids);
         }).catch(err => {
             console.error(err);
@@ -185,11 +187,11 @@ export default function Profile() {
                     {/* Contains all the info of user */}
                     <div className="profile-info">
                         {/* pull user data */}
-						{user_pic == null ? (
-						<img src="/img/weave-icon.svg" className="profile-icon" alt="" />
-						) : (
-                        <img src={user_pic} className="profile-icon" alt="" />
-						)}
+                        {user_pic == null ? (
+                            <img src="/img/weave-icon.svg" className="profile-icon" alt="" />
+                        ) : (
+                                <img src={user_pic} className="profile-icon" alt="" />
+                            )}
                         <h1 className="profile-name">{first_name} {last_name}</h1>
                         <p className="profile-username">{username}</p>
                         {/* toggle active depending on who is viewing the page */}
@@ -209,7 +211,7 @@ export default function Profile() {
                         </div>
                         {/* will contain the toggle display of users */}
                         <div className="profile-display">
-                            <Post userName={username} postId="002"></Post>
+                            {Posts(postdata, username)}
                             {/* <Post postId="002" userName="realuser2" /> */}
                             {/* toggle between posts and int
                                 <PostScreen active={postsOrInt} />
@@ -221,4 +223,14 @@ export default function Profile() {
             </div>
         </div>
     );
+}
+
+//post_ids: list of post ID's
+// could return before completion
+function Posts(post_ids, username) {
+    let postComponents = [];
+    post_ids.forEach(id => {
+        postComponents.push(<Post userName={username} postId={id} />)
+    });
+    return postComponents;
 }

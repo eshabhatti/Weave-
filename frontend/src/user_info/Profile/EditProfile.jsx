@@ -56,7 +56,6 @@ export default function EditProfile() {
         const formData = new FormData();
         const lastImg = image[image.length - 1];
         formData.append('image', lastImg, lastImg.name);
-        console.log(formData);
         fetch("http://localhost:5000/editprofilepic/", {
           method: "POST",
           headers: {

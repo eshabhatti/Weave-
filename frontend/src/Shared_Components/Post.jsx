@@ -9,39 +9,39 @@ export default function Post({
 
     const [errorMessage, updateErrorMessage] = useState("");
     const [postdata, setPostData] = useState([]);
-    {/* keeps track if user has saved or voted */}
+    {/* keeps track if user has saved or voted */ }
     const [saveCheck, setSaved] = useState(0);
     const [voteCheck, setVoted] = useState(0);
-    {/* current score of post */}
+    {/* current score of post */ }
     const [votes, setVotes] = useState(0);
-    
+
     const access_token = localStorage.getItem('access_token');
-	if (access_token == null) {
-		window.location = "/login"
-	}
+    if (access_token == null) {
+        window.location = "/login"
+    }
 
     const endpoint = "http://localhost:5000/post/" + postId;
     const votepoint = "http://localhost:5000/vote/"
     const savepoint = "http://localhost:5000/save/"
     const statepoint = "http://localhost:5000/poststates/"
 
-    {/* renders the post with fetch data and the states of the save and voting buttons */}
+    {/* renders the post with fetch data and the states of the save and voting buttons */ }
     useEffect(() => {
         fetch(endpoint, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + access_token
+                'Authorization': 'Bearer ' + access_token
             },
         }).then(response => response.json()).then(data => {
             if (data.error_message) {
                 updateErrorMessage(data.error_message);
-				window.location = "/404"
+                window.location = "/404"
             }
-			/* catches jwt errors that don't use the form "error_message:" */
-			if (data.msg) {
-				window.location = "/login"
-			}
+            /* catches jwt errors that don't use the form "error_message:" */
+            if (data.msg) {
+                window.location = "/login"
+            }
             setPostData(data);
             const { score } = data;
             setVotes(score);
@@ -59,18 +59,18 @@ export default function Post({
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + access_token
+                'Authorization': 'Bearer ' + access_token
             },
             body: JSON.stringify(body)
         }).then(response => response.json()).then(data => {
             if (data.error_message) {
                 updateErrorMessage(data.error_message);
-				window.location = "/404"
+                window.location = "/404"
             }
-			/* catches jwt errors that don't use the form "error_message:" */
-			if (data.msg) {
-				window.location = "/login"
-			}
+            /* catches jwt errors that don't use the form "error_message:" */
+            if (data.msg) {
+                window.location = "/login"
+            }
             /* setStateData(data); */
             const { saved, voted } = data;
             setSaved(saved);
@@ -81,10 +81,10 @@ export default function Post({
 
         });
     }, [])
-    
-    const { topic_name, date_created, post_type, title, content, creator } = postdata;
 
-    {/* sends the votes to the server and receives the change in score */}
+    const { topic_name, date_created, post_type, pic_path, title, content, creator } = postdata;
+
+    {/* sends the votes to the server and receives the change in score */ }
     const vote = (value) => {
         setVoted(value);
         const body = {
@@ -97,17 +97,17 @@ export default function Post({
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + access_token
+                'Authorization': 'Bearer ' + access_token
             },
             body: JSON.stringify(body)
         }).then(response => response.json()).then(data => {
             if (data.error_message) {
                 updateErrorMessage(data.error_message);
-				window.location = "/404"
+                window.location = "/404"
             }
-			/* catches jwt errors that don't use the form "error_message:" */
-			if (data.msg) {
-				window.location = "/login"
+            /* catches jwt errors that don't use the form "error_message:" */
+            if (data.msg) {
+                window.location = "/login"
             }
             const { change } = data;
             setVotes(votes + change);
@@ -117,7 +117,7 @@ export default function Post({
         });
     };
 
-    {/* sends the saved/unsaved postId to the server */}
+    {/* sends the saved/unsaved postId to the server */ }
     const savePost = (value) => {
         setSaved(value);
         const body = {
@@ -129,7 +129,7 @@ export default function Post({
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + access_token
+                'Authorization': 'Bearer ' + access_token
             },
             body: JSON.stringify(body)
         }).then(response => response.json()).then(data => {
@@ -137,16 +137,17 @@ export default function Post({
                 updateErrorMessage(data.error_message);
                 window.location = "/404"
             }
-			/* catches jwt errors that don't use the form "error_message:" */
-			if (data.msg) {
-				window.location = "/login"
+            /* catches jwt errors that don't use the form "error_message:" */
+            if (data.msg) {
+                window.location = "/login"
             }
         }).catch(err => {
             console.error(err);
 
         });
     };
-    
+
+    console.log(pic_path)
 
     return (
         <div>
@@ -156,17 +157,17 @@ export default function Post({
                     <div className="post-vote-container">
                         {/* replace with upvote and downvote */}
                         {voteCheck > 0 ? (
-                            <i class="fa fa-arrow-circle-up" style={{fontSize : '36px', color : 'red'}} onClick={() => vote(0)} ></i>
-                        
+                            <i class="fa fa-arrow-circle-up" style={{ fontSize: '36px', color: 'red' }} onClick={() => vote(0)} ></i>
+
                         ) : (
-                            <i class="fa fa-arrow-circle-up" style={{fontSize : '36px'}} onClick={() => vote(1)} ></i>
-                        )}
+                                <i class="fa fa-arrow-circle-up" style={{ fontSize: '36px' }} onClick={() => vote(1)} ></i>
+                            )}
                         <p className="post-vote-score">{votes}</p>
                         {voteCheck < 0 ? (
-                            <i class="fa fa-arrow-circle-down" style={{fontSize : '36px', color : 'red'}} onClick={() => vote(0)} ></i>
+                            <i class="fa fa-arrow-circle-down" style={{ fontSize: '36px', color: 'red' }} onClick={() => vote(0)} ></i>
                         ) : (
-                            <i class="fa fa-arrow-circle-down" style={{fontSize : '36px'}} onClick={() => vote(-1)} ></i>
-                        )}
+                                <i class="fa fa-arrow-circle-down" style={{ fontSize: '36px' }} onClick={() => vote(-1)} ></i>
+                            )}
                     </div>
                     <div className="post-text-container">
                         {/* align these better later */}
@@ -178,11 +179,11 @@ export default function Post({
                         {saveCheck === -1 ? (
                             <button className="post-save-button" onClick={() => savePost(1)}>Save</button>
                         ) : (
-                            <button className="post-save-button" onClick={() => savePost(-1)}>Unsave</button>
-                        )}
+                                <button className="post-save-button" onClick={() => savePost(-1)}>Unsave</button>
+                            )}
                     </div>
                     <div className="post-pic-container">
-                        <img src="/img/weave-icon.svg" className="post-pic" alt="" />
+                        {pic_path ? <img src={pic_path} className="post-pic" alt="" /> : null}
                     </div>
                 </div>
             </Collapsible>

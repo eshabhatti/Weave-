@@ -45,13 +45,18 @@ export default function Timeline() {
 				alert(err);
 			});
 
-			if (image !== null) {
+			//TO-DO: make sure this is being sent on the right post
+			console.log(image);
+			if (image !== null && image.length > 0) {
 				const formData = new FormData();
-				formData.append('image', image);
-				console.log(formData);
-				fetch("http://localhost:5000/editprofilepic", {
+				const lastImg = image[image.length - 1];
+				formData.append('image', lastImg, lastImg.name);
+				fetch("http://localhost:5000/createimage/", {
 					method: "POST",
-					body: formData
+					headers: {
+						'Authorization': 'Bearer ' + access_token
+					},
+					body: formData,
 				}).then(response => response.json()).then(data => {
 					console.log(data);
 				});
@@ -60,10 +65,6 @@ export default function Timeline() {
 	}
 
 	const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;
-
-	function addImage(image) {
-		addImage(image);
-	}
 
 	return (
 		<div>
@@ -128,7 +129,7 @@ export default function Timeline() {
 							updateIsAnon(!isAnon);
 						}}
 					/>
-					<label for="anon" className="post-check-label">Make this post anonymously</label>
+					<label className="post-check-label">Make this post anonymously</label>
 					{errObject}
 					<button type="submit" className="post-submit-btn" onClick={(e) => onSubmit(e)}>Create Post</button>
 				</form>
