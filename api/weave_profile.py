@@ -119,8 +119,9 @@ def weave_edit_profile():
         # All biocontent should be fine EXCEPT FOR QUOTE CHARACTERS, WHICH MUST BE REPLACED BELOW.
         final_biocontent = None
         if (mod_info["biocontent"] != ""):
-            final_biocontent = mod_info["biocontent"].replace(
-                "\\\"", "\\\\\\\"")
+            final_biocontent = mod_info["biocontent"].replace("\\\"", "\\\\\\\"")
+        if (len(final_biocontent) > 250):
+            return jsonify({'error_message': 'Your biography is too long.'}), 400
 
         # # # End validation
         # Updates the database with the new information.
