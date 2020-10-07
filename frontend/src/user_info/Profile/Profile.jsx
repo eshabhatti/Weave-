@@ -79,7 +79,28 @@ export default function Profile() {
     };
 
     const postpoint = "http://localhost:5000/userposts/";
-    const postFeed = () => {
+    {/* testing with user in sql tests */ }
+    const endpoint = "http://localhost:5000/profile/" + username;
+    useEffect(() => {
+        fetch(endpoint, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token
+            },
+        }).then(response => response.json()).then(data => {
+            if (data.error_message) {
+                updateErrorMessage(data.error_message);
+                window.location = "/404"
+            }
+            /* catches jwt errors that don't use the form "error_message:" */
+            if (data.msg) {
+                window.location = "/login"
+            }
+            setUserData(data);
+        }).catch(err => {
+            console.error(err);
+        });
 
         const body = {
             username: username,
@@ -103,31 +124,9 @@ export default function Profile() {
             if (data.msg) {
                 window.location = "/login"
             }
-            setPostData(data);
-        }).catch(err => {
-            console.error(err);
-        });
-    };
-
-    {/* testing with user in sql tests */ }
-    const endpoint = "http://localhost:5000/profile/" + username;
-    useEffect(() => {
-        fetch(endpoint, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + access_token
-            },
-        }).then(response => response.json()).then(data => {
-            if (data.error_message) {
-                updateErrorMessage(data.error_message);
-                window.location = "/404"
-            }
-            /* catches jwt errors that don't use the form "error_message:" */
-            if (data.msg) {
-                window.location = "/login"
-            }
-            setUserData(data);
+            const { pull_list } = data;
+            let post_ids = pull_list.split(",");
+            setPostData(post_ids);
         }).catch(err => {
             console.error(err);
         });
