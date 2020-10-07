@@ -12,6 +12,7 @@ export default function Profile() {
     const [errorMessage, updateErrorMessage] = useState("");
     const [xPosition, setX] = React.useState(-250);
     const [userdata, setUserData] = useState([]);
+    const [postdata, setPostData] = useState([])
 
     const canUserEditProfile = (userdata !== [] && userdata.username === username);
 
@@ -75,6 +76,37 @@ export default function Profile() {
             alert("error: check console for details");
         });
 
+    };
+
+    const postpoint = "http://localhost:5000/userposts/";
+    const postFeed = () => {
+
+        const body = {
+            username: username,
+            start: 0,
+            end: 5,
+        }
+
+        fetch(postpoint, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token
+            },
+            body: JSON.stringify(body)
+        }).then(response => response.json()).then(data => {
+            if (data.error_message) {
+                updateErrorMessage(data.error_message);
+                window.location = "/404"
+            }
+            /* catches jwt errors that don't use the form "error_message:" */
+            if (data.msg) {
+                window.location = "/login"
+            }
+            setPostData(data);
+        }).catch(err => {
+            console.error(err);
+        });
     };
 
     {/* testing with user in sql tests */ }
@@ -181,9 +213,9 @@ export default function Profile() {
                             <Post userName={username} postId="002"></Post>
                             {/* <Post postId="002" userName="realuser2" /> */}
                             {/* toggle between posts and int
-              <PostScreen active={postsOrInt} />
-              <InteractionScreen active={!postsOrInt} />
-              */}
+                                <PostScreen active={postsOrInt} />
+                                <InteractionScreen active={!postsOrInt} />
+                            */}
                         </div>
                     </div>
                 </div>

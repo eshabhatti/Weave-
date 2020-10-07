@@ -182,7 +182,7 @@ export default function Post({
                         )}
                     </div>
                     <div className="post-pic-container">
-                        <img src="/img/weave-icon.svg" classname="post-pic" alt="" />
+                        <img src="/img/weave-icon.svg" className="post-pic" alt="" />
                     </div>
                 </div>
             </Collapsible>
