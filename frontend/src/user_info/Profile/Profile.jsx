@@ -154,7 +154,11 @@ export default function Profile() {
                     {/* Contains all the info of user */}
                     <div className="profile-info">
                         {/* pull user data */}
+						{user_pic == null ? (
+						<img src="/img/weave-icon.svg" className="profile-icon" alt="" />
+						) : (
                         <img src={user_pic} className="profile-icon" alt="" />
+						)}
                         <h1 className="profile-name">{first_name} {last_name}</h1>
                         <p className="profile-username">{username}</p>
                         {/* toggle active depending on who is viewing the page */}

@@ -31,7 +31,10 @@ def weave_profile_data(username):
         # Returns each needed item in one JSON object
         profile_data = (cursor.fetchall())[0]
         profile_data["username"] = get_jwt_identity()
-        profile_data["user_pic"] = "http://localhost:5000/profile_picture/" + username
+        if (profile_data["user_pic"] == None):
+            profile_data["user_pic"] = None
+        else:
+            profile_data["user_pic"] = "http://localhost:5000/profile_picture/" + username
         return profile_data
 
 
@@ -52,33 +55,7 @@ def weave_profile_picture(username):
         # Returns each needed item in one JSON object
         filename = (cursor.fetchall())[0]["user_pic"]
         print(filename)
-        return send_file("./static/" + filename)
-
-# # # # Backend code for displaying profile pictures on Weave.
-# # DOES NOT expect a JSON but DOES expect a unique URL for the profile that needs to be displayed.
-# # This route will likely have to be called without explicitly navigating to this URL.
-@weave_profile.route("/profilepic/<username>", methods=["GET"])
-@jwt_required
-def weave_profile_image():
-
-    # The backend has received a profile GET request.
-    if request.method == "GET":
-
-        # Initializes MySQL cursor.
-        cursor = mysql.connection.cursor()
-
-        # Checks if username exists in db and grabs relevant data.
-        cursor.execute(
-            "SELECT user_pic FROM UserAccount WHERE username = %s;", (username,))
-        if (cursor.rowcount == 0):
-            return jsonify({'error_message': 'User does not exist'}), 404
-
-        # Pulls the picture path out of the cursor.
-        filename = cursor.fetchall()[0]["user_pic"]
-
-        # Sends the file back to the frontend.
-        # Media file type detection should work automatically but may need to be updated if not.
-        return send_file(filename)
+        return send_file(str(current_app.config['UPLOAD_FOLDER']) + filename)
 
 
 # # # # Backend code for editing profiles on Weave.
@@ -186,9 +163,7 @@ def weave_edit_profile_pic():
 
         # Uploads a photo if attached
         new_filename = ""
-        print(request.files)
         if 'image' in request.files:
-            print('made it!')
             img_file = request.files['image']
             if img_file.filename != '':
                 new_filename = secure_filename(img_file.filename)
@@ -197,8 +172,7 @@ def weave_edit_profile_pic():
                 while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
                     prefix += 1
                 new_filename = str(prefix) + new_filename
-                img_file.save(
-                    "." + str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
+                img_file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
 
         # Grabbing identity of uploader
         identity = get_jwt_identity()
