@@ -18,12 +18,12 @@ line = test_output.readline()
 failed_reg = True
 while line:
 	if failed_reg and line and line.find('access_token') != -1:
-		reg_test1 = "PASSED: Register new user (new valid user created)"
+		reg_test1 = "PASSED: Checking that an account is created in the database"
 		failed_reg = False
 		break
 	line = test_output.readline()
 if failed_reg:
-	reg_test1 = "FAILED: Register new user (make sure app and database are running and that database is reset)"
+	reg_test1 = "FAILED: Checking that an account is created in the database"
 test_output.close()
 
 #attempt to register existing user
@@ -34,12 +34,12 @@ line = test_output.readline()
 failed_reg = True
 while line:
 	if failed_reg and line and line.find('This username has already been used.') != -1:
-		reg_test2 = "PASSED: Fail to register existing user (failed attempt to register existing user)"
+		reg_test2 = "PASSED: Checking that duplicate accounts cannot be created"
 		failed_reg = False
 		break
 	line = test_output.readline()
 if failed_reg:
-	reg_test2 = "FAILED: Fail to register existing user (failed attempt to register existing user)"
+	reg_test2 = "FAILED: Checking that duplicate accounts cannot be created"
 test_output.close()
 
 #attempt to register blank user and password
@@ -56,12 +56,12 @@ line = test_output.readline()
 failed_reg = True
 while line:
 	if failed_reg and line and line.find('Your username is invalid.') != -1:
-		reg_test3 = "PASSED: Fail to register user with blank inputs (failed attempt to register user with blank inputs)"
+		reg_test3 = "PASSED: Checking that empty inputs can't be accepted"
 		failed_reg = False
 		break
 	line = test_output.readline()
 if failed_reg:
-	reg_test3 = "FAILED: Fail to register user with blank inputs (failed attempt to register user with blank inputs)"
+	reg_test3 = "FAILED: Checking that empty inputs can't be accepted"
 test_output.close()
 
 #attempt to register user with user and pass that are too small (<6 chars)
@@ -79,12 +79,12 @@ line = test_output.readline()
 failed_reg = True
 while line:
 	if failed_reg and line and line.find('Your username is invalid.') != -1:
-		reg_test4 = "PASSED: Fail to register user with too short of inputs (inputs less than 6 chars)"
+		reg_test4 = "PASSED: Checking that inputs with incorrect format can't be accepted. (inputs less than 6 chars)"
 		failed_reg = False
 		break
 	line = test_output.readline()
 if failed_reg:
-	reg_test4 = "FAILED: Fail to register user with too short of inputs (inputs less than 6 chars)"
+	reg_test4 = "FAILED: Checking that inputs with incorrect format can't be accepted. (inputs less than 6 chars)"
 test_output.close()
 
 #attempt to register user with user and pass that are too large (>42 chars)
@@ -102,12 +102,12 @@ line = test_output.readline()
 failed_reg = True
 while line:
 	if failed_reg and line and line.find('Your username is invalid.') != -1:
-		reg_test5 = "PASSED: Fail to register user with too large of inputs (inputs greater than 42 characters)"
+		reg_test5 = "PASSED: Checking that inputs with incorrect format can't be accepted. (inputs greater than 42 characters)"
 		failed_reg = False
 		break
 	line = test_output.readline()
 if failed_reg:
-	reg_test5 = "FAILED: Fail to register user with too large of inputs (inputs greater than 42 characters)"
+	reg_test5 = "FAILED: Checking that inputs with incorrect format can't be accepted. (inputs greater than 42 characters)"
 test_output.close()
 
 
@@ -128,13 +128,13 @@ line = test_output.readline()
 failed_login = True
 while line:
 	if failed_login and line and line.find('access_token') != -1:
-		login_test1 = "PASSED: Login valid user"
+		login_test1 = "PASSED: Checking a valid username and password."
 		access_token = line[line.find('token') + 9:len(line) - 4]
 		failed_login = False
 		break
 	line = test_output.readline()
 if failed_login:
-	login_test1 = "FAILED: Login valid user"
+	login_test1 = "FAILED: Checking a valid username and password."
 test_output.close()
 
 #login test for empty inputs
@@ -152,12 +152,12 @@ line = test_output.readline()
 failed_login = True
 while line:
 	if failed_login and line and line.find('Username and password do not match.') != -1:
-		login_test2 = "PASSED: Fail to login user with empty inputs"
+		login_test2 = "PASSED: Checking empty input boxes."
 		failed_login = False
 		break
 	line = test_output.readline()
 if failed_login:
-	login_test2 = "FAILED: Fail to login user with empty inputs"
+	login_test2 = "FAILED: Checking empty input boxes."
 test_output.close()
 
 #login test for user not in database
@@ -175,12 +175,12 @@ line = test_output.readline()
 failed_login = True
 while line:
 	if failed_login and line and line.find('Username and password do not match.') != -1:
-		login_test3 = "PASSED: Fail to login nonexistent user"
+		login_test3 = "PASSED: Checking an invalid username and password."
 		failed_login = False
 		break
 	line = test_output.readline()
 if failed_login:
-	login_test3 = "FAILED: Fail to login nonexistent user"
+	login_test3 = "FAILED: Checking an invalid username and password."
 test_output.close()
 
 
@@ -205,22 +205,19 @@ subprocess.call([r'profile_test.cmd'])
 test_output = open("test_output.txt", "r")
 
 line = test_output.readline()
-failed_profile1 = True
+failed_profile = True
 while line:
-	if failed_profile1 and line and line.find('token') != -1:
-		profile_test1 = "PASSED: Valid profile change (profile names changed)"
+	if failed_profile and line and line.find('token') != -1:
+		profile_test1 = "PASSED: Check that a normal case updates the database."
 		access_token = line[line.find('token') + 9:len(line) - 4]
-		failed_profile1 = False
+		failed_profile = False
 		break
 	line = test_output.readline()
-if failed_profile1:
-	profile_test1 = "FAILED: Valid profile change (profile names changed)"
+if failed_profile:
+	profile_test1 = "FAILED: Check that a normal case updates the database."
 test_output.close()
 
-#edit profile blank inputs test
-
-
-#revert profile test file
+#revert profile test file NOT A TEST CASE
 new_profile_test = open('profile_test.cmd', 'r+')
 new_profile_test.seek(0)
 #new_profile_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"newusername\\":\\"newtestname\\",\\"firstname\\":\\"Bob\\",\\"lastname\\":\\"Banana\\",\\"biocontent\\":\\"Hi I am Bob, aren't I cool?\\",\\"profilepic\\":\\"\\"}" http://localhost:5000/editprofile/ > test_output.txt""")
@@ -239,6 +236,52 @@ while line:
 	line = test_output.readline()
 test_output.close()
 
+#edit profile blank inputs test doesnt work
+new_profile_test = open('profile_test.cmd', 'r+')
+new_profile_test.seek(0)
+new_profile_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"newusername\\":\\"\\",\\"firstname\\":\\"\\",\\"lastname\\":\\"\\",\\"biocontent\\":\\"Hi I am Bob, aren't I cool?\\",\\"profilepic\\":\\"\\"}" http://localhost:5000/editprofile/ > test_output.txt""")
+new_profile_test.truncate()
+new_profile_test.close()
+
+subprocess.call([r'profile_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_profile = True
+while line:
+		
+	if failed_profile and line and line.find('token') != -1:
+		profile_test2 = "PASSED: Check that blank inputs are not accepted."
+		failed_profile = False
+		break
+	line = test_output.readline()
+if failed_profile:
+	profile_test2 = "FAILED: Check that blank inputs are not accepted."
+test_output.close()
+
+#edit profile too many characters test
+new_profile_test = open('profile_test.cmd', 'r+')
+new_profile_test.seek(0)
+new_profile_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"newusername\\":\\"testtesttetesttesttetesttesttetesttesttetesttestte\\",\\"firstname\\":\\"Bob\\",\\"lastname\\":\\"Banana\\",\\"biocontent\\":\\"Hi I am Bob, aren't I cool?\\",\\"profilepic\\":\\"\\"}" http://localhost:5000/editprofile/ > test_output.txt""")
+new_profile_test.truncate()
+new_profile_test.close()
+
+subprocess.call([r'profile_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_profile = True
+while line:
+
+	if failed_profile and line and line.find('Your new username is invalid.') != -1:
+		profile_test3 = "PASSED: Check that case where too many characters are entered does not update the database. (>250 characters)"
+		failed_profile = False
+		break
+	line = test_output.readline()
+if failed_profile:
+	profile_test3 = "FAILED: Check that case where too many characters are entered does not update the database. (>250 characters)"
+test_output.close()
+
 
 # post curl
 #curl -i -X POST -H "Authorization: Bearer <access_token>" -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"anon\":\"0\"}" http://localhost:5000/createpost/
@@ -255,26 +298,141 @@ test_output = open("test_output.txt", "r")
 line = test_output.readline()
 failed_post = True
 while line:
-
-	print(line)
-
 	if failed_post and line and line.find('token') != -1:
-		post_test = "PASSED: Post Test"
+		post_test1 = "PASSED: Check that a valid post should always be posted."
 		access_token = line[line.find('token') + 9:len(line) - 4]
 		failed_post = False
-		#break
+		break
 	line = test_output.readline()
 if failed_login:
-	login_test = "FAILED: Post Test"
+	post_test1 = "FAILED: Check that a valid post should always be posted."
 test_output.close()
+
+#post blank post test doesnt work
+new_post_test = open('post_test.cmd', 'r+')
+new_post_test.seek(0)
+new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"type\\":\\"1\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"\\",\\"anon\\":\\"0\\"}" http://localhost:5000/createpost/ > test_output.txt""")
+new_post_test.truncate()
+new_post_test.close()
+
+subprocess.call([r'post_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_post = True
+while line:
+	if failed_post and line and line.find('token') != -1:
+		post_test2 = "PASSED: Check that blank posts can't be posted."
+		failed_post = False
+		break
+	line = test_output.readline()
+if failed_login:
+	post_test2 = "FAILED: Check that blank posts can't be posted."
+test_output.close()
+
+#post test: fail to post that is too long >750 chars
+new_post_test = open('post_test.cmd', 'r+')
+new_post_test.seek(0)
+new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"type\\":\\"1\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test \\",\\"anon\\":\\"0\\"}" http://localhost:5000/createpost/ > test_output.txt""")
+new_post_test.truncate()
+new_post_test.close()
+
+subprocess.call([r'post_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_post = True
+while line:
+	if failed_post and line and line.find('token') != -1:
+		post_test3 = "PASSED: Check that posts can't exceed 750 characters."
+		failed_post = False
+		break
+	line = test_output.readline()
+if failed_login:
+	post_test3 = "FAILED: Check that posts can't exceed 750 characters."
+test_output.close()
+
+
+
+#anon post Tests
+
+#anon retain original username (returns token)
+new_post_test = open('post_test.cmd', 'r+')
+new_post_test.seek(0)
+new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"type\\":\\"1\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"hello hello hello hello\\",\\"anon\\":\\"1\\"}" http://localhost:5000/createpost/ > test_output.txt""")
+new_post_test.truncate()
+new_post_test.close()
+
+subprocess.call([r'post_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_post = True
+while line:
+	if failed_post and line and line.find('token') != -1:
+		post_test4 = "PASSED: Anonymous posts still retain the original user's username, but do not show it when displaying."
+		access_token = line[line.find('token') + 9:len(line) - 4]
+		failed_post = False
+		break
+	line = test_output.readline()
+if failed_login:
+	post_test4 = "FAILED: Anonymous posts still retain the original user's username, but do not show it when displaying."
+test_output.close()
+
+#blank anon post test
+new_post_test = open('post_test.cmd', 'r+')
+new_post_test.seek(0)
+new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"type\\":\\"1\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"\\",\\"anon\\":\\"1\\"}" http://localhost:5000/createpost/ > test_output.txt""")
+new_post_test.truncate()
+new_post_test.close()
+
+subprocess.call([r'post_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_post = True
+while line:
+	if failed_post and line and line.find('token') != -1:
+		post_test5 = "PASSED: Anonymous posts should not be empty."
+		failed_post = False
+		break
+	line = test_output.readline()
+if failed_login:
+	post_test5 = "FAILED: Anonymous posts should not be empty."
+test_output.close()
+
+#format anon post requirement
+new_post_test = open('post_test.cmd', 'r+')
+new_post_test.seek(0)
+new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"type\\":\\"1\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test \\",\\"anon\\":\\"1\\"}" http://localhost:5000/createpost/ > test_output.txt""")
+new_post_test.truncate()
+new_post_test.close()
+
+subprocess.call([r'post_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_post = True
+while line:
+	if failed_post and line and line.find('token') != -1:
+		post_test6 = "PASSED: Anonymous posts should not break any formally-established format requirements."
+		failed_post = False
+		break
+	line = test_output.readline()
+if failed_login:
+	post_test6 = "FAILED: Anonymous posts should not break any formally-established format requirements."
+test_output.close()
+
+
 
 
 # vote curl
 #curl -i -X POST -H "Authorization: Bearer <access_token>" -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"type\":\"1\",\"id\":\"1\",\"vote\":\"1\"}" http://localhost:5000/vote/
 
-new_post_test = open('vote_test.cmd', 'r+')
-new_post_test.seek(0)
-new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\":\\"testname\\",\\"type\\":\\"1\\",\\"id\\":\\"1\\",\\"vote\\":\\"1\\"}" http://localhost:5000/vote/ > test_output.txt""")
+#new_post_test = open('vote_test.cmd', 'r+')
+#new_post_test.seek(0)
+#new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\":\\"testname\\",\\"type\\":\\"1\\",\\"id\\":\\"1\\",\\"vote\\":\\"1\\"}" http://localhost:5000/vote/ > test_output.txt""")
+"""
 new_post_test.truncate()
 new_post_test.close()
 
@@ -293,17 +451,37 @@ while line:
 if failed_vote:
 	vote_test = "FAILED: Vote Test"
 test_output.close()
-
+"""
+print(" ")
+print("Registration Tests")
 print(reg_test1)
 print(reg_test2)
 print(reg_test3)
 print(reg_test4)
 print(reg_test5)
 
+print(" ")
+print("Login Tests")
 print(login_test1)
 print(login_test2)
 print(login_test3)
 
+print(" ")
+print("Profile Changing Tests")
 print(profile_test1)
-print(post_test)
-print(vote_test)
+print(profile_test2)
+print(profile_test3)
+
+print(" ")
+print("Posting Tests")
+print(post_test1)
+print(post_test2)
+print(post_test3)
+
+print(" ")
+print("Anonymous Posting Tests")
+print(post_test4)
+print(post_test5)
+print(post_test6)
+
+#print(vote_test)
