@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from extensions import mysql
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 weave_vote = Blueprint('weave_vote', __name__)
 
@@ -10,7 +11,7 @@ weave_vote = Blueprint('weave_vote', __name__)
 # # Call this route from the Windows Command Prompt with:
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"type\":\"1\",\"id\":\"1\",\"vote\":\"1\"}" http://localhost:5000/vote/
 @weave_vote.route("/vote/", methods=["POST"])
-# @login_required
+@jwt_required
 def weave_voting():
 
     # The backend has recieved information that needs to go into the database.
@@ -28,6 +29,7 @@ def weave_voting():
         if (not request.is_json):
             return jsonify({'error_message':'Request Error: Not JSON.'}), 400
         vote_info = request.get_json()
+        vote_info["username"] = get_jwt_identity()
         print(vote_info) # debugging
 
         # Checks for all needed elements in the JSON.
