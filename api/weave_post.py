@@ -36,7 +36,7 @@ def weave_post_create():
     # Validates the content information.
     # Most strings will be fine. Empty content will be saved as an empty string. Any \" phrase must be replaced with \\\".
     post_info["content"].replace("\\\"", "\\\\\\\"")
-    if (len(post_info["content"]) > 750):
+    if (post_info["content"] != None and len(post_info["content"]) > 250):
         return jsonify({'error_message': 'Request Error: Post Too Large'})
 
     # The post will always be treated as a text post when it is being saved to the database.
