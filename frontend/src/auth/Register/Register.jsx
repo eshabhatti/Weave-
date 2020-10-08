@@ -125,6 +125,8 @@ function isFormValid({ loginName, password, confirmPassword, isOverThirteen, ema
     updateErrorMessage("Please enter a password.");
   } else if (password !== confirmPassword) {
     updateErrorMessage("The passwords do not match.")
+  }	else if (password.length < 6) {
+	updateErrorMessage("Password should be 6 character minimum.")
   } else if (!isOverThirteen) {
     updateErrorMessage("You must be 13 or older to join Weave.")
   } else {
