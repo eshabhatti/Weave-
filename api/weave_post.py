@@ -135,7 +135,7 @@ def weave_post_data(post_id):
         # Checks and updates return items if post is anonymous.
         post_info = (cursor.fetchall())[0]
         print(post_info)
-        if (post_info["anon_flag"] == True):
+        if (post_info["anon_flag"] == 1):
             post_info["creator"] = "anonymous"
         post_info.pop("anon_flag", None)
 
@@ -257,7 +257,7 @@ def weave_pull_userposts():
         # Pulls the user's most recent posts as specified by the range.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
         pull_query = "SELECT post_id FROM Post WHERE creator = \"" + \
-            pull_info["username"] + "\" AND anon_flag = 0 ORDER BY date_created DESC LIMIT " + \
+            pull_info["username"] + "\" AND anon_flag = 0 ORDER BY post_id DESC LIMIT " + \
             str(pull_info["start"]) + ", " + str(pull_info["end"]) + ";"
         cursor.execute(pull_query)
 

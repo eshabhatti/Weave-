@@ -86,16 +86,14 @@ def weave_edit_profile():
         # The original username should not need to be validated since it is not user input. (?)
         # If newusername is the same as the old one, then once again no validation needs to be done.
         # If there is a difference, however, then the new username needs to be checked for proper format.
+        final_username = mod_info["username"]
         if (mod_info["username"] != mod_info["newusername"] and mod_info["newusername"] != ""):
             if (re.search("^[A-Za-z0-9_-]{6,20}$", mod_info["newusername"]) == None):
                 return jsonify({'error_message': 'Your new username is invalid.'}), 400
             final_username = mod_info["newusername"]
-        else:
-            final_username = mod_info["username"]
 
         # There also cannot be repeated usernames, which should be checked for before we get a SQL error.
-        username_query = "SELECT username from UserAccount WHERE username = \"" + \
-            mod_info["newusername"] + "\";"
+        username_query = "SELECT username from UserAccount WHERE username = \"" + mod_info["newusername"] + "\";"
         cursor.execute(username_query)
         for row in cursor:
             if (mod_info["username"] != mod_info["newusername"]) and (mod_info["newusername"] == row["username"]):
@@ -127,8 +125,7 @@ def weave_edit_profile():
         # # # End validation
         # Updates the database with the new information.
         mod_query = "UPDATE UserAccount SET username = %s, first_name = %s, last_name = %s, user_bio = %s WHERE username = %s;"
-        mod_values = (final_username, final_firstname,
-                      final_lastname, final_biocontent, mod_info["username"])
+        mod_values = (final_username, final_firstname, final_lastname, final_biocontent, mod_info["username"])
         cursor.execute(mod_query, mod_values)
         mysql.connection.commit()
 
