@@ -343,12 +343,12 @@ test_output = open("test_output.txt", "r")
 line = test_output.readline()
 failed_post = True
 while line:
-	if failed_post and line and line.find('token') != -1:
+	if failed_post and line and line.find('error') != -1:
 		post_test3 = "PASSED: Check that posts can't exceed 750 characters."
 		failed_post = False
 		break
 	line = test_output.readline()
-if failed_login:
+if failed_post:
 	post_test3 = "FAILED: Check that posts can't exceed 750 characters."
 test_output.close()
 
@@ -375,7 +375,7 @@ while line:
 		failed_post = False
 		break
 	line = test_output.readline()
-if failed_login:
+if failed_post:
 	post_test4 = "FAILED: Anonymous posts still retain the original user's username, but do not show it when displaying."
 test_output.close()
 
@@ -397,7 +397,7 @@ while line:
 		failed_post = False
 		break
 	line = test_output.readline()
-if failed_login:
+if failed_post:
 	post_test5 = "FAILED: Anonymous posts should not be empty."
 test_output.close()
 
@@ -414,12 +414,12 @@ test_output = open("test_output.txt", "r")
 line = test_output.readline()
 failed_post = True
 while line:
-	if failed_post and line and line.find('token') != -1:
+	if failed_post and line and line.find('error') != -1:
 		post_test6 = "PASSED: Anonymous posts should not break any formally-established format requirements."
 		failed_post = False
 		break
 	line = test_output.readline()
-if failed_login:
+if failed_post:
 	post_test6 = "FAILED: Anonymous posts should not break any formally-established format requirements."
 test_output.close()
 
