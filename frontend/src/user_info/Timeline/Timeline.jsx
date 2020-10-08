@@ -7,7 +7,7 @@ import "./timeline.css";
 export default function Timeline() {
 	const [postContent, updatePostContent] = useState("");
 	const [postTitle, updatePostTitle] = useState("");
-	const [isAnon, updateIsAnon] = useState("0");
+	const [isAnon, updateIsAnon] = useState(0);
 	const access_token = localStorage.getItem('access_token');
 	const [image, saveImage] = useState(null);
 
@@ -126,9 +126,14 @@ export default function Timeline() {
 						type="checkbox"
 						id="anon"
 						className="post-check-box"
-						checked={isAnon}
 						onChange={e => {
-							updateIsAnon(!isAnon);
+							if (isAnon == 0){
+								updateIsAnon(1);
+							}
+							else {
+								updateIsAnon(0);
+							}
+
 						}}
 					/>
 					<label className="post-check-label">Make this post anonymously</label>
