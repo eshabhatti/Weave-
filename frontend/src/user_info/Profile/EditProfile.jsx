@@ -14,9 +14,7 @@ export default function EditProfile() {
   const [errorMessage, updateErrorMessage] = useState("");
   const [image, saveImage] = useState(null);
   const [access_token, updateToken] = useState(localStorage.getItem('access_token'));
-  if (access_token == null) {
-    window.location = "/login"
-  }
+  window.onload = isLoggedIn(access_token);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -173,4 +171,10 @@ function ErrorBubble({ message }) {
       <p className="edit-error-message">{message}</p>
     </div>
   )
+}
+
+function isLoggedIn(access_token) {
+	if (access_token == "null") {
+		window.location = "/login"
+	}
 }

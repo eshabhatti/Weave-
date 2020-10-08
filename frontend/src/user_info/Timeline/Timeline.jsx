@@ -8,14 +8,12 @@ export default function Timeline() {
 	const [postContent, updatePostContent] = useState("");
 	const [postTitle, updatePostTitle] = useState("");
 	const [isAnon, updateIsAnon] = useState(0);
-	const access_token = localStorage.getItem('access_token');
 	const [image, saveImage] = useState(null);
-
 	const [errorMessage, updateErrorMessage] = useState("");
 	const [successMessage, updateSuccessMessage] = useState("");
-	if (access_token == null) {
-		window.location = "/login"
-	}
+	
+	const access_token = localStorage.getItem('access_token');
+	window.onload = isLoggedIn(access_token);
 
 	const onSubmit = (event) => {
 		event.preventDefault();
@@ -180,4 +178,10 @@ function SuccessBubble({ message }) {
 			<p className="post-error-message">{message}</p>
 		</div>
 	)
+}
+
+function isLoggedIn(access_token) {
+	if (access_token == "null") {
+		window.location = "/login"
+	}
 }
