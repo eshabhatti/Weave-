@@ -24,10 +24,9 @@ USE weave;
 -- 			NOTE: These names are separated to make injection attacks harder.
 -- 		date_joined: the date corresponding to when the user created their account
 -- 		user_bio: the optional biography description attached to a user account
--- 		user_pic: the optional filepath to the user's profile picture (length may be too long?)
+-- 		user_pic: the optional filepath to the user's profile picture
 -- 		follower_count: an integer corresponding to the user's follower count
--- 		moderation_status: an integer flag corresponding to the user's moderation status
--- 			NOTE: For now, the above two attributes will always be set to 0
+-- 		moderation_status: an integer flag corresponding to the user's moderation (deletion) status
 CREATE TABLE UserAccount (
     username VARCHAR(20) NOT NULL,
     email VARCHAR(50) NOT NULL,
@@ -43,14 +42,26 @@ CREATE TABLE UserAccount (
     UNIQUE (email)
 );
 
--- NOTE: When topics are added, their table needs to be initialized here.
+-- Initializes the Topic Table
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		topic_name: the UNIQUE name of the topic at 50 characters maximum
+-- 		date_created: the date and time that the first post in this topic was created
+-- 		follower_count: an integer that represents how many users follow this topic
+-- 		moderation_status: an integer flag corresponding to topic moderation
+-- 			NOTE: Always set the moderation status flag to 0 for now; it may be removed later. 
+CREATE TABLE Topic (
+	topic_name VARCHAR(50) NOT NULL,
+    date_created DATETIME NOT NULL,
+    follower_count INT NOT NULL,
+    moderation_status INT NOT NULL,
+    PRIMARY KEY (topic_name)
+);
 
 -- Initializes the Post Table
--- If album posts are allowed, this table will need to be modified
+-- If album posts are ever allowed, this table will need to be modified
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		post_id: Unique ID value assigned to a post upon creation
 -- 		topic_name: The one topic that the post is assigned to; foreign key that applies to Topic
--- 			NOTE: For now, just assign this value as "null" or "general"
 -- 		creator: The creator of the post's username; foreign key that applies to UserAccount
 -- 		date_created: The date of the post's creation
 -- 		post_type: A flag that states whether the post is pure text (1) or picture-caption (2) -- maybe not needed?
