@@ -16,17 +16,16 @@ USE weave;
 -- Initializes the user table.
 -- 'USER' is a keyword in SQL which is the reason for the long table name.
 -- ATTRIBUTE DESCRIPTIONS:
--- 		username: plaintext username with a maximum of 20 characters
--- 		email: plaintext email that the user's account is connected with
--- 		encrypted_password: user password hashed with bcrypt; bcrypt includes the salt along with the hash
--- 		first_name: optional value that represents the user's first name
--- 		last_name: optional value that represents the user's last name
--- 			NOTE: These names are separated to make injection attacks harder.
--- 		date_joined: the date corresponding to when the user created their account
--- 		user_bio: the optional biography description attached to a user account
--- 		user_pic: the optional filepath to the user's profile picture
--- 		follower_count: an integer corresponding to the user's follower count
--- 		moderation_status: an integer flag corresponding to the user's moderation (deletion) status
+-- 		username: Plaintext username with a maximum of 20 characters
+-- 		email: Plaintext email that the user's account is connected with
+-- 		encrypted_password: User password hashed with bcrypt; bcrypt includes the salt along with the hash
+-- 		first_name: Optional value that represents the user's first name
+-- 		last_name: Optional value that represents the user's last name
+-- 		date_joined: The date corresponding to when the user created their account
+-- 		user_bio: The optional biography description attached to a user account
+-- 		user_pic: The optional filepath to the user's profile picture
+-- 		follower_count: An integer corresponding to the user's follower count
+-- 		moderation_status: An integer flag corresponding to the user's moderation (deletion) status
 CREATE TABLE UserAccount (
     username VARCHAR(20) NOT NULL,
     email VARCHAR(50) NOT NULL,
@@ -44,11 +43,11 @@ CREATE TABLE UserAccount (
 
 -- Initializes the Topic Table
 -- ATTRIBUTE DESCRIPTIONS:
--- 		topic_name: the UNIQUE name of the topic at 50 characters maximum
--- 		date_created: the date and time that the first post in this topic was created
--- 		follower_count: an integer that represents how many users follow this topic
--- 		moderation_status: an integer flag corresponding to topic moderation
--- 			NOTE: Always set the moderation status flag to 0 for now; it may be removed later. 
+-- 		topic_name: The UNIQUE name of the topic at 50 characters maximum
+-- 		date_created: The date and time that the first post in this topic was created
+-- 		follower_count: An integer that represents how many users follow this topic
+-- 		moderation_status: An integer flag corresponding to topic moderation
+-- 			NOTE: For now, this attribute will always be set to 0; it may be removed later. 
 CREATE TABLE Topic (
 	topic_name VARCHAR(50) NOT NULL,
     date_created DATETIME NOT NULL,
@@ -62,7 +61,7 @@ CREATE TABLE Topic (
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		post_id: Unique ID value assigned to a post upon creation
 -- 		topic_name: The one topic that the post is assigned to; foreign key that applies to Topic
--- 		creator: The creator of the post's username; foreign key that applies to UserAccount
+-- 		username: The creator of the post's username; foreign key that applies to UserAccount
 -- 		date_created: The date of the post's creation
 -- 		post_type: A flag that states whether the post is pure text (1) or picture-caption (2) -- maybe not needed?
 -- 		title: A string that holds the post's title
@@ -72,13 +71,12 @@ CREATE TABLE Topic (
 -- 		downvote_count: The total number of downvotes the post has (initialized to 0)
 -- 		anon_flag: A flag that marks whether (1) or not (0) the post is anonymous
 -- 		moderation_status: an integer flag corresponding to the post's moderation status
--- 			NOTE: For now, this attribute will always be set to 0
+-- 			NOTE: For now, this attribute will always be set to 0; it may be removed later. 
 CREATE TABLE Post (
     post_id INT NOT NULL,
     topic_name VARCHAR(30) NOT NULL,
     creator VARCHAR(20) NOT NULL,
     date_created DATE NOT NULL,
-    post_type INT NOT NULL,
     title VARCHAR(75) NOT NULL,
     content VARCHAR(750),
     pic_path VARCHAR(100), 
@@ -87,11 +85,17 @@ CREATE TABLE Post (
     anon_flag INT NOT NULL,
     moderation_status INT NOT NULL,
     PRIMARY KEY (post_id),
-    FOREIGN KEY (creator) REFERENCES UserAccount(username) ON UPDATE CASCADE   
+    FOREIGN KEY (creator) REFERENCES UserAccount(username) ON UPDATE CASCADE
+    -- THERE NEEDS TO BE A FOREIGN KEY CONSTRAINT REFRENCING TOPICS HERE
+    -- THIS CANNOT BE ADDED INTO THE TABLE UNTIL TOPICS ARE WORKING PROPERLY IN /CREATEPOST/
 );
 
+-- Initializes the Comment table.
+-- ATTRIBUTE DESCRIPTIONS: 
+-- 		comment_id: 
+
+
 -- Initializes the SavedPost table.
--- Note that users can save their own posts on a database level. This can be prevented by the backend.
 -- ATTRIBUTE DESCRIPTIONS: 
 -- 		username: The user who saved the post
 -- 		post_id: The post that the user saved

@@ -9,6 +9,7 @@
 
 # production
 /build
+/api/static
 
 # security
 /api/credentials

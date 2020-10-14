@@ -15,6 +15,9 @@ DROP TABLE SavedPost;
 -- Drops the Post table.
 DROP TABLE Post;
 
+-- Drops the Topic table.
+DROP TABLE Topic;
+
 -- Drops the UserAccount table
 DROP TABLE UserAccount;
 
