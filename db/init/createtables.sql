@@ -14,7 +14,7 @@ CREATE DATABASE weave;
 USE weave;
 
 -- Initializes the user table.
--- 'USER' is a keyword in SQL which is the reason for the long table name.
+-- 'USER' is a keyword in SQL, which is the reason for the long table name.
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		username: Plaintext username with a maximum of 20 characters
 -- 		email: Plaintext email that the user's account is connected with
@@ -42,6 +42,7 @@ CREATE TABLE UserAccount (
 );
 
 -- Initializes the Topic Table
+-- Topic descriptions aren't implemented for the time being, but they may be added later.
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		topic_name: The UNIQUE name of the topic at 50 characters maximum
 -- 		date_created: The date and time that the first post in this topic was created
@@ -74,7 +75,7 @@ CREATE TABLE Topic (
 -- 			NOTE: For now, this attribute will always be set to 0; it may be removed later. 
 CREATE TABLE Post (
     post_id INT NOT NULL,
-    topic_name VARCHAR(30) NOT NULL,
+    topic_name VARCHAR(50) NOT NULL,
     creator VARCHAR(20) NOT NULL,
     date_created DATE NOT NULL,
     title VARCHAR(75) NOT NULL,
@@ -91,15 +92,39 @@ CREATE TABLE Post (
 );
 
 -- Initializes the Comment table.
+-- 'COMMENT' is also a keyword in SQL, which is the reason for the long table name.
 -- ATTRIBUTE DESCRIPTIONS: 
--- 		comment_id: 
-
+-- 		comment_id: Unique ID assigned upon comment creation
+-- 		post_parent: The ID of the post that the comment is attached to
+-- 		user_parent: The username of the account that made the comment
+-- 		comment_parent: The ID of the comment that this comment is a reply to 
+-- 			NOTE: If the comment is not a reply, this attribute should be 0.
+-- 		date_created: The date and time at which this comment was created
+-- 		content: A string representing the body of the comment, with a maximum of 400 characters
+-- 		upvote_count: An integer representing the total number of upvotes on this comment
+-- 		downvote_count: An integer representing the total number of downvotes on this comment
+-- 		moderation_status: an integer flag corresponding to the comment's moderation status
+-- 			NOTE: For now, this attribute will always be set to 0; it may be removed later. 
+CREATE TABLE PostComment (
+	comment_id INT NOT NULL,
+    post_parent INT NOT NULL,
+    user_parent VARCHAR(20) NOT NULL,
+    comment_parent INT NOT NULL,
+    date_created DATETIME NOT NULL,
+    content VARCHAR(400) NOT NULL,
+    upvote_count INT NOT NULL,
+    downvote_count INT NOT NULL,
+    moderation_status INT NOT NULL,
+    PRIMARY KEY (comment_id),
+    FOREIGN KEY (post_parent) REFERENCES Post(post_id),
+    FOREIGN KEY (user_parent) REFERENCES UserAccount(username) ON UPDATE CASCADE
+);
 
 -- Initializes the SavedPost table.
 -- ATTRIBUTE DESCRIPTIONS: 
 -- 		username: The user who saved the post
 -- 		post_id: The post that the user saved
--- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair.
 -- 		date_saved: The date that the post was saved
 CREATE TABLE SavedPost (
     username VARCHAR(20) NOT NULL,
@@ -107,14 +132,14 @@ CREATE TABLE SavedPost (
     date_saved DATE NOT NULL,
     PRIMARY KEY (username, post_id),
     FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE, 
-    FOREIGN KEY (post_id) REFERENCES Post(post_id) ON UPDATE CASCADE
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
 -- Initializes the PostVote table.
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		username: The user who voted on the post
--- 		post_id: The post that the user saved
--- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair
+-- 		post_id: The post that the user voted on
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair.
 -- 		score: A flag representing an upvote (1) or downvote (-1)
 CREATE TABLE PostVote (
     username VARCHAR(20) NOT NULL,
@@ -122,7 +147,49 @@ CREATE TABLE PostVote (
     score INT NOT NULL,
     PRIMARY KEY (username, post_id),
     FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES Post(post_id) ON UPDATE CASCADE
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
+);
+
+-- Initializes the PostVote table.
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		username: The user who voted on the post
+-- 		comment_id: The comment that the user saved
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair.
+-- 		score: A flag representing an upvote (1) or downvote (-1)
+CREATE TABLE CommentVote (
+	username VARCHAR(20) NOT NULL,
+    comment_id INT NOT NULL,
+    score INT NOT NULL,
+	PRIMARY KEY (username, comment_id),
+    FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE,
+    FOREIGN KEY (comment_id) REFERENCES PostComment(comment_id)
+);
+
+-- Initializes the FollowUser table
+-- Note that users can technically follow themselves, but the backend should be able to handle this.
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		user_follower: The user who is following someone
+-- 		user_followed: The user who is being followed by someone
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair.
+CREATE TABLE FollowUser (
+	user_follower VARCHAR(20) NOT NULL,
+    user_followed VARCHAR(20) NOT NULL,
+    PRIMARY KEY (user_follower, user_followed),
+    FOREIGN KEY (user_follower) REFERENCES UserAccount(username),
+    FOREIGN KEY (user_followed) REFERENCES UserAccount(username)
+);
+
+-- Initializes the TopicFollow table
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		user_follower: The user who is following the topic
+-- 		topic_followed: The topic that is being followed by the user
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair.
+CREATE TABLE FollowTopic (
+	user_follower VARCHAR(20) NOT NULL,
+    topic_followed VARCHAR(50) NOT NULL,
+    PRIMARY KEY (user_follower, topic_followed),
+    FOREIGN KEY (user_follower) REFERENCES UserAccount(username),
+    FOREIGN KEY (topic_followed) REFERENCES Topic(topic_name)
 );
 
 -- Initializes the Blacklist table

@@ -6,11 +6,23 @@
 -- Drops the Blacklist table.
 DROP TABLE Blacklist;
 
+-- Drops the TopicFollow table.
+DROP TABLE FollowTopic;
+
+-- Drops the UserFollow table.
+DROP TABLE FollowUser;
+
+-- Drops the CommentVote table.
+DROP TABLE CommentVote;
+
 -- Drops the PostVote table.
 DROP TABLE PostVote;
 
 -- Drops the SavedPost table.
 DROP TABLE SavedPost;
+
+-- Drops the Comment table.
+DROP TABLE PostComment;
 
 -- Drops the Post table.
 DROP TABLE Post;
