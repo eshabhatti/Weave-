@@ -4,17 +4,6 @@
   margin: 0px auto;
 }
 
-.profile-side-bar {
-  height: 100% !important;
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid;
-  border-radius: 0;
-  border-color: rgba(75, 15, 52, 0.693);
-  background-color: rgba(224, 219, 228, 0.1);
-  transition: 0.8s ease;
-}
-
 .side-bar-menu {
   padding-left: 5%;
   padding-top: 20px;
@@ -189,6 +178,7 @@
   padding-bottom: 30px;
   margin-bottom: 100px;
   margin-top: 40px;
+
 }
 
 .profile-buttons {
