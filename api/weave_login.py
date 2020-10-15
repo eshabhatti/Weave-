@@ -13,6 +13,7 @@ weave_login = Blueprint('weave_login', __name__)
 
 # # # # Backend code for logging into Weave. 
 # # Expects a POST request with a JSON. Details are discussed in "/api/README.md".
+# # Returns a JSON including JWT tokens and confirmation of user identity.
 # # Call this route from the Windows Command Prompt with:
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\"}" http://localhost:5000/login/
 @weave_login.route('/login/', methods=["GET", "POST"])
@@ -42,25 +43,24 @@ def weave_user_login():
         # Need to pull the hashed password of the selected user out of the database
         # This also needs to catch the case of an invalid user
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s;", (username,)) #args have to be a tuple
+        cursor.execute("SELECT encrypted_password FROM UserAccount WHERE " + username_type + " = %s;", (username,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message':'Username and password do not match.'}), 401
         hashed_password = cursor.fetchall()
         hashed_password = (hashed_password[0])["encrypted_password"]
         
         # This will validate the user's password:
-        valid_password = bcrypt.checkpw(password.encode('utf8'), hashed_password.encode('utf8')) #have to encode strings here
+        valid_password = bcrypt.checkpw(password.encode('utf8'), hashed_password.encode('utf8')) 
         if (not valid_password):
             return jsonify({'error_message':'Username and password do not match.'}), 401 
             
         # This will fetch the user's information from the database after validation (should it all be grabbed in the first execute?)
         cursor.execute("SELECT * FROM UserAccount WHERE " + username_type + " = %s", (username,))
         account = cursor.fetchall()
-        print(account) # debugging
 
         # Return "Profile page of account"
         for row in cursor:
-            # creates an access token and refresh token using the usernamem
+            # Creates an access token and refresh token using the usernamem
             ret = {
                 'access_token': create_access_token(identity=row["username"]),
                 'refresh_token': create_refresh_token(identity=row["username"]),
@@ -76,6 +76,7 @@ def weave_user_login():
 
 # # # # Backend code for logging out of Weave
 # # Right now this route blacklists access tokens, and another route blacklists refresh tokens.
+# # Returns an empty access token and confirmation of user identity.
 @weave_login.route("/logout", methods=["DELETE"])
 @jwt_required
 def weave_logout():
@@ -106,6 +107,7 @@ def weave_logout():
 
 # # # # Backend code for logging out of Weave
 # # Right now this route blacklists refresh tokens, and another route blacklists access tokens.
+# # Returns empty refresh token and confirmation of user identity.
 @weave_login.route("/logout2", methods=["DELETE"])
 @jwt_refresh_token_required
 def weave_logout2():

@@ -6,8 +6,9 @@ weave_vote = Blueprint('weave_vote', __name__)
 
 
 # # # # Backend code for adding votes to posts (this should also scale to voting on comments)
-# # Expects a POST request with a JSON. Details are discussed in "/api/README.md".
 # # Like saving posts, this method assumes we can call routes without navigating to that page on the frontend.
+# # Expects a POST request with a JSON. Details are discussed in "/api/README.md".
+# # Returns a JSON with a flag corresponding to how the vote has been changed. 
 # # Call this route from the Windows Command Prompt with:
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"type\":\"1\",\"id\":\"1\",\"vote\":\"1\"}" http://localhost:5000/vote/
 @weave_vote.route("/vote/", methods=["POST"])

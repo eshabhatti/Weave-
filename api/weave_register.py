@@ -14,6 +14,7 @@ weave_register = Blueprint('weave_register', __name__)
 
 # # # # Backend code for user registration on Weave.
 # # Expects a POST request with a JSON object. Details are discussed in "/api/README.md".
+# # Returns a JSON with JWT access tokens and confirmation of the user's identity. 
 # # Call this route from the Windows Command Prompt with:
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\",\"email\":\"test@tes.com\"}" http://localhost:5000/register/
 @weave_register.route('/register/', methods=["GET", "POST"])

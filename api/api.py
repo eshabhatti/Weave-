@@ -67,6 +67,7 @@ with app.app_context():
 
 # # # # Backend code for token blacklist checking
 # # Looks for the token in the database of blacklisted tokens.
+# # Returns true if the token is in the blacklist; returns false otherwise. 
 @jwt.token_in_blacklist_loader
 def check_against_blacklist(passed_token):
     cursor = mysql.connection.cursor()

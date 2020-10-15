@@ -10,6 +10,7 @@ weave_post = Blueprint('weave_post', __name__)
 # # # # # Backend code for creating posts on Weave.
 # # Will save a "text post" to the database. If the post has a picture component, another server request will be needed.
 # # Expects a POST request with a JSON. Details are discussed in "/api/README.md".
+# # Returns a JSON with JWT tokens and confirmation of the user's identity.
 # # Call this route from the Windows Command Prompt with:
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"anon\":\"0\"}" http://localhost:5000/createpost/
 @weave_post.route("/createpost/", methods=["GET", "POST"])
@@ -21,25 +22,26 @@ def weave_post_create():
 
     # Checks for JSON format.
     if (not request.is_json):
-        return jsonify({'error_message': 'Request Error: Not JSON.'})
+        return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
     post_info = request.get_json()
     post_info["username"] = get_jwt_identity()
 
     # This horrific thing checks that the JSON has all the needed elements.
     if ("username" not in post_info or "topic" not in post_info or "title" not in post_info or "content" not in post_info or "anon" not in post_info):
-        return jsonify({'error_message': 'Request Error: Missing JSON Element'})
+        return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
 
-    # Don't have to validate the username because the frontend should send us it directly. (?)
-    # May want to validate anon flag for safety, even though the backend will always send it to us without user input. (?)
-    # Topic stuff is not implemented in this sprint, but when it IS implemented there will need to be more stuff here.
+    # The username does not need to be validated here because it's passed through JWT. 
+    # The anonymous flag should not ever give an error because it's sent from the server directly.
+    
+    # TODO: Validate title information here.
 
     # Validates the content information.
-    # Most strings will be fine. Empty content will be saved as an empty string. Any \" phrase must be replaced with \\\".
-    post_info["content"].replace("\\\"", "\\\\\\\"")
+    # Most strings will be fine. Empty content (currently not be possible) will be saved as an empty string.
+    # Any single or double quote in strings will be taken care of as part of the cursor's execute method.
     if (post_info["content"] != None and len(post_info["content"]) > 750):
-        return jsonify({'error_message': 'Request Error: Post Too Large'})
+        return jsonify({'error_message': 'Request Error: Post too large.'}), 400
 
-    # The post will always be treated as a text post when it is being saved to the database.
+    # TODO: Implement topic validation and creation here.
 
     # Assigns the Post a new post_id by querying the most recent post and then adding one.
     # The post_id is initialized to 1 because the first query should not return any posts.
@@ -50,6 +52,7 @@ def weave_post_create():
         post_id = row["post_id"] + 1
 
     # Gets the current date in "YYYY-MM-DD" format.
+    # TODO: Update this (and the database structure) to a DATETIME in the format 'YYYY-MM-DD HH:MI:SS'
     current_date = datetime.today().strftime("%Y-%m-%d")
 
     # Insert new text post into the database.
@@ -69,6 +72,7 @@ def weave_post_create():
 # # # # Backend code for uploading post images on Weave.
 # # Will save the picture image of a picture-caption post to the database.
 # # Expects a POST request with a header holding authorization and an attached image file.
+# # Returns a string confirmation of the image creation.
 @weave_post.route("/createimage/", methods=["GET", "POST"])
 @jwt_required
 def weave_post_upload_image():
@@ -96,8 +100,8 @@ def weave_post_upload_image():
                 while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
                     prefix += 1
                 new_filename = str(prefix) + new_filename
-                img_file.save(
-                    str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
+                img_file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
+                # TODO: Make sure filepath is under 100 characters before calling the database.
             else:
                 return "no content"
 
@@ -115,8 +119,9 @@ def weave_post_upload_image():
 
 
 # # # # # Backend code for viewing posts on Weave.
-# # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
 # # The frontend will need to make another call to /postimage/<post_id> to get any possible other image.
+# # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
+# # Returns a dictionary of post information including the topic, date created, title, content, image path, score, and creator.
 @weave_post.route("/post/<post_id>", methods=["GET"])
 @jwt_required
 def weave_post_data(post_id):
@@ -128,8 +133,7 @@ def weave_post_data(post_id):
         cursor = mysql.connection.cursor()
 
         # Checks if post exists in db and grabs relevant data.
-        cursor.execute(
-            "SELECT topic_name, date_created, title, content, upvote_count, downvote_count, anon_flag, creator, pic_path FROM POST WHERE post_id = %s;", (post_id,))
+        cursor.execute("SELECT topic_name, date_created, title, content, upvote_count, downvote_count, anon_flag, creator, pic_path FROM POST WHERE post_id = %s;", (post_id,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'Post does not exist'}), 404
 
@@ -155,6 +159,7 @@ def weave_post_data(post_id):
 
 # # # # Backend code for getting a post's special qualities according to a specific user.
 # # Expects a JSON with details defined in "api/README.md".
+# # Returns a JSON  that defines whether a post has been saved and/or voted on by the user passed.
 @weave_post.route("/poststates/", methods=["POST"])
 @jwt_required
 def weave_post_state():
@@ -163,6 +168,7 @@ def weave_post_state():
         # Initializes MySQL cursor.
         cursor = mysql.connection.cursor()
 
+        # Initializes post state variables.
         saved = 0
         voted = 0
 
@@ -172,17 +178,18 @@ def weave_post_state():
         post_info = request.get_json()
         post_info["username"] = get_jwt_identity()
 
+        # Checks that JSON has all needed elements.
         if ("username" not in post_info or "post_id" not in post_info):
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
 
-        # Checks if upvoted/downvoted
+        # Checks if post is upvoted/downvoted.
         vote_query = "SELECT score FROM PostVote WHERE username = %s and post_id = %s;"
         vote_values = (post_info["username"], post_info["post_id"])
         cursor.execute(vote_query, vote_values)
         if (cursor.rowcount > 0):
             voted = (cursor.fetchall())[0]["score"]
 
-        # Checks is saved or not
+        # Checks if post is saved or not.
         save_query = "SELECT * FROM SavedPost WHERE username = %s and post_id = %s;"
         save_values = (post_info["username"], post_info["post_id"])
         cursor.execute(save_query, save_values)
@@ -200,8 +207,9 @@ def weave_post_state():
         return jsonify(ret_states)
 
 # # # # Backend code for a pulling a single post's image.
-# # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
 # # This route will likely have to be called without explicitly navigating to this URL.
+# # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
+# # Returns an image file if the post has a picture; returns empty otherwise.
 @weave_post.route("/postimage/<post_id>", methods=["GET"])
 def weave_post_image(post_id):
 
@@ -212,16 +220,15 @@ def weave_post_image(post_id):
         cursor = mysql.connection.cursor()
 
         # Checks if post exists in db; may not need to be done if we know the post data route is visited first.
-        cursor.execute(
-            "SELECT pic_path FROM POST WHERE post_id = %s;", (post_id,))
+        cursor.execute("SELECT pic_path FROM POST WHERE post_id = %s;", (post_id,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'Post does not exist'}), 404
 
         # Pulls the picture path out of the cursor.
         filename = cursor.fetchall()[0]["pic_path"]
         if (filename is not ""):
-        # Sends the file back to the frontend.
-        # Media file type detection should work automatically but may need to be updated if not.
+            # Sends the file back to the frontend.
+            # Media file type detection should work automatically but may need to be updated if not.
             print('"' + filename + '"')
             print('HERE ' + str(current_app.config['UPLOAD_FOLDER']) + filename)
             return send_file(str(current_app.config['UPLOAD_FOLDER']) + filename)
@@ -231,6 +238,7 @@ def weave_post_image(post_id):
 
 # # # # Backend code for pulling a user's posts on Weave
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
+# # Returns a JSON with a list of the posts made by a user within the specified range.
 @weave_post.route("/userposts/", methods=["POST"])
 @jwt_required
 def weave_pull_userposts():
@@ -246,15 +254,17 @@ def weave_pull_userposts():
             return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
         pull_info = request.get_json()
 
+        # Checks for all needed JSON elements.
         if ("username" not in pull_info or "start" not in pull_info or "end" not in pull_info):
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
 
         # Checks if username exists in database.
-        cursor.execute(
-            "SELECT * FROM UserAccount WHERE username = %s;", (pull_info["username"],))
+        cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (pull_info["username"],))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'User does not exist'}), 404
         cursor.fetchall()
+
+        # TODO: May want to validate start and end because the query is set up rather insecurely.
 
         # Pulls the user's most recent posts as specified by the range.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
@@ -268,19 +278,15 @@ def weave_pull_userposts():
         for row in cursor:
             pull_list.append(row["post_id"])
 
-        # List needs to be rewritten as a string that frontend will have to parse.
-        pull_string = ""
-        for element in range(len(pull_list)):
-            pull_string += str(pull_list[element])
-            pull_string += ","
-
-        # return as list
+        # Return as list
         return {'pull_list': pull_list}
 
 
 # # # # Backend code for saving posts on Weave
 # # Doesn't expect a unique URL right now, but this may be changed later.
 # # Does expect a POST request along with a JSON. Details will be in "/api/README.md".
+# # Returns confirmation of success as a string.
+# # Call this route from the Windows Command Prompt with:
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"realuser1\",\"post\":\"4\",\"type\":\"1\"}" http://localhost:5000/save/
 @weave_post.route("/save/", methods=["POST"])
 @jwt_required
@@ -305,16 +311,18 @@ def save_weave_post():
         # There shouldn't need to be any validation as the username and post_id are sent directly.
 
         # Gets the current date in "YYYY-MM-DD" format.
+        # TODO: Change this (along with the database attribute) into DATETIME in the format 'YYYY-MM-DD HH:MI:SS'.
         current_date = datetime.today().strftime("%Y-%m-%d")
+
+        # If type is 1: Saves the specific username-post save relation as a database entity.
         if (save_info["type"] == 1):
-            # Saves the specific username-post save relation as a database entity.
             save_query = "INSERT INTO SavedPost VALUES (%s, %s, %s);"
-            save_values = (save_info["username"],
-                           save_info["post"], current_date)
+            save_values = (save_info["username"], save_info["post"], current_date)
             cursor.execute(save_query, save_values)
             mysql.connection.commit()
+
+        # If type is -1: Deletes the specifice username-post save relation entity from the database.
         elif (save_info["type"] == -1):
-            # Unsaves the specifice username-post save relation
             unsave_query = "DELETE FROM SavedPost WHERE username = %s AND post_id = %s;"
             unsave_values = (save_info["username"], save_info["post"])
             cursor.execute(unsave_query, unsave_values)
@@ -325,6 +333,7 @@ def save_weave_post():
 
 # # # # Backend code for pulling a user's saved posts on Weave
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
+# # Call this route from the Windows Command Prompt with: 
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"realuser1\",\"start\":\"0\",\"end\":\"10\"}" http://localhost:5000/savedposts/
 @weave_post.route("/savedposts/", methods=["POST"])
 @jwt_required
@@ -346,11 +355,12 @@ def weave_pull_saves():
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
 
         # Checks if username exists in database.
-        cursor.execute(
-            "SELECT * FROM UserAccount WHERE username = %s;", (save_info["username"],))
+        cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (save_info["username"],))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'User does not exist'}), 404
         cursor.fetchall()
+
+         # TODO: May want to validate start and end because the query is set up rather insecurely.
 
         # Pulls the saved posts of the user as specified by the range.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
@@ -363,10 +373,6 @@ def weave_pull_saves():
         save_list = []
         for row in cursor:
             save_list.append(row["post_id"])
-
-        # List needs to be rewritten as a string that frontend will have to parse.
-        save_string = ""
-        for element in range(len(save_list)):
-            save_string += str(save_list[element])
-            save_string += ","
-        return jsonify({'save_list': save_string}), 200
+        
+        # Return as list
+        return {'save_list': save_list}
