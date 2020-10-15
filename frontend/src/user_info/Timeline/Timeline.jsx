@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import ImageUploader from 'react-images-upload';
 
@@ -14,6 +14,23 @@ export default function Timeline() {
 	
 	const access_token = localStorage.getItem('access_token');
 	window.onload = isLoggedIn(access_token);
+
+	useEffect(() => {
+		fetch("http://localhost:5000/protected", {
+			method: "GET",
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + access_token
+			}
+		}).then(response => response.json()).then(data => {
+			if (!data.logged_in) {
+				window.location.href="/login";
+			}
+		}).catch(err => {
+			alert("Err in console");
+			console.error(err);
+		});
+	}, []);
 
 	const onSubmit = (event) => {
 		event.preventDefault();
