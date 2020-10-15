@@ -8,14 +8,12 @@ export default function Timeline() {
 	const [postContent, updatePostContent] = useState("");
 	const [postTitle, updatePostTitle] = useState("");
 	const [isAnon, updateIsAnon] = useState(0);
-	const access_token = localStorage.getItem('access_token');
 	const [image, saveImage] = useState(null);
-
 	const [errorMessage, updateErrorMessage] = useState("");
 	const [successMessage, updateSuccessMessage] = useState("");
-	if (access_token == null) {
-		window.location = "/login"
-	}
+	
+	const access_token = localStorage.getItem('access_token');
+	window.onload = isLoggedIn(access_token);
 
 	useEffect(() => {
 		fetch("http://localhost:5000/protected", {
@@ -37,7 +35,7 @@ export default function Timeline() {
 	const onSubmit = (event) => {
 		event.preventDefault();
 		/* More to be added for posts eventually */
-		if (isFormValid({ postTitle, postContent, updateErrorMessage, updateSuccessMessage })) {
+		if (isFormValid({ postTitle, postContent, updateErrorMessage, updateSuccessMessage, image })) {
 			const body = {
 				title: postTitle,
 				content: postContent,
@@ -166,14 +164,18 @@ export default function Timeline() {
 	);
 }
 
-function isFormValid({ postTitle, postContent, updateErrorMessage, updateSuccessMessage }) {
+function isFormValid({ postTitle, postContent, updateErrorMessage, updateSuccessMessage, image }) {
 	updateSuccessMessage("")
 	updateErrorMessage("")
 	if (postTitle === "") {
 		updateErrorMessage("Please enter a title for your post.");
 	} else if (postContent === "") {
 		updateErrorMessage("Post body cannot be empty.");
-	} else {
+	} else if (postContent.length > 750 && image === null) {
+		updateErrorMessage("Post body cannot exceed 750 characters")
+	} else if (postContent.length > 100 && image !== null) {
+		updateErrorMessage("Captions cannot exceed 100 characters")
+	}else {
 		return true;
 	}
 	return false;
@@ -193,4 +195,10 @@ function SuccessBubble({ message }) {
 			<p className="post-error-message">{message}</p>
 		</div>
 	)
+}
+
+function isLoggedIn(access_token) {
+	if (access_token == "null") {
+		window.location = "/login"
+	}
 }

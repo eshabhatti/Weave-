@@ -11,7 +11,7 @@ weave_post = Blueprint('weave_post', __name__)
 # # Will save a "text post" to the database. If the post has a picture component, another server request will be needed.
 # # Expects a POST request with a JSON. Details are discussed in "/api/README.md".
 # # Call this route from the Windows Command Prompt with:
-#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"anon\":\"0\"}" http://localhost:5000/createpost/
+#       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"anon\":\"0\"}" http://localhost:5000/createpost/
 @weave_post.route("/createpost/", methods=["GET", "POST"])
 @jwt_required
 def weave_post_create():
@@ -36,7 +36,7 @@ def weave_post_create():
     # Validates the content information.
     # Most strings will be fine. Empty content will be saved as an empty string. Any \" phrase must be replaced with \\\".
     post_info["content"].replace("\\\"", "\\\\\\\"")
-    if (len(post_info["content"]) > 750):
+    if (post_info["content"] != None and len(post_info["content"]) > 750):
         return jsonify({'error_message': 'Request Error: Post Too Large'})
 
     # The post will always be treated as a text post when it is being saved to the database.
@@ -53,9 +53,8 @@ def weave_post_create():
     current_date = datetime.today().strftime("%Y-%m-%d")
 
     # Insert new text post into the database.
-    post_query = "INSERT INTO Post VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-    post_values = (post_id, post_info["topic"], post_info["username"], current_date,
-                   0, post_info["title"], post_info["content"], None, 0, 0, post_info["anon"], 0)
+    post_query = "INSERT INTO Post VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+    post_values = (post_id, post_info["topic"], post_info["username"], current_date, post_info["title"], post_info["content"], None, 0, 0, post_info["anon"], 0)
     cursor.execute(post_query, post_values)
     mysql.connection.commit()
 
@@ -130,7 +129,7 @@ def weave_post_data(post_id):
 
         # Checks if post exists in db and grabs relevant data.
         cursor.execute(
-            "SELECT topic_name, date_created, post_type, title, content, upvote_count, downvote_count, anon_flag, creator, pic_path FROM POST WHERE post_id = %s;", (post_id,))
+            "SELECT topic_name, date_created, title, content, upvote_count, downvote_count, anon_flag, creator, pic_path FROM POST WHERE post_id = %s;", (post_id,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'Post does not exist'}), 404
 

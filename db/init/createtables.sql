@@ -14,20 +14,18 @@ CREATE DATABASE weave;
 USE weave;
 
 -- Initializes the user table.
--- 'USER' is a keyword in SQL which is the reason for the long table name.
+-- 'USER' is a keyword in SQL, which is the reason for the long table name.
 -- ATTRIBUTE DESCRIPTIONS:
--- 		username: plaintext username with a maximum of 20 characters
--- 		email: plaintext email that the user's account is connected with
--- 		encrypted_password: user password hashed with bcrypt; bcrypt includes the salt along with the hash
--- 		first_name: optional value that represents the user's first name
--- 		last_name: optional value that represents the user's last name
--- 			NOTE: These names are separated to make injection attacks harder.
--- 		date_joined: the date corresponding to when the user created their account
--- 		user_bio: the optional biography description attached to a user account
--- 		user_pic: the optional filepath to the user's profile picture (length may be too long?)
--- 		follower_count: an integer corresponding to the user's follower count
--- 		moderation_status: an integer flag corresponding to the user's moderation status
--- 			NOTE: For now, the above two attributes will always be set to 0
+-- 		username: Plaintext username with a maximum of 20 characters
+-- 		email: Plaintext email that the user's account is connected with
+-- 		encrypted_password: User password hashed with bcrypt; bcrypt includes the salt along with the hash
+-- 		first_name: Optional value that represents the user's first name
+-- 		last_name: Optional value that represents the user's last name
+-- 		date_joined: The date corresponding to when the user created their account
+-- 		user_bio: The optional biography description attached to a user account
+-- 		user_pic: The optional filepath to the user's profile picture
+-- 		follower_count: An integer corresponding to the user's follower count
+-- 		moderation_status: An integer flag corresponding to the user's moderation (deletion) status
 CREATE TABLE UserAccount (
     username VARCHAR(20) NOT NULL,
     email VARCHAR(50) NOT NULL,
@@ -43,15 +41,28 @@ CREATE TABLE UserAccount (
     UNIQUE (email)
 );
 
--- NOTE: When topics are added, their table needs to be initialized here.
+-- Initializes the Topic Table
+-- Topic descriptions aren't implemented for the time being, but they may be added later.
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		topic_name: The UNIQUE name of the topic at 50 characters maximum
+-- 		date_created: The date and time that the first post in this topic was created
+-- 		follower_count: An integer that represents how many users follow this topic
+-- 		moderation_status: An integer flag corresponding to topic moderation
+-- 			NOTE: For now, this attribute will always be set to 0; it may be removed later. 
+CREATE TABLE Topic (
+	topic_name VARCHAR(50) NOT NULL,
+    date_created DATETIME NOT NULL,
+    follower_count INT NOT NULL,
+    moderation_status INT NOT NULL,
+    PRIMARY KEY (topic_name)
+);
 
 -- Initializes the Post Table
--- If album posts are allowed, this table will need to be modified
+-- If album posts are ever allowed, this table will need to be modified
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		post_id: Unique ID value assigned to a post upon creation
 -- 		topic_name: The one topic that the post is assigned to; foreign key that applies to Topic
--- 			NOTE: For now, just assign this value as "null" or "general"
--- 		creator: The creator of the post's username; foreign key that applies to UserAccount
+-- 		username: The creator of the post's username; foreign key that applies to UserAccount
 -- 		date_created: The date of the post's creation
 -- 		post_type: A flag that states whether the post is pure text (1) or picture-caption (2) -- maybe not needed?
 -- 		title: A string that holds the post's title
@@ -61,13 +72,12 @@ CREATE TABLE UserAccount (
 -- 		downvote_count: The total number of downvotes the post has (initialized to 0)
 -- 		anon_flag: A flag that marks whether (1) or not (0) the post is anonymous
 -- 		moderation_status: an integer flag corresponding to the post's moderation status
--- 			NOTE: For now, this attribute will always be set to 0
+-- 			NOTE: For now, this attribute will always be set to 0; it may be removed later. 
 CREATE TABLE Post (
     post_id INT NOT NULL,
-    topic_name VARCHAR(30) NOT NULL,
+    topic_name VARCHAR(50) NOT NULL,
     creator VARCHAR(20) NOT NULL,
     date_created DATE NOT NULL,
-    post_type INT NOT NULL,
     title VARCHAR(75) NOT NULL,
     content VARCHAR(750),
     pic_path VARCHAR(100), 
@@ -76,15 +86,45 @@ CREATE TABLE Post (
     anon_flag INT NOT NULL,
     moderation_status INT NOT NULL,
     PRIMARY KEY (post_id),
-    FOREIGN KEY (creator) REFERENCES UserAccount(username) ON UPDATE CASCADE   
+    FOREIGN KEY (creator) REFERENCES UserAccount(username) ON UPDATE CASCADE
+    -- THERE NEEDS TO BE A FOREIGN KEY CONSTRAINT REFRENCING TOPICS HERE
+    -- THIS CANNOT BE ADDED INTO THE TABLE UNTIL TOPICS ARE WORKING PROPERLY IN /CREATEPOST/
+);
+
+-- Initializes the Comment table.
+-- 'COMMENT' is also a keyword in SQL, which is the reason for the long table name.
+-- ATTRIBUTE DESCRIPTIONS: 
+-- 		comment_id: Unique ID assigned upon comment creation
+-- 		post_parent: The ID of the post that the comment is attached to
+-- 		user_parent: The username of the account that made the comment
+-- 		comment_parent: The ID of the comment that this comment is a reply to 
+-- 			NOTE: If the comment is not a reply, this attribute should be 0.
+-- 		date_created: The date and time at which this comment was created
+-- 		content: A string representing the body of the comment, with a maximum of 400 characters
+-- 		upvote_count: An integer representing the total number of upvotes on this comment
+-- 		downvote_count: An integer representing the total number of downvotes on this comment
+-- 		moderation_status: an integer flag corresponding to the comment's moderation status
+-- 			NOTE: For now, this attribute will always be set to 0; it may be removed later. 
+CREATE TABLE PostComment (
+	comment_id INT NOT NULL,
+    post_parent INT NOT NULL,
+    user_parent VARCHAR(20) NOT NULL,
+    comment_parent INT NOT NULL,
+    date_created DATETIME NOT NULL,
+    content VARCHAR(400) NOT NULL,
+    upvote_count INT NOT NULL,
+    downvote_count INT NOT NULL,
+    moderation_status INT NOT NULL,
+    PRIMARY KEY (comment_id),
+    FOREIGN KEY (post_parent) REFERENCES Post(post_id),
+    FOREIGN KEY (user_parent) REFERENCES UserAccount(username) ON UPDATE CASCADE
 );
 
 -- Initializes the SavedPost table.
--- Note that users can save their own posts on a database level. This can be prevented by the backend.
 -- ATTRIBUTE DESCRIPTIONS: 
 -- 		username: The user who saved the post
 -- 		post_id: The post that the user saved
--- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair.
 -- 		date_saved: The date that the post was saved
 CREATE TABLE SavedPost (
     username VARCHAR(20) NOT NULL,
@@ -92,14 +132,14 @@ CREATE TABLE SavedPost (
     date_saved DATE NOT NULL,
     PRIMARY KEY (username, post_id),
     FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE, 
-    FOREIGN KEY (post_id) REFERENCES Post(post_id) ON UPDATE CASCADE
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
 -- Initializes the PostVote table.
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		username: The user who voted on the post
--- 		post_id: The post that the user saved
--- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair
+-- 		post_id: The post that the user voted on
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair.
 -- 		score: A flag representing an upvote (1) or downvote (-1)
 CREATE TABLE PostVote (
     username VARCHAR(20) NOT NULL,
@@ -107,7 +147,49 @@ CREATE TABLE PostVote (
     score INT NOT NULL,
     PRIMARY KEY (username, post_id),
     FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES Post(post_id) ON UPDATE CASCADE
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
+);
+
+-- Initializes the PostVote table.
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		username: The user who voted on the post
+-- 		comment_id: The comment that the user saved
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair.
+-- 		score: A flag representing an upvote (1) or downvote (-1)
+CREATE TABLE CommentVote (
+	username VARCHAR(20) NOT NULL,
+    comment_id INT NOT NULL,
+    score INT NOT NULL,
+	PRIMARY KEY (username, comment_id),
+    FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE,
+    FOREIGN KEY (comment_id) REFERENCES PostComment(comment_id)
+);
+
+-- Initializes the FollowUser table
+-- Note that users can technically follow themselves, but the backend should be able to handle this.
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		user_follower: The user who is following someone
+-- 		user_followed: The user who is being followed by someone
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair.
+CREATE TABLE FollowUser (
+	user_follower VARCHAR(20) NOT NULL,
+    user_followed VARCHAR(20) NOT NULL,
+    PRIMARY KEY (user_follower, user_followed),
+    FOREIGN KEY (user_follower) REFERENCES UserAccount(username),
+    FOREIGN KEY (user_followed) REFERENCES UserAccount(username)
+);
+
+-- Initializes the TopicFollow table
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		user_follower: The user who is following the topic
+-- 		topic_followed: The topic that is being followed by the user
+-- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair.
+CREATE TABLE FollowTopic (
+	user_follower VARCHAR(20) NOT NULL,
+    topic_followed VARCHAR(50) NOT NULL,
+    PRIMARY KEY (user_follower, topic_followed),
+    FOREIGN KEY (user_follower) REFERENCES UserAccount(username),
+    FOREIGN KEY (topic_followed) REFERENCES Topic(topic_name)
 );
 
 -- Initializes the Blacklist table

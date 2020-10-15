@@ -135,9 +135,9 @@ def weave_edit_profile():
             "SELECT * FROM UserAccount WHERE username = %s;", (mod_info["username"],))
         print(cursor.fetchall())
         ret = {
-            'access_token': create_access_token(identity=mod_info["newusername"]),
-            'refresh_token': create_refresh_token(identity=mod_info["newusername"]),
-            'username': mod_info["newusername"]
+            'access_token': create_access_token(identity=final_username),
+            'refresh_token': create_refresh_token(identity=final_username),
+            'username': final_username
         }
         return jsonify(ret), 200
 

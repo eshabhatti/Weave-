@@ -43,4 +43,5 @@ Download Node.JS (npm) from `https://nodejs.org/en/`
 
 1. Download MySQL Community Workbench and Server from `https://dev.mysql.com/downloads/installer/`
 2. Once your community server is initialized locally, add a file `\api\credentials\dbcredentials.txt` with your database username on the first line and your database password on the second.
-3. Run the file `db\init\createtables.sql` in MySQL workbench to create all the tables needed to run Weave. 
+3. Run the file `db/init/createtables.sql` in MySQL workbench to create all the tables needed to run Weave. 
+4. If the database needs to be updated (that is, if the creation file has been changed), run the file `db/init/droptables.sql` in MySQL workbench and then re-run `db/init/createtables.sql`.
