@@ -179,7 +179,7 @@ CREATE TABLE FollowUser (
     FOREIGN KEY (user_followed) REFERENCES UserAccount(username)
 );
 
--- Initializes the TopicFollow table
+-- Initializes the FollowTopic table
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		user_follower: The user who is following the topic
 -- 		topic_followed: The topic that is being followed by the user

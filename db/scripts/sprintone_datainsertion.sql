@@ -50,7 +50,7 @@ VALUES (
 -- 			upvote_count: an integer representing the post's total upvotes; initialize this as 0
 -- 			downvote_count: an integer representing the post's total downvotes; initialize this as 0
 -- 			anon_flag: an integer flag that is set to 0 if the post is not anonymous and set to 1 if it is
--- 			moderation_status: an integer that flags the mod status of the user; always set this to 0 for now
+-- 			moderation_status: an integer that flags the mod status of the post; always set this to 0 for now
 -- 		);
 -- A non-anonymous text post may be first inserted into the database like so:
 INSERT INTO Post
@@ -114,7 +114,7 @@ INSERT INTO PostVote
 VALUES (
     "realuser1",                      -- username
     101,                              -- post_id
-    "1"                               -- score
+    1                                 -- score
 );
 -- NOTE THAT POST VOTES MAY NOT BE INSERTED INTO THE DATABASE UNLESS THEY HAVE A VALID USER AND A VALID POST TO CONNECT TO
 -- IMPORTANT: When adding a new vote into the database, you also need to update the post table.
