@@ -21,7 +21,7 @@ USE weave;
 -- 		encrypted_password: User password hashed with bcrypt; bcrypt includes the salt along with the hash
 -- 		first_name: Optional value that represents the user's first name
 -- 		last_name: Optional value that represents the user's last name
--- 		date_joined: The date corresponding to when the user created their account
+-- 		date_joined: The date and time corresponding to when the user created their account
 -- 		user_bio: The optional biography description attached to a user account
 -- 		user_pic: The optional filepath to the user's profile picture
 -- 		follower_count: An integer corresponding to the user's follower count
@@ -32,7 +32,7 @@ CREATE TABLE UserAccount (
     encrypted_password CHAR(64) NOT NULL,
     first_name VARCHAR(15),
     last_name VARCHAR(15),
-    date_joined DATE NOT NULL,
+    date_joined DATETIME NOT NULL,
     user_bio VARCHAR(250),
     user_pic VARCHAR(100), 
     follower_count INT NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE Topic (
 -- 		post_id: Unique ID value assigned to a post upon creation
 -- 		topic_name: The one topic that the post is assigned to; foreign key that applies to Topic
 -- 		username: The creator of the post's username; foreign key that applies to UserAccount
--- 		date_created: The date of the post's creation
+-- 		date_created: The date and time of the post's creation
 -- 		post_type: A flag that states whether the post is pure text (1) or picture-caption (2) -- maybe not needed?
 -- 		title: A string that holds the post's title
 -- 		content: A string that completely holds a text post's content; in a picture-caption post, this holds the caption
@@ -77,7 +77,7 @@ CREATE TABLE Post (
     post_id INT NOT NULL,
     topic_name VARCHAR(50) NOT NULL,
     creator VARCHAR(20) NOT NULL,
-    date_created DATE NOT NULL,
+    date_created DATETIME NOT NULL,
     title VARCHAR(75) NOT NULL,
     content VARCHAR(750),
     pic_path VARCHAR(100), 
@@ -125,11 +125,11 @@ CREATE TABLE PostComment (
 -- 		username: The user who saved the post
 -- 		post_id: The post that the user saved
 -- 			NOTE: The above two elements form the primary key; there cannot be a duplicate pair.
--- 		date_saved: The date that the post was saved
+-- 		date_saved: The date and time that the post was saved
 CREATE TABLE SavedPost (
     username VARCHAR(20) NOT NULL,
     post_id INT NOT NULL,
-    date_saved DATE NOT NULL,
+    date_saved DATETIME NOT NULL,
     PRIMARY KEY (username, post_id),
     FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE, 
     FOREIGN KEY (post_id) REFERENCES Post(post_id)
