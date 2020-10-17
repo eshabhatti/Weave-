@@ -43,8 +43,7 @@ def weave_register_user():
             return jsonify({'error_message':'Your username is invalid.'}), 400  
 
         # There also cannot be repeated usernames, which should be checked for before we get a SQL error.    
-        username_query = "SELECT username from UserAccount WHERE username = \"" + reg_info["username"] + "\";"
-        cursor.execute(username_query)
+        cursor.execute("SELECT username FROM UserAccount WHERE username = %s;", (reg_info["username"],))
         for row in cursor:
             if reg_info["username"] == row["username"]:
                 return jsonify({'error_message':'This username has already been used.'}), 400  
@@ -59,8 +58,7 @@ def weave_register_user():
             return jsonify({'error_message':'Your email address is invalid.'}), 400  
 
         # There also cannot be repeated email, which should be checked for before we get a SQL error.    
-        email_query = "SELECT email from UserAccount WHERE email = \"" + reg_info["email"] + "\";"
-        cursor.execute(email_query)
+        cursor.execute("SELECT email FROM UserAccount WHERE email = %s;", (reg_info["email"],))
         for row in cursor:
             if reg_info["email"] == row["email"]:
                 return jsonify({'error_message':'This email has already been used.'}), 400  
@@ -82,8 +80,8 @@ def weave_register_user():
         # Hashes the password for security before storing it in the database (using bcrypt).
         hash_password = bcrypt.hashpw(reg_info["password"].encode('utf8'), bcrypt.gensalt())
 
-        # Gets the current date in "YYYY-MM-DD" format.
-        current_date = datetime.today().strftime("%Y-%m-%d")
+        # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
+        current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
         # Insert new user into database.
         register_query = "INSERT INTO UserAccount VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"

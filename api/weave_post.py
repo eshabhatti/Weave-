@@ -4,6 +4,7 @@ from extensions import mysql
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
 from werkzeug.utils import secure_filename
 from os import path
+import re
 weave_post = Blueprint('weave_post', __name__)
 
 
@@ -51,9 +52,8 @@ def weave_post_create():
     for row in cursor:
         post_id = row["post_id"] + 1
 
-    # Gets the current date in "YYYY-MM-DD" format.
-    # TODO: Update this (and the database structure) to a DATETIME in the format 'YYYY-MM-DD HH:MI:SS'
-    current_date = datetime.today().strftime("%Y-%m-%d")
+    # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
+    current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
     # Insert new text post into the database.
     post_query = "INSERT INTO Post VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
@@ -150,8 +150,7 @@ def weave_post_data(post_id):
             post_info["pic_path"] = "http://localhost:5000/postimage/"+str(post_id)
 
         # Adds easily computed score to the JSON.
-        post_info["score"] = post_info["upvote_count"] - \
-            post_info["downvote_count"]
+        post_info["score"] = post_info["upvote_count"] - post_info["downvote_count"]
 
         # Returns post info as JSON object.
         return post_info
@@ -310,9 +309,8 @@ def save_weave_post():
 
         # There shouldn't need to be any validation as the username and post_id are sent directly.
 
-        # Gets the current date in "YYYY-MM-DD" format.
-        # TODO: Change this (along with the database attribute) into DATETIME in the format 'YYYY-MM-DD HH:MI:SS'.
-        current_date = datetime.today().strftime("%Y-%m-%d")
+        # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
+        current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
         # If type is 1: Saves the specific username-post save relation as a database entity.
         if (save_info["type"] == 1):
@@ -355,6 +353,7 @@ def weave_pull_saves():
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
 
         # Checks if username exists in database.
+        # This also doubles as a validation statement, assuming all previous usernames are validated correctly.
         cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (save_info["username"],))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'User does not exist'}), 404
