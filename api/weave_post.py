@@ -4,6 +4,7 @@ from extensions import mysql
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
 from werkzeug.utils import secure_filename
 from os import path
+import re
 weave_post = Blueprint('weave_post', __name__)
 
 
@@ -51,9 +52,8 @@ def weave_post_create():
     for row in cursor:
         post_id = row["post_id"] + 1
 
-    # Gets the current date in "YYYY-MM-DD" format.
-    # TODO: Update this (and the database structure) to a DATETIME in the format 'YYYY-MM-DD HH:MI:SS'
-    current_date = datetime.today().strftime("%Y-%m-%d")
+    # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
+    current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
     # Insert new text post into the database.
     post_query = "INSERT INTO Post VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
@@ -150,8 +150,7 @@ def weave_post_data(post_id):
             post_info["pic_path"] = "http://localhost:5000/postimage/"+str(post_id)
 
         # Adds easily computed score to the JSON.
-        post_info["score"] = post_info["upvote_count"] - \
-            post_info["downvote_count"]
+        post_info["score"] = post_info["upvote_count"] - post_info["downvote_count"]
 
         # Returns post info as JSON object.
         return post_info
@@ -264,7 +263,12 @@ def weave_pull_userposts():
             return jsonify({'error_message': 'User does not exist'}), 404
         cursor.fetchall()
 
-        # TODO: May want to validate start and end because the query is set up rather insecurely.
+        # Validates start and end conditions because of the insecure query.
+        # This SHOULD never return an error if called legitimately from the frontend.
+        if (re.search("^[0-9]+$", str(pull_info["start"])) == None):
+            return jsonify({'error_message': 'Bad start value'}), 400
+        if (re.search("^[0-9]+$", str(pull_info["end"])) == None):
+            return jsonify({'error_message': 'Bad end value'}), 400
 
         # Pulls the user's most recent posts as specified by the range.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
@@ -310,9 +314,8 @@ def save_weave_post():
 
         # There shouldn't need to be any validation as the username and post_id are sent directly.
 
-        # Gets the current date in "YYYY-MM-DD" format.
-        # TODO: Change this (along with the database attribute) into DATETIME in the format 'YYYY-MM-DD HH:MI:SS'.
-        current_date = datetime.today().strftime("%Y-%m-%d")
+        # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
+        current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
         # If type is 1: Saves the specific username-post save relation as a database entity.
         if (save_info["type"] == 1):
@@ -356,13 +359,19 @@ def weave_pull_saves():
         save_info["username"] = get_jwt_identity()
 
         # Checks if username exists in database.
+        # This also doubles as a validation statement, assuming all previous usernames are validated correctly.
         cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (save_info["username"],))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'User does not exist'}), 404
         cursor.fetchall()
 
-         # TODO: May want to validate start and end because the query is set up rather insecurely.
-
+        # Validates start and end conditions because of the insecure query.
+        # This SHOULD never return an error if called legitimately from the frontend.
+        if (re.search("^[0-9]+$", str(save_info["start"])) == None):
+            return jsonify({'error_message': 'Bad start value'}), 400
+        if (re.search("^[0-9]+$", str(save_info["end"])) == None):
+            return jsonify({'error_message': 'Bad end value'}), 400
+        
         # Pulls the saved posts of the user as specified by the range.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
         save_query = "SELECT post_id FROM SavedPost WHERE username = \"" + \
