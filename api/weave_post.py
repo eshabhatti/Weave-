@@ -263,7 +263,12 @@ def weave_pull_userposts():
             return jsonify({'error_message': 'User does not exist'}), 404
         cursor.fetchall()
 
-        # TODO: May want to validate start and end because the query is set up rather insecurely.
+        # Validates start and end conditions because of the insecure query.
+        # This SHOULD never return an error if called legitimately from the frontend.
+        if (re.search("^[0-9]+$", str(pull_info["start"])) == None):
+            return jsonify({'error_message': 'Bad start value'}), 400
+        if (re.search("^[0-9]+$", str(pull_info["end"])) == None):
+            return jsonify({'error_message': 'Bad end value'}), 400
 
         # Pulls the user's most recent posts as specified by the range.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
@@ -359,8 +364,13 @@ def weave_pull_saves():
             return jsonify({'error_message': 'User does not exist'}), 404
         cursor.fetchall()
 
-         # TODO: May want to validate start and end because the query is set up rather insecurely.
-
+        # Validates start and end conditions because of the insecure query.
+        # This SHOULD never return an error if called legitimately from the frontend.
+        if (re.search("^[0-9]+$", str(save_info["start"])) == None):
+            return jsonify({'error_message': 'Bad start value'}), 400
+        if (re.search("^[0-9]+$", str(save_info["end"])) == None):
+            return jsonify({'error_message': 'Bad end value'}), 400
+        
         # Pulls the saved posts of the user as specified by the range.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
         save_query = "SELECT post_id FROM SavedPost WHERE username = \"" + \
