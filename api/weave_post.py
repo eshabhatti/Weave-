@@ -226,7 +226,7 @@ def weave_post_image(post_id):
 
         # Pulls the picture path out of the cursor.
         filename = cursor.fetchall()[0]["pic_path"]
-        if (filename is not ""):
+        if (filename != ""):
             # Sends the file back to the frontend.
             # Media file type detection should work automatically but may need to be updated if not.
             print('"' + filename + '"')
@@ -351,8 +351,9 @@ def weave_pull_saves():
         save_info = request.get_json()
 
         # Checks for all needed elements in the JSON.
-        if ("username" not in save_info or "start" not in save_info or "end" not in save_info):
+        if ("start" not in save_info or "end" not in save_info):
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+        save_info["username"] = get_jwt_identity()
 
         # Checks if username exists in database.
         cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (save_info["username"],))
@@ -366,7 +367,7 @@ def weave_pull_saves():
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
         save_query = "SELECT post_id FROM SavedPost WHERE username = \"" + \
             save_info["username"] + "\" ORDER BY date_saved DESC LIMIT " + \
-            save_info["start"] + ", " + save_info["end"] + ";"
+            str(save_info["start"]) + ", " + str(save_info["end"]) + ";"
         cursor.execute(save_query)
 
         # Adds the saved posts to a list that will then be returned.
@@ -375,4 +376,4 @@ def weave_pull_saves():
             save_list.append(row["post_id"])
         
         # Return as list
-        return {'save_list': save_list}
+        return {'pull_list': save_list}

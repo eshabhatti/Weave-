@@ -3,7 +3,7 @@ import NavBar from "../../Shared_Components/NavBar";
 import Post from "../../Shared_Components/Post";
 
 export default function SavedPosts() {
-  const [postIdList, updatePosts] = useState([]);
+  const [postData, setPostData] = useState([]);
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
     window.location = "/login"
@@ -17,12 +17,12 @@ export default function SavedPosts() {
         'Authorization': 'Bearer ' + access_token
       },
       body: JSON.stringify({
-        username: "", //should this be ID'ed by the access token
         start: 0,
-        end: 0
+        end: 5
       })
     }).then(response => response.json()).then(data => {
-      updatePosts(data);
+	  const { pull_list: post_ids } = data;
+      setPostData(post_ids);
     }).catch(err => {
       console.log(err);
       alert("Error in console");
@@ -30,8 +30,8 @@ export default function SavedPosts() {
   }, []);
 
   let postsContent = [];
-
-  postIdList.forEach(postId => {
+  
+  postData.forEach((postId) => {
     postsContent.push(<Post postId={postId} userName={"sahilkapur"} />)
   });
 
