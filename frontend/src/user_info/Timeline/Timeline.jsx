@@ -7,6 +7,7 @@ import "./timeline.css";
 export default function Timeline() {
 	const [postContent, updatePostContent] = useState("");
 	const [postTitle, updatePostTitle] = useState("");
+	const [postTopic, updatePostTopic] = useState("");
 	const [isAnon, updateIsAnon] = useState(0);
 	const [image, saveImage] = useState(null);
 	const [errorMessage, updateErrorMessage] = useState("");
@@ -35,12 +36,12 @@ export default function Timeline() {
 	const onSubmit = (event) => {
 		event.preventDefault();
 		/* More to be added for posts eventually */
-		if (isFormValid({ postTitle, postContent, updateErrorMessage, updateSuccessMessage, image })) {
+		if (isFormValid({ postTitle, postContent, postTopic, updateErrorMessage, updateSuccessMessage, image })) {
 			const body = {
 				title: postTitle,
 				content: postContent,
 				anon: isAnon,
-				topic: "test"
+				topic: postTopic
 			}
 			const endpoint = "http://localhost:5000/createpost/";
 			fetch(endpoint, {
@@ -117,6 +118,15 @@ export default function Timeline() {
 						}}
 						className="post-form-input-title"
 					/>
+					
+					<label className="post-form-label">Post Topic</label>
+					<input
+						value={postTopic}
+						onChange={e => {
+							updatePostTopic(e.target.value);
+						}}
+						className="post-form-input-title"
+					/>
 
 					<label className="post-form-label">Post Text</label>
 					<textarea
@@ -164,13 +174,15 @@ export default function Timeline() {
 	);
 }
 
-function isFormValid({ postTitle, postContent, updateErrorMessage, updateSuccessMessage, image }) {
+function isFormValid({ postTitle, postContent, postTopic, updateErrorMessage, updateSuccessMessage, image }) {
 	updateSuccessMessage("")
 	updateErrorMessage("")
 	if (postTitle === "") {
 		updateErrorMessage("Please enter a title for your post.");
 	} else if (postContent === "") {
 		updateErrorMessage("Post body cannot be empty.");
+	} else if (postTitle === "") {
+		updateErrorMessage("Post title cannot be empty.");
 	} else if (postContent.length > 750 && image === null) {
 		updateErrorMessage("Post body cannot exceed 750 characters")
 	} else if (postContent.length > 100 && image !== null) {

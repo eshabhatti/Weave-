@@ -15,6 +15,7 @@ import NotFound from "./error_pages/NotFound"
 import Timeline from "./user_info/Timeline/Timeline"
 import SavedPosts from './user_info/SavedPosts/SavedPosts';
 import PostPage from './user_info/Posts/PostPage';
+import TopicPage from './user_info/Topics/TopicPage';
 //import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 
 function AppRouter() {
@@ -47,6 +48,9 @@ function AppRouter() {
         </Route>
 		<Route path="/post/:post_id">
 		  <PostPage />
+		</Route>
+		<Route path="/topic/:topic_name">
+		  <TopicPage />
 		</Route>
         <Route path="/">
           <NotFound />

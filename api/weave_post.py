@@ -42,8 +42,18 @@ def weave_post_create():
     if (post_info["content"] != None and len(post_info["content"]) > 750):
         return jsonify({'error_message': 'Request Error: Post too large.'}), 400
 
-    # TODO: Implement topic validation and creation here.
+    # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
+    current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
+    # Checks if topic exists in database.
+    # TODO: Possibly convert topics to lowercase
+    cursor.execute("SELECT * FROM Topic WHERE topic_name = %s;", (post_info["topic"],))
+    if (cursor.rowcount == 0):
+        topic_query = "INSERT INTO Topic VALUES (%s, %s, %s, %s);"
+        topic_values = (post_info["topic"], current_date, 0, 0)
+        cursor.execute(topic_query, topic_values)
+        mysql.connection.commit()
+    
     # Assigns the Post a new post_id by querying the most recent post and then adding one.
     # The post_id is initialized to 1 because the first query should not return any posts.
     post_id = 1
@@ -51,9 +61,6 @@ def weave_post_create():
     cursor.execute(id_query)
     for row in cursor:
         post_id = row["post_id"] + 1
-
-    # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
-    current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
     # Insert new text post into the database.
     post_query = "INSERT INTO Post VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
@@ -386,3 +393,53 @@ def weave_pull_saves():
         
         # Return as list
         return {'pull_list': save_list}
+        
+        
+# # # # Backend code for pulling a list of posts that have a certain topic
+# # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
+@weave_post.route("/topicposts/", methods=["POST"])
+@jwt_required
+def weave_pull_topicposts():
+
+    # The backend has received a saved post POST request.
+    if request.method == "POST":
+
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
+        pull_info = request.get_json()
+
+        # Checks for all needed elements in the JSON.
+        if ("topic" not in pull_info or "start" not in pull_info or "end" not in pull_info):
+            return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+        
+        # Checks if topic exists in database.
+        cursor.execute("SELECT * FROM Topic WHERE topic_name = %s;", (pull_info["topic"],))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message': 'Topic does not exist'}), 404
+        cursor.fetchall()
+        
+        # Validates start and end conditions because of the insecure query.
+        # This SHOULD never return an error if called legitimately from the frontend.
+        if (re.search("^[0-9]+$", str(pull_info["start"])) == None):
+            return jsonify({'error_message': 'Bad start value'}), 400
+        if (re.search("^[0-9]+$", str(pull_info["end"])) == None):
+            return jsonify({'error_message': 'Bad end value'}), 400
+
+        # Pulls the user's most recent posts as specified by the range.
+        # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
+        pull_query = "SELECT post_id FROM Post WHERE topic_name = \"" + \
+            pull_info["topic"] + "\" ORDER BY post_id DESC LIMIT " + \
+            str(pull_info["start"]) + ", " + str(pull_info["end"]) + ";"
+        cursor.execute(pull_query)
+
+        # Adds the user's posts to a list that will then be returned.
+        pull_list = []
+        for row in cursor:
+            pull_list.append(row["post_id"])
+        print(pull_list)
+        # Return as list
+        return {'pull_list': pull_list}
