@@ -181,7 +181,7 @@ function isFormValid({ postTitle, postContent, postTopic, updateErrorMessage, up
 		updateErrorMessage("Please enter a title for your post.");
 	} else if (postContent === "") {
 		updateErrorMessage("Post body cannot be empty.");
-	} else if (postTitle === "") {
+	} else if (postTopic === "") {
 		updateErrorMessage("Post title cannot be empty.");
 	} else if (postContent.length > 750 && image === null) {
 		updateErrorMessage("Post body cannot exceed 750 characters")
