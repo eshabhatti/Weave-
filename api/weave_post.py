@@ -57,8 +57,7 @@ def weave_post_create():
     if (len(post_info["topic"]) > 50):
         return jsonify({'error_message': 'Topic too long.'}), 400
 
-    # Checks if topic exists in database.
-    # TODO: Possibly convert topics to lowercase
+    # Checks if topic exists in database. If not, the topic is added in all uppercase.
     cursor.execute("SELECT * FROM Topic WHERE topic_name = %s;", (post_info["topic"],))
     if (cursor.rowcount == 0):
         topic_query = "INSERT INTO Topic VALUES (%s, %s, %s, %s);"
@@ -224,6 +223,7 @@ def weave_post_state():
         print(ret_states)
         return jsonify(ret_states)
 
+
 # # # # Backend code for a pulling a single post's image.
 # # This route will likely have to be called without explicitly navigating to this URL.
 # # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
@@ -355,6 +355,7 @@ def save_weave_post():
 
 # # # # Backend code for pulling a user's saved posts on Weave
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
+# # Returns a JSON with a list of the posts that the user has saved within the specified range.
 # # Call this route from the Windows Command Prompt with: 
 #       curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"realuser1\",\"start\":\"0\",\"end\":\"10\"}" http://localhost:5000/savedposts/
 @weave_post.route("/savedposts/", methods=["POST"])
@@ -409,6 +410,7 @@ def weave_pull_saves():
         
 # # # # Backend code for pulling a list of posts that have a certain topic
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
+# # Returns a JSON with a list of the posts in a topic within the specified range.
 @weave_post.route("/topicposts/", methods=["POST"])
 @jwt_required
 def weave_pull_topicposts():
@@ -453,5 +455,6 @@ def weave_pull_topicposts():
         for row in cursor:
             pull_list.append(row["post_id"])
         print(pull_list)
+
         # Return as list
         return {'pull_list': pull_list}
