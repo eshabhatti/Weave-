@@ -8,6 +8,7 @@
 
 -- First, a set of users must be initialized.
 -- Note that these user entities have passwords shown as the first part of the email address.
+-- Note the modification from DATE to DATETIME.
 INSERT INTO UserAccount 
 VALUES (
 	'realuser1',
@@ -15,7 +16,7 @@ VALUES (
     '$2b$12$j2OssNGwu/nhjLapAt4cBeaO61iXaFqmly3PLnl1PfUHUV.fPHwES',
     NULL,
     NULL,
-    '2020-10-15',
+    '2020-10-15 22:22:22',
     NULL,
     NULL,
     '0',
@@ -29,7 +30,7 @@ VALUES (
     '$2b$12$rANOHjCeAsGx61ctkQGV8OJeCAM/2bQ5Zji1dZFyjFnmYtcBuX1MG',
     NULL,
     NULL,
-    '2020-10-15',
+    '2020-10-15 11:11:11',
     NULL,
     NULL,
     '0', 
@@ -58,13 +59,13 @@ VALUES (
 -- Again, however, each post needs to be attached to a valid topic name by the end of the sprint (THIS IS NOT A CONSTRAINT YET)
 -- It may be easiest to uppercase all topic names before pushing to the database, and lowercase them again when pulled.
 -- NOTE: The attribute TYPE for the Post table no longer exists. DO NOT INCLUDE IT IN ANY INSERTION OR SELECTION STATEMENTS.
--- NOTE: The DATE attribute here needs to be modified into a DATETIME attribute.
+-- Also note the modification from DATE to DATETIME.
 INSERT INTO Post 
 VALUES (
 	001,
     "GENERAL",
     "realuser1",
-    "2020-10-9",
+    "2020-10-9 01:01:11",
     "text post",
     "text content text content text content",
     NULL,
@@ -79,7 +80,7 @@ VALUES (
 	002, 
     "GENERAL",
     "realuser2",
-    "2020-10-10",
+    "2020-10-10 01:01:11",
     "picture post",
     "picture caption picture caption picture caption",
     "0headshot.png.jpeg",
@@ -90,15 +91,15 @@ VALUES (
 );
 
 -- Posts can also be saved like before.
--- NOTE: The DATE attribute needs to be modified into a DATETIME attribute.
+-- Note the modification from DATE to DATETIME.
 INSERT INTO SavedPost 
 VALUES (
 	"realuser1",
     002,
-    "2020-10-12"
+    "2020-10-12 11:11:11"
 );
 
--- Posts can also be voted on like before:
+-- Posts can also be voted on like before.
 INSERT INTO PostVote
 VALUES (
 	"realuser1",

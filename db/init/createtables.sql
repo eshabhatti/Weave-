@@ -86,9 +86,8 @@ CREATE TABLE Post (
     anon_flag INT NOT NULL,
     moderation_status INT NOT NULL,
     PRIMARY KEY (post_id),
-    FOREIGN KEY (creator) REFERENCES UserAccount(username) ON UPDATE CASCADE
-    -- THERE NEEDS TO BE A FOREIGN KEY CONSTRAINT REFRENCING TOPICS HERE
-    -- THIS CANNOT BE ADDED INTO THE TABLE UNTIL TOPICS ARE WORKING PROPERLY IN /CREATEPOST/
+    FOREIGN KEY (creator) REFERENCES UserAccount(username) ON UPDATE CASCADE,
+    FOREIGN KEY (topic_name) REFERENCES Topic(topic_name)
 );
 
 -- Initializes the Comment table.
