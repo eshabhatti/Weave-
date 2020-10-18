@@ -34,23 +34,35 @@ def weave_post_create():
     # The username does not need to be validated here because it's passed through JWT. 
     # The anonymous flag should not ever give an error because it's sent from the server directly.
     
-    # TODO: Validate title information here.
+    # Validates the title information.
+    # Most strings will be fine. Empty strings are not allowed; however, this should be caught by the frontend.
+    # Any single or double quote in strings will be taken care of as part of the cursor's execute method.
+    if (len(post_info["title"]) > 100):
+        return jsonify({'error_message': 'Title too long.'}), 400
 
     # Validates the content information.
     # Most strings will be fine. Empty content (currently not be possible) will be saved as an empty string.
     # Any single or double quote in strings will be taken care of as part of the cursor's execute method.
-    if (post_info["content"] != None and len(post_info["content"]) > 750):
-        return jsonify({'error_message': 'Request Error: Post too large.'}), 400
+    if (len(post_info["content"]) > 750):
+        return jsonify({'error_message': 'Post too large.'}), 400
 
     # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
     current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Validates the topic information.
+    # No characters should break the application. Length does need to be checked, however.
+    # As a stylistic choice, each topic will only be allowed to be one word as well.
+    if (re.search("^[A-Za-z0-9]+$", post_info["topic"]) == None):
+        return jsonify({'error_message': 'Topic name invalid.'}), 400
+    if (len(post_info["topic"]) > 50):
+        return jsonify({'error_message': 'Topic too long.'}), 400
 
     # Checks if topic exists in database.
     # TODO: Possibly convert topics to lowercase
     cursor.execute("SELECT * FROM Topic WHERE topic_name = %s;", (post_info["topic"],))
     if (cursor.rowcount == 0):
         topic_query = "INSERT INTO Topic VALUES (%s, %s, %s, %s);"
-        topic_values = (post_info["topic"], current_date, 0, 0)
+        topic_values = (post_info["topic"].upper(), current_date, 0, 0)
         cursor.execute(topic_query, topic_values)
         mysql.connection.commit()
     
