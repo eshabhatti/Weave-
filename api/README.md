@@ -73,3 +73,8 @@ POST requests to the following routes require JSON objects formatted as shown:
     * start: \[begin-value\]
     * end: \[end-value\]
         * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).
+
+* Timeline post pulling (`/timeline/`) requires a JSON object where JSON = 
+    * start: \[begin-value\]
+    * end: \[end-value\]
+        * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).

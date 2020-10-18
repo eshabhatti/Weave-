@@ -18,73 +18,76 @@ weave_post = Blueprint('weave_post', __name__)
 @jwt_required
 def weave_post_create():
 
-    # Initializes MySQL cursor
-    cursor = mysql.connection.cursor()
+    # The backend has recieved information that needs to go into the database.
+    if request.method == "POST":
 
-    # Checks for JSON format.
-    if (not request.is_json):
-        return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
-    post_info = request.get_json()
-    post_info["username"] = get_jwt_identity()
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
 
-    # This horrific thing checks that the JSON has all the needed elements.
-    if ("username" not in post_info or "topic" not in post_info or "title" not in post_info or "content" not in post_info or "anon" not in post_info):
-        return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
+        post_info = request.get_json()
+        post_info["username"] = get_jwt_identity()
 
-    # The username does not need to be validated here because it's passed through JWT. 
-    # The anonymous flag should not ever give an error because it's sent from the server directly.
-    
-    # Validates the title information.
-    # Most strings will be fine. Empty strings are not allowed; however, this should be caught by the frontend.
-    # Any single or double quote in strings will be taken care of as part of the cursor's execute method.
-    if (len(post_info["title"]) > 100):
-        return jsonify({'error_message': 'Title too long.'}), 400
+        # This horrific thing checks that the JSON has all the needed elements.
+        if ("username" not in post_info or "topic" not in post_info or "title" not in post_info or "content" not in post_info or "anon" not in post_info):
+            return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
 
-    # Validates the content information.
-    # Most strings will be fine. Empty content (currently not be possible) will be saved as an empty string.
-    # Any single or double quote in strings will be taken care of as part of the cursor's execute method.
-    if (len(post_info["content"]) > 750):
-        return jsonify({'error_message': 'Post too large.'}), 400
+        # The username does not need to be validated here because it's passed through JWT. 
+        # The anonymous flag should not ever give an error because it's sent from the server directly.
+        
+        # Validates the title information.
+        # Most strings will be fine. Empty strings are not allowed; however, this should be caught by the frontend.
+        # Any single or double quote in strings will be taken care of as part of the cursor's execute method.
+        if (len(post_info["title"]) > 100):
+            return jsonify({'error_message': 'Title too long.'}), 400
 
-    # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
-    current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+        # Validates the content information.
+        # Most strings will be fine. Empty content (currently not be possible) will be saved as an empty string.
+        # Any single or double quote in strings will be taken care of as part of the cursor's execute method.
+        if (len(post_info["content"]) > 750):
+            return jsonify({'error_message': 'Post too large.'}), 400
 
-    # Validates the topic information.
-    # No characters should break the application. Length does need to be checked, however.
-    # As a stylistic choice, each topic will only be allowed to be one word as well.
-    if (re.search("^[A-Za-z0-9]+$", post_info["topic"]) == None):
-        return jsonify({'error_message': 'Topic name invalid.'}), 400
-    if (len(post_info["topic"]) > 50):
-        return jsonify({'error_message': 'Topic too long.'}), 400
+        # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
+        current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Checks if topic exists in database. If not, the topic is added in all uppercase.
-    cursor.execute("SELECT * FROM Topic WHERE topic_name = %s;", (post_info["topic"],))
-    if (cursor.rowcount == 0):
-        topic_query = "INSERT INTO Topic VALUES (%s, %s, %s, %s);"
-        topic_values = (post_info["topic"].upper(), current_date, 0, 0)
-        cursor.execute(topic_query, topic_values)
+        # Validates the topic information.
+        # No characters should break the application. Length does need to be checked, however.
+        # As a stylistic choice, each topic will only be allowed to be one word as well.
+        if (re.search("^[A-Za-z0-9]+$", post_info["topic"]) == None):
+            return jsonify({'error_message': 'Topic name invalid.'}), 400
+        if (len(post_info["topic"]) > 50):
+            return jsonify({'error_message': 'Topic too long.'}), 400
+
+        # Checks if topic exists in database. If not, the topic is added in all uppercase.
+        cursor.execute("SELECT * FROM Topic WHERE topic_name = %s;", (post_info["topic"],))
+        if (cursor.rowcount == 0):
+            topic_query = "INSERT INTO Topic VALUES (%s, %s, %s, %s);"
+            topic_values = (post_info["topic"].upper(), current_date, 0, 0)
+            cursor.execute(topic_query, topic_values)
+            mysql.connection.commit()
+        
+        # Assigns the Post a new post_id by querying the most recent post and then adding one.
+        # The post_id is initialized to 1 because the first query should not return any posts.
+        post_id = 1
+        id_query = "SELECT post_id FROM Post ORDER BY post_id DESC LIMIT 1;"
+        cursor.execute(id_query)
+        for row in cursor:
+            post_id = row["post_id"] + 1
+
+        # Insert new text post into the database.
+        post_query = "INSERT INTO Post VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+        post_values = (post_id, post_info["topic"], post_info["username"], current_date, post_info["title"], post_info["content"], None, 0, 0, post_info["anon"], 0)
+        cursor.execute(post_query, post_values)
         mysql.connection.commit()
-    
-    # Assigns the Post a new post_id by querying the most recent post and then adding one.
-    # The post_id is initialized to 1 because the first query should not return any posts.
-    post_id = 1
-    id_query = "SELECT post_id FROM Post ORDER BY post_id DESC LIMIT 1;"
-    cursor.execute(id_query)
-    for row in cursor:
-        post_id = row["post_id"] + 1
 
-    # Insert new text post into the database.
-    post_query = "INSERT INTO Post VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-    post_values = (post_id, post_info["topic"], post_info["username"], current_date, post_info["title"], post_info["content"], None, 0, 0, post_info["anon"], 0)
-    cursor.execute(post_query, post_values)
-    mysql.connection.commit()
-
-    ret = {
-        'access_token': create_access_token(identity=post_info["username"]),
-        'refresh_token': create_refresh_token(identity=post_info["username"]),
-        'username': post_info["username"]
-    }
-    return jsonify(ret), 200
+        ret = {
+            'access_token': create_access_token(identity=post_info["username"]),
+            'refresh_token': create_refresh_token(identity=post_info["username"]),
+            'username': post_info["username"]
+        }
+        return jsonify(ret), 200
 
 
 # # # # Backend code for uploading post images on Weave.
@@ -180,6 +183,8 @@ def weave_post_data(post_id):
 @weave_post.route("/poststates/", methods=["POST"])
 @jwt_required
 def weave_post_state():
+    
+    # The backend has received a post state POST request.
     if request.method == "POST":
 
         # Initializes MySQL cursor.

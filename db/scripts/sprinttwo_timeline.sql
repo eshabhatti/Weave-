@@ -259,4 +259,20 @@ OR creator IN
 ORDER BY date_created DESC
 ;
 
+-- This can then be limited by adding in one more line:
+SELECT *
+FROM Post
+WHERE creator = 'followtest1'
+OR topic_name IN 
+	( SELECT topic_followed AS topic_name
+	  FROM FollowTopic
+      WHERE user_follower = 'followtest1' )
+OR creator IN
+	( SELECT user_followed AS creator
+      FROM FollowUser
+      WHERE user_follower = 'followtest1' )
+ORDER BY date_created DESC
+LIMIT 0, 2
+;
+
 -- Note that as long as no tables are connected with JOIN, there should be no need for the DISTINCT keyword.
