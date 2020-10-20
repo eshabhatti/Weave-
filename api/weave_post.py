@@ -52,7 +52,7 @@ def weave_post_create():
         # Validates the topic information.
         # Most strings will be fine. Empty content will be changed to the topic "general"
         # Any single or double quote in strings will be taken care of as part of the cursor's execute method.
-        if (len(post_info["topic"]) > 20):
+        if (len(post_info["topic"]) > 50):
             return jsonify({'error_message': 'Topic too large.'}), 400
         if (re.search("^[A-Za-z0-9]*$", post_info["topic"]) == None):
             return jsonify({'error_message': 'Topic name invalid.'}), 400
