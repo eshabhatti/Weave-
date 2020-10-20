@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../../Shared_Components/NavBar";
 import Post from "../../Shared_Components/Post";
+import './savedposts.css';
 
 export default function SavedPosts() {
   const [postData, setPostData] = useState([]);
@@ -44,9 +45,11 @@ export default function SavedPosts() {
       <NavBar />
       <div className="saved-posts-page-content">
         {/* List of posts */}
+        <h1 className="saved-posts-heading">Your saved posts</h1>
         <div className="saved-posts-container">
           {postsContent}
         </div>
+        <a href="javascript:history.back()" className="saved-posts-return">go back</a>
       </div>
     </div>
   );
