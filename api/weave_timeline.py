@@ -55,20 +55,84 @@ def weave_render_timeline():
         # Return as list
         return {'timeline_list': timeline_list}
 
+
+# # # # Backend route for allowing the user to follow a topic on Weave.
+# # Expects a POST request with a JSON. Details will be in 'api/README.md'.
+# # Returns a message of success as a string. 
 @weave_timeline.route("/followuser", methods=["POST"])
 @jwt_required
 def weave_follow_user():
 
-    # Initializes MySQL cursor
-    cursor = mysql.connection.cursor()
+    # The backend has recieved a request to make one user follow another.
+    if request.method == "POST":
 
-    return "follow user"
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
+        follow_info = request.get_json()
+        
+        # Checks for all needed elements in the JSON.
+        if ("following" not in follow_info or "type" not in follow_info):
+            return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+
+        # Grabs the identity of both users.
+        follower = get_jwt_identity()
+        followed = follow_info["following"]
+        
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+
+        # Handles instances where a new follow instance is being created.
+        if (follow_info["type"] == 1):
+            follow_query = "INSERT INTO FollowUser VALUES (%s, %s);"
+            follow_values = (follower, followed)
+            cursor.execute(follow_query, follow_values)
+            mysql.connection.commit()
+
+        # Handles instances where a follow instance is being deleted.
+        elif (follow_info["type"] == -1):
+            follow_query = "DELETE FROM FollowUser WHERE user_follower = %s AND user_followed = %s;"
+            follow_values - (follower, followed)
+            cursor.execute(follow_query, follow_values)
+            mysql.connection.commit()
+
+        return "follow user done"
 
 @weave_timeline.route("/followtopic", methods=["POST"])
 @jwt_required
 def weave_follow_topic():
 
-    # Initializes MySQL cursor
-    cursor = mysql.connection.cursor()
+    # The backend has recieved a request to make one user follow some topic.
+    if request.method == "POST":
+        
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
+        follow_info = request.get_json()
+        
+        # Checks for all needed elements in the JSON.
+        if ("following" not in follow_info or "type" not in follow_info):
+            return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
 
-    return "follow user"
+        # Grabs the identity of the user and the topic
+        follower = get_jwt_identity()
+        followed = follow_info["following"]
+
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+
+        # Handles instances where a new follow instance is being created.
+        if (follow_info["type"] == 1):
+            follow_query = "INSERT INTO FollowTopic VALUES (%s, %s);"
+            follow_values = (follower, followed)
+            cursor.execute(follow_query, follow_values)
+            mysql.connection.commit()
+
+        # Handles instances where a follow instance is being deleted.
+        elif (follow_info["type"] == -1):
+            follow_query = "DELETE FROM FollowTopic WHERE user_follower = %s AND topic_followed = %s;"
+            follow_values - (follower, followed)
+            cursor.execute(follow_query, follow_values)
+            mysql.connection.commit()
+
+        return "follow topic done"

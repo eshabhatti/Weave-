@@ -43,6 +43,8 @@ POST requests to the following routes require JSON objects formatted as shown:
 * Post saving (`/save/`) requires a JSON object where JSON = 
     * username: \[username-string\]
     * post: \[post-id\]
+    * type: \[save-or-unsave\]
+        * Note that type will be 1 if the post is being saved, and -1 is the post is being unsaved.
 
 * Post voting (`/vote/`) requires a JSON object where JSON = 
     * username: \[username-string\]
@@ -78,3 +80,13 @@ POST requests to the following routes require JSON objects formatted as shown:
     * start: \[begin-value\]
     * end: \[end-value\]
         * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).
+
+* Following users (`/followuser/`) requires a JSON object where JSON = 
+    * following: \[username-to-follow\]
+    * type: \[follow-or-unfollow\]
+        * Note that type will be 1 if the user is being followed, and -1 is the user is being unfollowed.
+
+* Following topics (`/followtopic/`) requires a JSON object where JSON = 
+    * following: \[topic-to-follow\]
+    * type: \[follow-or-unfollow\]
+        * Note that type will be 1 if the topic is being followed, and -1 is the topic is being unfollowed.
