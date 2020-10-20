@@ -187,6 +187,8 @@ function isFormValid({ postTitle, postContent, postTopic, updateErrorMessage, up
 		updateErrorMessage("Captions cannot exceed 100 characters");
 	} else if (postTitle.length > 100) {
 		updateErrorMessage("Post title cannot exceed 100 characters");
+	} else if (postTopic.length > 20) {
+		updateErrorMessage("Post topic cannot exceed 20 characters");
 	} else {
 		return true;
 	}
