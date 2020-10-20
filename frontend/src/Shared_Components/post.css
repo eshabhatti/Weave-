@@ -6,6 +6,7 @@
   padding-left: 10px;
   font-weight: 500;
   transition-duration: 0.50s;
+  margin-bottom: 5px;
 } 
 
 .post-trigger:hover {
@@ -36,8 +37,7 @@
     width: 100%;
     display: flex;
     margin: 0px auto;
-    padding-bottom: 30px;
-    margin-bottom: 100px;
+    margin-bottom: 30px;
     margin-top: 20px;
     padding: 10px;
 }
