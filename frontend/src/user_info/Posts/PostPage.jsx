@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import NavBar from '../../Shared_Components/NavBar';
 import Sidebar from '../../Shared_Components/Sidebar/Sidebar';
 import Post from '../../Shared_Components/Post';
+import CommentCreator from '../../Shared_Components/CommentCreator';
 
 export default function Profile() {
 	const { post_id: pagePost } = useParams();
@@ -151,8 +152,10 @@ export default function Profile() {
 			<p>
 				Need the post information <br></br>
 				Then need the comment creator <br></br>
-				Then need the comment information
+				Then need the comments
 			</p>
+			<CommentCreator postId={1} />
 		</div>
+
 	);
 }

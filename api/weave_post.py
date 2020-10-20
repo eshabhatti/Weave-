@@ -48,6 +48,16 @@ def weave_post_create():
         # Any single or double quote in strings will be taken care of as part of the cursor's execute method.
         if (len(post_info["content"]) > 750):
             return jsonify({'error_message': 'Post too large.'}), 400
+            
+        # Validates the topic information.
+        # Most strings will be fine. Empty content will be changed to the topic "general"
+        # Any single or double quote in strings will be taken care of as part of the cursor's execute method.
+        if (len(post_info["topic"]) > 20):
+            return jsonify({'error_message': 'Topic too large.'}), 400
+        if (re.search("^[A-Za-z0-9]*$", post_info["topic"]) == None):
+            return jsonify({'error_message': 'Topic name invalid.'}), 400
+        if (post_info["topic"] == ""):
+            post_info["topic"] = "general"
 
         # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
         current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
@@ -60,11 +70,11 @@ def weave_post_create():
         if (len(post_info["topic"]) > 50):
             return jsonify({'error_message': 'Topic too long.'}), 400
 
-        # Checks if topic exists in database. If not, the topic is added in all uppercase.
+        # Checks if topic exists in database. If not, the topic is added in all lowercase.
         cursor.execute("SELECT * FROM Topic WHERE topic_name = %s;", (post_info["topic"],))
         if (cursor.rowcount == 0):
             topic_query = "INSERT INTO Topic VALUES (%s, %s, %s, %s);"
-            topic_values = (post_info["topic"].upper(), current_date, 0, 0)
+            topic_values = (post_info["topic"].lower(), current_date, 0, 0)
             cursor.execute(topic_query, topic_values)
             mysql.connection.commit()
         
@@ -106,23 +116,19 @@ def weave_post_upload_image():
 
         # Uploads a photo if attached.
         new_filename = ""
-        print(request.files)
-        print('up here')
         if 'image' in request.files:
             img_file = request.files['image']
-            print('here')
             # Checks to make sure an image is attached.
             if img_file.filename != '':
-                print('down here')
                 new_filename = secure_filename(img_file.filename)
-                print(new_filename)
                 prefix = 0
                 # Adjusts filename for duplicate names.
                 while (path.exists(str(current_app.config['UPLOAD_FOLDER']) + str(prefix) + str(new_filename))):
                     prefix += 1
                 new_filename = str(prefix) + new_filename
+                if (len(new_filename) > 100):
+                    return jsonify({'error_message': 'Image path too long'}), 400
                 img_file.save(str(current_app.config['UPLOAD_FOLDER']) + str(new_filename))
-                # TODO: Make sure filepath is under 100 characters before calling the database.
             else:
                 return "no content"
 

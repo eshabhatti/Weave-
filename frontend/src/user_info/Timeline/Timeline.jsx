@@ -181,13 +181,15 @@ function isFormValid({ postTitle, postContent, postTopic, updateErrorMessage, up
 		updateErrorMessage("Please enter a title for your post.");
 	} else if (postContent === "") {
 		updateErrorMessage("Post body cannot be empty.");
-	} else if (postTopic === "") {
-		updateErrorMessage("Post title cannot be empty.");
 	} else if (postContent.length > 750 && image === null) {
-		updateErrorMessage("Post body cannot exceed 750 characters")
+		updateErrorMessage("Post body cannot exceed 750 characters");
 	} else if (postContent.length > 100 && image !== null) {
-		updateErrorMessage("Captions cannot exceed 100 characters")
-	}else {
+		updateErrorMessage("Captions cannot exceed 100 characters");
+	} else if (postTitle.length > 100) {
+		updateErrorMessage("Post title cannot exceed 100 characters");
+	} else if (postTopic.length > 20) {
+		updateErrorMessage("Post topic cannot exceed 20 characters");
+	} else {
 		return true;
 	}
 	return false;
