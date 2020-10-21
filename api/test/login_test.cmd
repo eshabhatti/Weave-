@@ -1,1 +1,0 @@
-curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testtest\",\"password\":\"testtest\"}" http://localhost:5000/login/ > test_output.txt

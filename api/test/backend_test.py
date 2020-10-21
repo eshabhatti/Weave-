@@ -1,234 +1,17 @@
 import subprocess
+from test_registration import registration_test
 
 # Tests (only) backend functionality with curl commands.
 # Before running this script, start the Flask server for Weave.
 # MAY WANT TO FEED THE DATABASE DROPTABLES AND THEN CREATETABLES SO THAT REGISTRATION ALWAYS WORKS.
 
 
-# # # # # # # # # # # # # # # # # # # #
-# # # # # REGISTER CURL TESTS # # # # #
-# # # # # # # # # # # # # # # # # # # # 
-
-# # Correct Registration Test
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-new_register_test = open('registration_test.cmd', 'r+')
-new_register_test.seek(0)
-new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
-new_register_test.truncate()
-new_register_test.close()
-
-subprocess.call([r'registration_test.cmd'])
-test_output = open("test_output.txt", "r")
-
-line = test_output.readline()
-failed_reg = True
-while line:
-	if failed_reg and line and line.find('access_token') != -1:
-		reg_test1 = "PASSED: Checking that an account is created in the database"
-		failed_reg = False
-		break
-	line = test_output.readline()
-if failed_reg:
-	reg_test1 = "FAILED: Checking that an account is created in the database"
-test_output.close()
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# # Register Existing Username Test
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-new_register_test = open('registration_test.cmd', 'r+')
-new_register_test.seek(0)
-new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"testtess@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
-new_register_test.truncate()
-new_register_test.close()
-
-subprocess.call([r'registration_test.cmd'])
-test_output = open("test_output.txt", "r")
-
-line = test_output.readline()
-failed_reg = True
-while line:
-	if failed_reg and line and line.find('This username has already been used.') != -1:
-		reg_test2 = "PASSED: Checking that duplicate accounts cannot be created"
-		failed_reg = False
-		break
-	line = test_output.readline()
-if failed_reg:
-	reg_test2 = "FAILED: Checking that duplicate accounts cannot be created"
-test_output.close()
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# # Register Existing Email Test
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-new_register_test = open('registration_test.cmd', 'r+')
-new_register_test.seek(0)
-new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname111\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
-new_register_test.truncate()
-new_register_test.close()
-
-subprocess.call([r'registration_test.cmd'])
-test_output = open("test_output.txt", "r")
-
-line = test_output.readline()
-failed_reg = True
-while line:
-	if failed_reg and line and line.find('This email has already been used.') != -1:
-		reg_test3 = "PASSED: Checking that duplicate emails cannot be used"
-		failed_reg = False
-		break
-	line = test_output.readline()
-if failed_reg:
-	reg_test3 = "FAILED: Checking that duplicate emails cannot be used"
-test_output.close()
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# # Register Blank User and Password Test 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-new_register_test = open('registration_test.cmd', 'r+')
-new_register_test.seek(0)
-new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"\\",\\"password\\":\\"\\",\\"email\\":\\"\\"}" http://localhost:5000/register/ > test_output.txt""")
-new_register_test.truncate()
-new_register_test.close()
-
-subprocess.call([r'registration_test.cmd'])
-test_output = open("test_output.txt", "r")
-
-line = test_output.readline()
-failed_reg = True
-while line:
-	if failed_reg and line and line.find('Your username is invalid.') != -1:
-		reg_test4 = "PASSED: Checking that empty inputs can't be accepted"
-		failed_reg = False
-		break
-	line = test_output.readline()
-if failed_reg:
-	reg_test4 = "FAILED: Checking that empty inputs can't be accepted"
-test_output.close()
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# Register Small Username (<6 chars) Test
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-new_register_test = open('registration_test.cmd', 'r+')
-new_register_test.seek(0)
-new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"test\\",\\"password\\":\\"Gudpassword3\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
-new_register_test.truncate()
-new_register_test.close()
-
-subprocess.call([r'registration_test.cmd'])
-test_output = open("test_output.txt", "r")
-
-line = test_output.readline()
-failed_reg = True
-while line:
-	if failed_reg and line and line.find('Your username is invalid.') != -1:
-		reg_test5 = "PASSED: Checking that inputs with incorrect format can't be accepted (username less than 6 chars)"
-		failed_reg = False
-		break
-	line = test_output.readline()
-if failed_reg:
-	reg_test5 = "FAILED: Checking that inputs with incorrect format can't be accepted (username less than 6 chars)"
-test_output.close()
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# Register Large Username (>42 chars) Test
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-new_register_test = open('registration_test.cmd', 'r+')
-new_register_test.seek(0)
-new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testtesttetesttesttetesttesttetesttesttetesttesttetesttestte\\",\\"password\\":\\"testTEST33\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
-new_register_test.truncate()
-new_register_test.close()
-
-subprocess.call([r'registration_test.cmd'])
-test_output = open("test_output.txt", "r")
-
-line = test_output.readline()
-failed_reg = True
-while line:
-	if failed_reg and line and line.find('Your username is invalid.') != -1:
-		reg_test6 = "PASSED: Checking that inputs with incorrect format can't be accepted (username greater than 42 characters)"
-		failed_reg = False
-		break
-	line = test_output.readline()
-if failed_reg:
-	reg_test6 = "FAILED: Checking that inputs with incorrect format can't be accepted (username greater than 42 characters)"
-test_output.close()
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# Register Invalid Length Password (>20 chars) Test
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-new_register_test = open('registration_test.cmd', 'r+')
-new_register_test.seek(0)
-new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"testTEST3333333333333333333333333333333333\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
-new_register_test.truncate()
-new_register_test.close()
-
-subprocess.call([r'registration_test.cmd'])
-test_output = open("test_output.txt", "r")
-
-line = test_output.readline()
-failed_reg = True
-while line:
-	if failed_reg and line and line.find('Your password has an invalid character.') != -1:
-		reg_test7 = "PASSED: Checking that inputs with incorrect format can't be accepted (password length)"
-		failed_reg = False
-		break
-	line = test_output.readline()
-if failed_reg:
-	reg_test7 = "FAILED: Checking that inputs with incorrect format can't be accepted (password length)"
-test_output.close()
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# Register Invalid Length Email (>50 chars) Test
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-new_register_test = open('registration_test.cmd', 'r+')
-new_register_test.seek(0)
-new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"testTEST3\\",\\"email\\":\\"testtestatestststeststsasdfadsfafsdfasdfasdfljakfdlja@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
-new_register_test.truncate()
-new_register_test.close()
-
-subprocess.call([r'registration_test.cmd'])
-test_output = open("test_output.txt", "r")
-
-line = test_output.readline()
-failed_reg = True
-while line:
-	if failed_reg and line and line.find('Your email address is invalid.') != -1:
-		reg_test8 = "PASSED: Checking that inputs with incorrect format can't be accepted (email length)"
-		failed_reg = False
-		break
-	line = test_output.readline()
-if failed_reg:
-	reg_test8 = "FAILED: Checking that inputs with incorrect format can't be accepted (email length)"
-test_output.close()
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# Register Invalid Length Email (>50 chars) Test
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-new_register_test = open('registration_test.cmd', 'r+')
-new_register_test.seek(0)
-new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"testTEST3\\",\\"email\\":\\"testemail\\"}" http://localhost:5000/register/ > test_output.txt""")
-new_register_test.truncate()
-new_register_test.close()
-
-subprocess.call([r'registration_test.cmd'])
-test_output = open("test_output.txt", "r")
-
-line = test_output.readline()
-failed_reg = True
-while line:
-	if failed_reg and line and line.find('Your email address is invalid.') != -1:
-		reg_test9 = "PASSED: Checking that inputs with incorrect format can't be accepted (email regex)"
-		failed_reg = False
-		break
-	line = test_output.readline()
-if failed_reg:
-	reg_test9 = "FAILED: Checking that inputs with incorrect format can't be accepted (email regex)"
-test_output.close()
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+reg_test = registration_test()
 
 
 # login curl test
 # curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\"}" http://localhost:5000/login/
-new_login_test = open('login_test.cmd', 'r+')
+new_login_test = open('login_test.cmd', 'w+')
 new_login_test.seek(0)
 new_login_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"password\\":\\"Gudpasswurd22\\"}" http://localhost:5000/login/ > test_output.txt""")
 new_login_test.truncate()
@@ -252,7 +35,7 @@ test_output.close()
 
 #login test for empty inputs
 #curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"\",\"password\":\"\"}" http://localhost:5000/login/
-new_login_test = open('login_test.cmd', 'r+')
+new_login_test = open('login_test.cmd', 'w+')
 new_login_test.seek(0)
 new_login_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"\\",\\"password\\":\\"\\"}" http://localhost:5000/login/ > test_output.txt""")
 new_login_test.truncate()
@@ -275,7 +58,7 @@ test_output.close()
 
 #login test for user not in database
 #curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testtest\",\"password\":\"testtest\"}" http://localhost:5000/login/
-new_login_test = open('login_test.cmd', 'r+')
+new_login_test = open('login_test.cmd', 'w+')
 new_login_test.seek(0)
 new_login_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testtest\\",\\"password\\":\\"testtest\\"}" http://localhost:5000/login/ > test_output.txt""")
 new_login_test.truncate()
@@ -307,7 +90,7 @@ test_output.close()
 #Missing Authorization Header
 
 #edit profile test
-new_profile_test = open('profile_test.cmd', 'r+')
+new_profile_test = open('profile_test.cmd', 'w+')
 new_profile_test.seek(0)
 new_profile_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"newusername\\":\\"newtestname\\",\\"firstname\\":\\"Bob\\",\\"lastname\\":\\"Banana\\",\\"biocontent\\":\\"Hi I am Bob, aren't I cool?\\",\\"profilepic\\":\\"\\"}" http://localhost:5000/editprofile/ > test_output.txt""")
 #new_profile_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"newtestname\\",\\"newusername\\":\\"testname\\",\\"firstname\\":\\"Banana\\",\\"lastname\\":\\"Bob\\",\\"biocontent\\":\\"Hi I am Bob, aren't I cool?\\",\\"profilepic\\":\\"\\"}" http://localhost:5000/editprofile/ > test_output.txt""")
@@ -331,7 +114,7 @@ if failed_profile:
 test_output.close()
 
 #revert profile test file NOT A TEST CASE
-new_profile_test = open('profile_test.cmd', 'r+')
+new_profile_test = open('profile_test.cmd', 'w+')
 new_profile_test.seek(0)
 #new_profile_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"newusername\\":\\"newtestname\\",\\"firstname\\":\\"Bob\\",\\"lastname\\":\\"Banana\\",\\"biocontent\\":\\"Hi I am Bob, aren't I cool?\\",\\"profilepic\\":\\"\\"}" http://localhost:5000/editprofile/ > test_output.txt""")
 new_profile_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"newtestname\\",\\"newusername\\":\\"testname\\",\\"firstname\\":\\"Banana\\",\\"lastname\\":\\"Bob\\",\\"biocontent\\":\\"Hi I am Bob, aren't I cool?\\",\\"profilepic\\":\\"\\"}" http://localhost:5000/editprofile/ > test_output.txt""")
@@ -350,7 +133,7 @@ while line:
 test_output.close()
 
 #edit profile blank inputs test doesnt work
-new_profile_test = open('profile_test.cmd', 'r+')
+new_profile_test = open('profile_test.cmd', 'w+')
 new_profile_test.seek(0)
 new_profile_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"newusername\\":\\"\\",\\"firstname\\":\\"\\",\\"lastname\\":\\"\\",\\"biocontent\\":\\"Hi I am Bob, aren't I cool?\\",\\"profilepic\\":\\"\\"}" http://localhost:5000/editprofile/ > test_output.txt""")
 new_profile_test.truncate()
@@ -373,7 +156,7 @@ if failed_profile:
 test_output.close()
 
 #edit profile too many characters test
-new_profile_test = open('profile_test.cmd', 'r+')
+new_profile_test = open('profile_test.cmd', 'w+')
 new_profile_test.seek(0)
 new_profile_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"newusername\\":\\"testtesttetesttesttetesttesttetesttesttetesttestte\\",\\"firstname\\":\\"Bob\\",\\"lastname\\":\\"Banana\\",\\"biocontent\\":\\"Hi I am Bob, aren't I cool?\\",\\"profilepic\\":\\"\\"}" http://localhost:5000/editprofile/ > test_output.txt""")
 new_profile_test.truncate()
@@ -399,7 +182,7 @@ test_output.close()
 # post curl
 #curl -i -X POST -H "Authorization: Bearer <access_token>" -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"topic\":\"general\",\"type\":\"1\",\"title\":\"TESTPOST\",\"content\":\"hello hello hello hello\",\"anon\":\"0\"}" http://localhost:5000/createpost/
 
-new_post_test = open('post_test.cmd', 'r+')
+new_post_test = open('post_test.cmd', 'w+')
 new_post_test.seek(0)
 new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"hello hello hello hello\\",\\"anon\\":\\"0\\"}" http://localhost:5000/createpost/ > test_output.txt""")
 new_post_test.truncate()
@@ -422,7 +205,7 @@ if failed_login:
 test_output.close()
 
 #post blank post test doesnt work
-new_post_test = open('post_test.cmd', 'r+')
+new_post_test = open('post_test.cmd', 'w+')
 new_post_test.seek(0)
 new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"type\\":\\"1\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"\\",\\"anon\\":\\"0\\"}" http://localhost:5000/createpost/ > test_output.txt""")
 new_post_test.truncate()
@@ -444,7 +227,7 @@ if failed_login:
 test_output.close()
 
 #post test: fail to post that is too long >750 chars
-new_post_test = open('post_test.cmd', 'r+')
+new_post_test = open('post_test.cmd', 'w+')
 new_post_test.seek(0)
 new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"type\\":\\"1\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test \\",\\"anon\\":\\"0\\"}" http://localhost:5000/createpost/ > test_output.txt""")
 new_post_test.truncate()
@@ -470,7 +253,7 @@ test_output.close()
 #anon post Tests
 
 #anon retain original username (returns token)
-new_post_test = open('post_test.cmd', 'r+')
+new_post_test = open('post_test.cmd', 'w+')
 new_post_test.seek(0)
 new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"type\\":\\"1\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"hello hello hello hello\\",\\"anon\\":\\"1\\"}" http://localhost:5000/createpost/ > test_output.txt""")
 new_post_test.truncate()
@@ -493,7 +276,7 @@ if failed_post:
 test_output.close()
 
 #blank anon post test
-new_post_test = open('post_test.cmd', 'r+')
+new_post_test = open('post_test.cmd', 'w+')
 new_post_test.seek(0)
 new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"type\\":\\"1\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"\\",\\"anon\\":\\"1\\"}" http://localhost:5000/createpost/ > test_output.txt""")
 new_post_test.truncate()
@@ -515,7 +298,7 @@ if failed_post:
 test_output.close()
 
 #format anon post requirement
-new_post_test = open('post_test.cmd', 'r+')
+new_post_test = open('post_test.cmd', 'w+')
 new_post_test.seek(0)
 new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"topic\\":\\"general\\",\\"type\\":\\"1\\",\\"title\\":\\"TESTPOST\\",\\"content\\":\\"test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test \\",\\"anon\\":\\"1\\"}" http://localhost:5000/createpost/ > test_output.txt""")
 new_post_test.truncate()
@@ -542,7 +325,7 @@ test_output.close()
 # vote curl
 #curl -i -X POST -H "Authorization: Bearer <access_token>" -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"type\":\"1\",\"id\":\"1\",\"vote\":\"1\"}" http://localhost:5000/vote/
 
-#new_post_test = open('vote_test.cmd', 'r+')
+#new_post_test = open('vote_test.cmd', 'w+')
 #new_post_test.seek(0)
 #new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\":\\"testname\\",\\"type\\":\\"1\\",\\"id\\":\\"1\\",\\"vote\\":\\"1\\"}" http://localhost:5000/vote/ > test_output.txt""")
 """
@@ -570,15 +353,17 @@ test_output.close()
 # Prints test output
 print(" ")
 print("Registration Tests")
-print(reg_test1)
-print(reg_test2)
-print(reg_test3)
-print(reg_test4)
-print(reg_test5)
-print(reg_test6)
-print(reg_test7)
-print(reg_test8)
-print(reg_test9)
+for row in range(len(reg_test)):
+	print(reg_test[row])
+# print(reg_test1)
+# print(reg_test2)
+# print(reg_test3)
+# print(reg_test4)
+# print(reg_test5)
+# print(reg_test6)
+# print(reg_test7)
+# print(reg_test8)
+# print(reg_test9)
 
 print(" ")
 print("Login Tests")
