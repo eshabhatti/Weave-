@@ -6,6 +6,7 @@
 # testing
 /coverage
 /api/test/test_output.txt
+/api/test/*.cmd
 api/test/__pycache__
 
 # production
