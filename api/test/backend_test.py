@@ -1,10 +1,16 @@
 import subprocess
 
-#Tests backend functionality with curl commands
+# Tests (only) backend functionality with curl commands.
+# Before running this script, start the Flask server for Weave.
+# MAY WANT TO FEED THE DATABASE DROPTABLES AND THEN CREATETABLES SO THAT REGISTRATION ALWAYS WORKS.
 
 
-# register curl tests
-#curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testname\",\"password\":\"Gudpasswurd22\",\"email\":\"test@tes.com\"}" http://localhost:5000/register/
+# # # # # # # # # # # # # # # # # # # #
+# # # # # REGISTER CURL TESTS # # # # #
+# # # # # # # # # # # # # # # # # # # # 
+
+# # Correct Registration Test
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 new_register_test = open('registration_test.cmd', 'r+')
 new_register_test.seek(0)
 new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
@@ -25,8 +31,16 @@ while line:
 if failed_reg:
 	reg_test1 = "FAILED: Checking that an account is created in the database"
 test_output.close()
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-#attempt to register existing user
+# # Register Existing Username Test
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+new_register_test = open('registration_test.cmd', 'r+')
+new_register_test.seek(0)
+new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"testtess@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+new_register_test.truncate()
+new_register_test.close()
+
 subprocess.call([r'registration_test.cmd'])
 test_output = open("test_output.txt", "r")
 
@@ -41,8 +55,34 @@ while line:
 if failed_reg:
 	reg_test2 = "FAILED: Checking that duplicate accounts cannot be created"
 test_output.close()
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-#attempt to register blank user and password
+# # Register Existing Email Test
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+new_register_test = open('registration_test.cmd', 'r+')
+new_register_test.seek(0)
+new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname111\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+new_register_test.truncate()
+new_register_test.close()
+
+subprocess.call([r'registration_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_reg = True
+while line:
+	if failed_reg and line and line.find('This email has already been used.') != -1:
+		reg_test3 = "PASSED: Checking that duplicate emails cannot be used"
+		failed_reg = False
+		break
+	line = test_output.readline()
+if failed_reg:
+	reg_test3 = "FAILED: Checking that duplicate emails cannot be used"
+test_output.close()
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# # Register Blank User and Password Test 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 new_register_test = open('registration_test.cmd', 'r+')
 new_register_test.seek(0)
 new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"\\",\\"password\\":\\"\\",\\"email\\":\\"\\"}" http://localhost:5000/register/ > test_output.txt""")
@@ -56,19 +96,20 @@ line = test_output.readline()
 failed_reg = True
 while line:
 	if failed_reg and line and line.find('Your username is invalid.') != -1:
-		reg_test3 = "PASSED: Checking that empty inputs can't be accepted"
+		reg_test4 = "PASSED: Checking that empty inputs can't be accepted"
 		failed_reg = False
 		break
 	line = test_output.readline()
 if failed_reg:
-	reg_test3 = "FAILED: Checking that empty inputs can't be accepted"
+	reg_test4 = "FAILED: Checking that empty inputs can't be accepted"
 test_output.close()
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-#attempt to register user with user and pass that are too small (<6 chars)
-#curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"test\",\"password\":\"Gudp\",\"email\":\"test@tes.com\"}" http://localhost:5000/register/
+# Register Small Username (<6 chars) Test
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 new_register_test = open('registration_test.cmd', 'r+')
 new_register_test.seek(0)
-new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"test\\",\\"password\\":\\"Gudp\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"test\\",\\"password\\":\\"Gudpassword3\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
 new_register_test.truncate()
 new_register_test.close()
 
@@ -79,19 +120,20 @@ line = test_output.readline()
 failed_reg = True
 while line:
 	if failed_reg and line and line.find('Your username is invalid.') != -1:
-		reg_test4 = "PASSED: Checking that inputs with incorrect format can't be accepted. (inputs less than 6 chars)"
+		reg_test5 = "PASSED: Checking that inputs with incorrect format can't be accepted (username less than 6 chars)"
 		failed_reg = False
 		break
 	line = test_output.readline()
 if failed_reg:
-	reg_test4 = "FAILED: Checking that inputs with incorrect format can't be accepted. (inputs less than 6 chars)"
+	reg_test5 = "FAILED: Checking that inputs with incorrect format can't be accepted (username less than 6 chars)"
 test_output.close()
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-#attempt to register user with user and pass that are too large (>42 chars)
-#curl -i -X POST -H "Content-Type:application/json" -d "{\"username\":\"testtesttetesttesttetesttesttetesttesttetesttesttetesttestte\",\"password\":\"testtesttetesttesttetesttesttetesttesttetesttestte\",\"email\":\"test@tes.com\"}" http://localhost:5000/register/
+# Register Large Username (>42 chars) Test
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 new_register_test = open('registration_test.cmd', 'r+')
 new_register_test.seek(0)
-new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testtesttetesttesttetesttesttetesttesttetesttesttetesttestte\\",\\"password\\":\\"testtesttetesttesttetesttesttetesttesttetesttestte\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testtesttetesttesttetesttesttetesttesttetesttesttetesttestte\\",\\"password\\":\\"testTEST33\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
 new_register_test.truncate()
 new_register_test.close()
 
@@ -102,15 +144,86 @@ line = test_output.readline()
 failed_reg = True
 while line:
 	if failed_reg and line and line.find('Your username is invalid.') != -1:
-		reg_test5 = "PASSED: Checking that inputs with incorrect format can't be accepted. (inputs greater than 42 characters)"
+		reg_test6 = "PASSED: Checking that inputs with incorrect format can't be accepted (username greater than 42 characters)"
 		failed_reg = False
 		break
 	line = test_output.readline()
 if failed_reg:
-	reg_test5 = "FAILED: Checking that inputs with incorrect format can't be accepted. (inputs greater than 42 characters)"
+	reg_test6 = "FAILED: Checking that inputs with incorrect format can't be accepted (username greater than 42 characters)"
 test_output.close()
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+# Register Invalid Length Password (>20 chars) Test
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+new_register_test = open('registration_test.cmd', 'r+')
+new_register_test.seek(0)
+new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"testTEST3333333333333333333333333333333333\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+new_register_test.truncate()
+new_register_test.close()
 
+subprocess.call([r'registration_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_reg = True
+while line:
+	if failed_reg and line and line.find('Your password has an invalid character.') != -1:
+		reg_test7 = "PASSED: Checking that inputs with incorrect format can't be accepted (password length)"
+		failed_reg = False
+		break
+	line = test_output.readline()
+if failed_reg:
+	reg_test7 = "FAILED: Checking that inputs with incorrect format can't be accepted (password length)"
+test_output.close()
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Register Invalid Length Email (>50 chars) Test
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+new_register_test = open('registration_test.cmd', 'r+')
+new_register_test.seek(0)
+new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"testTEST3\\",\\"email\\":\\"testtestatestststeststsasdfadsfafsdfasdfasdfljakfdlja@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+new_register_test.truncate()
+new_register_test.close()
+
+subprocess.call([r'registration_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_reg = True
+while line:
+	if failed_reg and line and line.find('Your email address is invalid.') != -1:
+		reg_test8 = "PASSED: Checking that inputs with incorrect format can't be accepted (email length)"
+		failed_reg = False
+		break
+	line = test_output.readline()
+if failed_reg:
+	reg_test8 = "FAILED: Checking that inputs with incorrect format can't be accepted (email length)"
+test_output.close()
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Register Invalid Length Email (>50 chars) Test
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+new_register_test = open('registration_test.cmd', 'r+')
+new_register_test.seek(0)
+new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"testTEST3\\",\\"email\\":\\"testemail\\"}" http://localhost:5000/register/ > test_output.txt""")
+new_register_test.truncate()
+new_register_test.close()
+
+subprocess.call([r'registration_test.cmd'])
+test_output = open("test_output.txt", "r")
+
+line = test_output.readline()
+failed_reg = True
+while line:
+	if failed_reg and line and line.find('Your email address is invalid.') != -1:
+		reg_test9 = "PASSED: Checking that inputs with incorrect format can't be accepted (email regex)"
+		failed_reg = False
+		break
+	line = test_output.readline()
+if failed_reg:
+	reg_test9 = "FAILED: Checking that inputs with incorrect format can't be accepted (email regex)"
+test_output.close()
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
 # login curl test
@@ -452,6 +565,9 @@ if failed_vote:
 	vote_test = "FAILED: Vote Test"
 test_output.close()
 """
+
+
+# Prints test output
 print(" ")
 print("Registration Tests")
 print(reg_test1)
@@ -459,6 +575,10 @@ print(reg_test2)
 print(reg_test3)
 print(reg_test4)
 print(reg_test5)
+print(reg_test6)
+print(reg_test7)
+print(reg_test8)
+print(reg_test9)
 
 print(" ")
 print("Login Tests")
