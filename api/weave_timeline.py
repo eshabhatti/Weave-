@@ -56,7 +56,7 @@ def weave_render_timeline():
         return {'timeline_list': timeline_list}
 
 
-# # # # Backend route for allowing the user to follow a topic on Weave.
+# # # # Backend route for allowing the user to follow a user on Weave.
 # # Expects a POST request with a JSON. Details will be in 'api/README.md'.
 # # Returns a message of success as a string. 
 @weave_timeline.route("/followuser", methods=["POST"])
@@ -84,20 +84,38 @@ def weave_follow_user():
 
         # Handles instances where a new follow instance is being created.
         if (follow_info["type"] == 1):
+            
+            # Inserts new relationship entity.
             follow_query = "INSERT INTO FollowUser VALUES (%s, %s);"
             follow_values = (follower, followed)
             cursor.execute(follow_query, follow_values)
+            
+            # Updates the followed user's follower count attribute.
+            update_query = "UPDATE UserAccount SET follower_count = follower_count + 1 WHERE username = %s;"
+            update_values = (followed,)
+            cursor.execute(update_query, update_values)
             mysql.connection.commit()
 
         # Handles instances where a follow instance is being deleted.
         elif (follow_info["type"] == -1):
+            
+            # Deletes relationship entity.
             follow_query = "DELETE FROM FollowUser WHERE user_follower = %s AND user_followed = %s;"
             follow_values - (follower, followed)
             cursor.execute(follow_query, follow_values)
+            
+            # Updates the ex-followed user's follower count attribute.
+            update_query = "UPDATE UserAccount SET follower_count = follower_count - 1 WHERE username = %s;"
+            update_values = (followed,)
+            cursor.execute(update_query, update_values)
             mysql.connection.commit()
 
         return "follow user done"
 
+
+# # # # Backend route for allowing the user to follow a topic on Weave.
+# # Expects a POST request with a JSON. Details will be in 'api/README.md'.
+# # Returns a message of success as a string. 
 @weave_timeline.route("/followtopic", methods=["POST"])
 @jwt_required
 def weave_follow_topic():
@@ -123,16 +141,34 @@ def weave_follow_topic():
 
         # Handles instances where a new follow instance is being created.
         if (follow_info["type"] == 1):
+            
+            # Inserts new relationship entity.
             follow_query = "INSERT INTO FollowTopic VALUES (%s, %s);"
             follow_values = (follower, followed)
             cursor.execute(follow_query, follow_values)
+            
+            # Updates the followed topic's follow count attribute.
+            update_query = "UPDATE Topic SET follower_count = follower_count + 1 WHERE topic_name = %s;"
+            update_values = (followed,)
+            cursor.execute(update_query, update_values)
+            
+            # Commits database.
             mysql.connection.commit()
 
         # Handles instances where a follow instance is being deleted.
         elif (follow_info["type"] == -1):
+            
+            # Deletes the old relationship entity.
             follow_query = "DELETE FROM FollowTopic WHERE user_follower = %s AND topic_followed = %s;"
             follow_values - (follower, followed)
             cursor.execute(follow_query, follow_values)
+            
+            # Updates the ex-followed topic's follow count attribute.
+            update_query = "UPDATE Topic SET follower_count = follower_count - 1 WHERE topic_name = %s;"
+            update_values = (followed,)
+            cursor.execute(update_query, update_values)
+            
+            # Commits database.
             mysql.connection.commit()
 
         return "follow topic done"
