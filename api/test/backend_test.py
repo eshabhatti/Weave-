@@ -11,6 +11,7 @@ from test_follow import follow_test
 # Tests (only) backend functionality with curl commands.
 # Before running this script, start the Flask server for Weave.
 # This script has a dependency of mysql-connector-python==8.0.22: run 'pip install mysql-connector-python' to install.
+# IF THE TEST SUITE HANGS ON STARTUP, TRY RESTARTING YOUR LOCAL MYSQL SERVER.
 
 # Since the database can actually be damaged now, here is a confirm statement. 
 confirm_test = input("THESE TESTS WILL ERASE THE CURRENT LOCAL WEAVE DATABASE.\nIS THIS OK? ENTER 'Y' TO PROCEED.\n")
