@@ -276,3 +276,95 @@ LIMIT 0, 2
 ;
 
 -- Note that as long as no tables are connected with JOIN, there should be no need for the DISTINCT keyword.
+-- The above queries will all work properly only as long as there are no anonymous posts, however.
+-- These anonymous posts should show when a user is following a topic, not when a user is following a user or when they made a post.
+-- To illustrate this, there will be some more posts inserted:
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+INSERT INTO Post
+VALUES (
+	007,
+    'ART',
+    'followtest2',
+    '2020-10-17 23:22:22',
+    'Visible Post 6',
+    'This post should show in the final select statement',
+    NULL,
+    0,
+    0,
+    1,
+    0
+);
+
+INSERT INTO Post
+VALUES (
+	008,
+    'GENERAL',
+    'followtest3',
+    '2020-10-17 23:22:22',
+    'Invisible Post 2',
+    'This post should not show in the final select statement',
+    NULL,
+    0,
+    0,
+    1,
+    0
+);
+
+INSERT INTO Post
+VALUES (
+    009,
+    'GENERAL',
+    'followtest1',
+    '2020-10-17 22:22:22',
+    'Invisible Post 3',
+    'This post should not show in the final select statement',
+    NULL,
+    0,
+    0,
+    1,
+    0
+);
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+
+-- If the above query is run, it will show anonymous posts where they aren't supposed to be.
+-- Therefore the internal queries need to be modified, as anonymous posts are treated differently per category.
+-- The easiest thing to do is likely going to be returning an explicit list of post_id attributes for each subquery.
+-- The follow-user subquery, for instance, may look something like this:
+SELECT post_id
+FROM Post AS P, FollowUser AS F
+WHERE F.user_followed = P.creator 
+    AND P.anon_flag = 0 AND F.user_follower = 'followtest1'
+;
+
+-- While the user's own query may look something like this:
+SELECT post_id
+FROM Post
+WHERE creator = 'followtest1' AND anon_flag = 0 
+;
+
+-- And the topic query may look like this:
+SELECT post_id
+FROM Post AS P, FollowTopic AS T
+WHERE T.topic_followed = P.topic_name
+    AND T.user_follower = 'followtest1'
+;
+
+-- The whole query, then, will look like this:
+SELECT *
+FROM Post
+WHERE post_id IN
+    ( SELECT post_id
+      FROM Post
+      WHERE creator = 'followtest1' AND anon_flag = 0 )
+OR post_id IN 
+    ( SELECT post_id
+      FROM Post AS P, FollowTopic AS T
+      WHERE T.topic_followed = P.topic_name AND T.user_follower = 'followtest1' )
+OR post_id IN
+    ( SELECT post_id
+	  FROM Post AS P, FollowUser AS F
+      WHERE F.user_followed = P.creator AND P.anon_flag = 0 AND F.user_follower = 'followtest1')
+ORDER BY date_created DESC
+;
+
+-- And, of course, the limit statement can be added on afterwards.
