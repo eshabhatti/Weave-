@@ -15,6 +15,7 @@ export default function Post({
     {/* current score of post */ }
     const [votes, setVotes] = useState(0);
 
+	
     const access_token = localStorage.getItem('access_token');
     if (access_token == null) {
         window.location = "/login"
@@ -146,7 +147,11 @@ export default function Post({
 
         });
     };
-
+	
+	const postLink = "/post/" + postId;
+	const profileLink = "/profile/" + creator;
+	const topicLink = "/topic/" + topic_name;
+	
     return (
         <div>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
@@ -169,11 +174,12 @@ export default function Post({
                     </div>
                     <div className="post-text-container">
                         {/* align these better later */}
-                        <p className="post-text">{creator}</p>
+                        <p className="post-text"><a href={profileLink}>{creator}</a></p>
                         <p className="post-text">{date_created}</p>
-                        <p className="post-text">{topic_name}</p>
+                        <p className="post-text"><a href={topicLink}>{topic_name}</a></p>
                         <h1 className="post-title">{title}</h1>
                         <p className="post-content">{content}</p>
+						<p><a href={postLink}>View Comments</a></p>
                         {saveCheck === -1 ? (
                             <button className="post-save-button" onClick={() => savePost(1)}>Save</button>
                         ) : (

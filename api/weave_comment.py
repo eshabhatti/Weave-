@@ -116,7 +116,7 @@ def weave_comment_pull():
             str(pull_info["start"]) + ", " + str(pull_info["end"]) + ";"
         cursor.execute(pull_query)
 
-        # Adds the user's posts to a list that will then be returned.
+        # Adds the user's comments to a list that will then be returned.
         pull_list = []
         for row in cursor:
             pull_list.append(row["comment_id"])
