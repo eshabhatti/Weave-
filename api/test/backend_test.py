@@ -46,13 +46,20 @@ init_cursor.close()
 
 # RUNS THE BACKEND TESTS
 # See separate files for more information on each test.
+
 reg_test = registration_test()                             # Registration tests.
+
 login_tests = login_test()                                 # Login tests.
 access_token = login_tests[len(login_tests) - 1]           # Access token needed for later tests.
+
 pro_tests = profile_test(access_token)                     # Profile tests.
 access_token = pro_tests[len(pro_tests) - 1]               # Access token needs to update for later tests.
+
 post_tests = post_test(access_token)                       # Post tests.
 access_token = post_tests[len(post_tests) - 1]             # Access token needs to update for later tests.
+valid_post1 = post_tests[len(post_tests) - 2]              # Pulls first valid post's ID from the database.
+valid_post2 = post_tests[len(post_tests) - 3]              # Pulls first valid post's ID from the database.
+
 anon_tests = anon_test(access_token)                       # Anonymous post tests.
 access_token = anon_tests[len(anon_tests) - 1]             # Access token needs to update for later tests.
 
@@ -63,26 +70,24 @@ access_token = anon_tests[len(anon_tests) - 1]             # Access token needs 
 #new_post_test = open('vote_test.cmd', 'w+')
 #new_post_test.seek(0)
 #new_post_test.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"username\":\\"testname\\",\\"type\\":\\"1\\",\\"id\\":\\"1\\",\\"vote\\":\\"1\\"}" http://localhost:5000/vote/ > test_output.txt""")
-"""
-new_post_test.truncate()
-new_post_test.close()
+# new_post_test.truncate()
+# new_post_test.close()
 
-subprocess.call([r'vote_test.cmd'])
-test_output = open("test_output.txt", "r")
+# subprocess.call([r'vote_test.cmd'])
+# test_output = open("test_output.txt", "r")
 
-line = test_output.readline()
-failed_vote = True
-while line:	
-	if failed_vote and line and line.find('token') != -1:
-		vote_test = "PASSED: Vote Test"
-		access_token = line[line.find('token') + 9:len(line) - 4]
-		failed_vote = False
-		break
-	line = test_output.readline()
-if failed_vote:
-	vote_test = "FAILED: Vote Test"
-test_output.close()
-"""
+# line = test_output.readline()
+# failed_vote = True
+# while line:	
+# 	if failed_vote and line and line.find('token') != -1:
+# 		vote_test = "PASSED: Vote Test"
+# 		access_token = line[line.find('token') + 9:len(line) - 4]
+# 		failed_vote = False
+# 		break
+# 	line = test_output.readline()
+# if failed_vote:
+# 	vote_test = "FAILED: Vote Test"
+# test_output.close()
 
 
 # Prints test output
@@ -103,7 +108,7 @@ for row in range(len(pro_tests) - 1):
 
 print(" ")
 print("Posting Tests")
-for row in range(len(post_tests) - 1):
+for row in range(len(post_tests) - 3):
 	print(post_tests[row])
 
 print(" ")
