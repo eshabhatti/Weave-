@@ -3,6 +3,9 @@
 -- Format is:
 -- 		DROP TABLE TableName ;
 
+-- Selects the database to be deleted.
+USE weave;
+
 -- Drops the Blacklist table.
 DROP TABLE Blacklist;
 
@@ -35,4 +38,4 @@ DROP TABLE UserAccount;
 
 -- Terminates the entire database. This will also drop the tables above.
 -- The DROP statements will be kept nonetheless in case the database needs to be cleared, not removed.
-DROP DATABASE weave; 
+DROP DATABASE weave;
