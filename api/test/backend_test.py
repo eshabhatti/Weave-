@@ -68,7 +68,7 @@ vp_2 = post_tests[len(post_tests) - 3]                     # Pulls first valid p
 anon_tests = anon_test(access_token)                       # Anonymous post tests.
 access_token = anon_tests[len(anon_tests) - 1]             # Access token needs to update for later tests.
 
-# follow_tests = follow_test(access_token, vp_1, vp_2)       # Following and timeline tests.
+follow_tests = follow_test(access_token, vp_1, vp_2)       # Following and timeline tests.
 
             
 # vote curl
@@ -124,3 +124,8 @@ for row in range(len(anon_tests) - 1):
 	print(anon_tests[row])
 
 #print(vote_test)
+
+print(" ")
+print("Timeline and Following Tests")
+for row in range(len(follow_tests)):
+	print(follow_tests[row])

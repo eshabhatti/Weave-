@@ -41,3 +41,78 @@ VALUES (
     0,
     0
 );
+
+INSERT INTO Post
+VALUES (
+	004,
+    'general',
+    'followtest_1',
+    '2020-10-17 21:22:22',
+    'Invisible Post 1',
+    'This post should not show in the final select statement',
+    NULL,
+    0,
+    0,
+    0,
+    0
+);
+
+INSERT INTO Post
+VALUES (
+	005,
+    'art',
+    'followtest_1',
+    '2020-10-17 21:22:22',
+    'Visible Post 2',
+    'This post should show in the final select statement',
+    NULL,
+    0,
+    0,
+    0,
+    0
+);
+
+INSERT INTO Post
+VALUES (
+	006,
+    'cats',
+    'followtest_1',
+    '2020-10-17 12:21:34',
+    'Visible Post 3',
+    'This post should show in the final select statement',
+    NULL,
+    0,
+    0,
+    0,
+    0
+);
+
+INSERT INTO Post
+VALUES (
+	007,
+    'general',
+    'followtest_2',
+    '2020-10-17 20:22:22',
+    'Visible Post 4',
+    'This post should show in the final select statement',
+    NULL,
+    0,
+    0,
+    0,
+    0
+);
+
+INSERT INTO Post
+VALUES (
+	008,
+    'art',
+    'followtest_2',
+    '2020-10-17 23:22:22',
+    'Visible Post 5',
+    'This post should show in the final select statement',
+    NULL,
+    0,
+    0,
+    0,
+    0
+);
