@@ -45,7 +45,6 @@ create_commands = createtables.split(";")
 for query in create_commands:
 	init_cursor.execute(query)
 init_cursor.close()
-print("Database rebuilt...")
 
 
 

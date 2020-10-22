@@ -12,7 +12,7 @@ weave_timeline = Blueprint('weave_timeline', __name__)
 def weave_render_timeline():
 
     # The backend has recieved a request to display the user's timeline.
-    if request.method == "GET":
+    if request.method == "POST":
 
         # Checks for JSON format.
         if (not request.is_json):
@@ -25,9 +25,9 @@ def weave_render_timeline():
 
         # Validates start and end conditions because of the insecure query.
         # This SHOULD never return an error if called legitimately from the frontend.
-        if (re.search("^[0-9]+$", str(pull_info["start"])) == None):
+        if (re.search("^[0-9]+$", str(timeline_info["start"])) == None):
             return jsonify({'error_message': 'Bad start value'}), 400
-        if (re.search("^[0-9]+$", str(pull_info["end"])) == None):
+        if (re.search("^[0-9]+$", str(timeline_info["end"])) == None):
             return jsonify({'error_message': 'Bad end value'}), 400
 
         # Initializes MySQL cursor.
@@ -38,6 +38,7 @@ def weave_render_timeline():
 
         # This SQL statement will pull everything the we need from the database for timeline display.
         # Not only is this thing long and ugly, but it is also insecure and requires the limits to be validated above. B)
+        # TODO: THIS SHOWS THE ANONYMOUS POSTS OF OTHER USERS AS WELL AS ONE'S OWN ANON POSTS.
         timeline_query = "SELECT post_id FROM Post WHERE creator = %s " + \
             "OR topic_name IN (SELECT topic_followed AS topic_name FROM FollowTopic WHERE user_follower = %s) " + \
             "OR creator IN (SELECT user_followed AS creator FROM FollowUser WHERE user_follower = %s) " + \
@@ -48,7 +49,7 @@ def weave_render_timeline():
 
         # Adds the timeline posts to a list that will then be returned.
         timeline_list = []
-        for cursor in row:
+        for row in cursor:
             timeline_list.append(row["post_id"])
         print(timeline_list) #debugging
 

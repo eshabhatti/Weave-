@@ -40,8 +40,7 @@ def post_test(access_token):
             post_test1 = "PASSED: Check that a valid text post should always be posted."
             access_token = line[line.find('token') + 9:len(line) - 4]
             failed_post = False
-            cursor.execute("SELECT post_id FROM Post ORDER BY post_id DESC LIMIT 0, 1;")
-            valid_post1 = cursor.fetchall()[0][0]
+            valid_post1 = 1
             break
         line = test_output.readline()
     if failed_post:
@@ -78,8 +77,7 @@ def post_test(access_token):
             post_test5 = "PASSED: Check that a text post without a topic should be created in general."
             access_token = line[line.find('token') + 9:len(line) - 4]
             failed_post = False
-            cursor.execute("SELECT post_id FROM Post ORDER BY post_id DESC LIMIT 0, 1;")
-            valid_post2 = cursor.fetchall()[0][0]
+            valid_post2 = 2
             break
         line = test_output.readline()
     if failed_post:

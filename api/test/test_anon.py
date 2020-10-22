@@ -24,6 +24,7 @@ def anon_test(access_token):
         if failed_post and line and line.find('token') != -1:
             post_test4 = "PASSED: Anonymous posts still retain the original user's username, but do not show it when displaying."
             access_token = line[line.find('token') + 9:len(line) - 4]
+            # third valid post
             failed_post = False
             break
         line = test_output.readline()

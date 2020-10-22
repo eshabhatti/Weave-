@@ -1,6 +1,7 @@
 # # # # # # # # # # # # # # # # # # # 
 # # # # # FOLLOW CURL TESTS # # # # # 
 # # # # # # # # # # # # # # # # # # # 
+import re
 import subprocess
 import mysql.connector
 
@@ -58,5 +59,43 @@ def follow_test(access_token, valid_post_1, valid_post_2):
         follow_test1 = "FAILED: Users can follow other users."
     test_output.close()
     follow_tests.append(follow_test1)
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    # Follow User Timeline Modifications
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    cursor.execute("SELECT post_id FROM Post WHERE creator = \"followtest_2\"")
+    valid_posts = [str(valid_post_1), str(valid_post_2)]
+    for row in cursor:
+        valid_posts.append(str(row[0]))
+    print("Valid = " + str(valid_posts))
+
+    follow_command = open('follow_test.cmd', 'w+')
+    follow_command.seek(0)
+    follow_command.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"start\\":0,\\"end\\":5}" http://localhost:5000/timeline > test_output.txt""")
+    follow_command.truncate()
+    follow_command.close()
+
+    subprocess.call([r'follow_test.cmd'])
+    test_output = open("test_output.txt", "r")
+    
+    displayed_posts = []
+    line = test_output.readline()
+    follow_search = False
+    while line:
+        if line and follow_search == False and re.search("\[", line) != None:
+            follow_search = True
+        if line and follow_search == True and re.search("[0-9]+", line) != None:
+            displayed_posts.append(line.strip("\n\t ,"))
+        line = test_output.readline()
+    print("Displayed = " + str(displayed_posts))
+
+    follow_test2 = "FAILED: Proper posts display properly on the timeline after following a user."
+    valid_posts.sort()
+    displayed_posts.sort()
+    if (valid_posts == displayed_posts):
+        follow_test2 = "PASSED: Proper posts display properly on the timeline after following a user."
+    test_output.close()
+    follow_tests.append(follow_test2)
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     return follow_tests
