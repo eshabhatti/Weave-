@@ -149,12 +149,10 @@ export default function Profile() {
 	
 	return (
 		<div>
-			<p>
-				Need the post information <br></br>
-				Then need the comment creator <br></br>
-				Then need the comments
-			</p>
-			<CommentCreator postId={1} />
+			<p>Need the post information in a different format than this</p>
+			<Post postId={pagePost} />
+			<CommentCreator postId={pagePost} />
+			<p>List of comments below</p>
 		</div>
 
 	);
