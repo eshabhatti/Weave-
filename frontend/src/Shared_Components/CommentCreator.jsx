@@ -12,8 +12,37 @@ export default function CommentCreator({
 	const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;
 	const successObject = successMessage != "" ? <SuccessBubble message={successMessage} /> : null;
 	
+	const access_token = localStorage.getItem('access_token');
+    if (access_token == null) {
+        window.location = "/login"
+    }
+	
+	const commentpoint = "http://localhost:5000/createcomment/"
 	const onSubmit = (event) => {
-		//TODO submitting comment to backend
+		event.preventDefault();
+		const body = {
+            content: commentContent,
+            post_id: postId,
+        }
+		fetch(commentpoint, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token
+            },
+            body: JSON.stringify(body)
+        }).then(response => response.json()).then(data => {
+            if (data.error_message) {
+                updateErrorMessage(data.error_message);
+            }
+            /* catches jwt errors that don't use the form "error_message:" */
+            if (data.msg) {
+                window.location = "/login"
+            }
+        }).catch(err => {
+            console.error(err);
+            alert(err);
+        });
 	}
 	
 	return (
