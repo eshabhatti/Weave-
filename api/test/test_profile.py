@@ -100,12 +100,12 @@ def profile_test(access_token):
     while line:
 
         if failed_profile and line and line.find('Your new username is invalid.') != -1:
-            profile_test3 = "PASSED: Check that case where too many characters are entered does not update the database. (>250 characters)"
+            profile_test3 = "PASSED: Check that case where too many characters (>250) are entered does not update the database."
             failed_profile = False
             break
         line = test_output.readline()
     if failed_profile:
-        profile_test3 = "FAILED: Check that case where too many characters are entered does not update the database. (>250 characters)"
+        profile_test3 = "FAILED: Check that case where too many characters (>250) are entered does not update the database."
     test_output.close()
     pro_tests.append(profile_test3)
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

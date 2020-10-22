@@ -48,6 +48,9 @@ def weave_post_create():
         # Any single or double quote in strings will be taken care of as part of the cursor's execute method.
         if (len(post_info["content"]) > 750):
             return jsonify({'error_message': 'Post too large.'}), 400
+        if (len(post_info["content"]) < 1):
+            return jsonify({'error_message': 'Empty posts are not allowed.'}), 400
+
             
         # Validates the topic information.
         # Most strings will be fine. Empty content will be changed to the topic "general"
@@ -61,14 +64,6 @@ def weave_post_create():
 
         # Gets the current date in "YYYY-MM-DD HH:MI:SS" format.
         current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-
-        # Validates the topic information.
-        # No characters should break the application. Length does need to be checked, however.
-        # As a stylistic choice, each topic will only be allowed to be one word as well.
-        if (re.search("^[A-Za-z0-9]+$", post_info["topic"]) == None):
-            return jsonify({'error_message': 'Topic name invalid.'}), 400
-        if (len(post_info["topic"]) > 50):
-            return jsonify({'error_message': 'Topic too long.'}), 400
 
         # Checks if topic exists in database. If not, the topic is added in all lowercase.
         cursor.execute("SELECT * FROM Topic WHERE topic_name = %s;", (post_info["topic"],))

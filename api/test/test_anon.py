@@ -47,7 +47,7 @@ def anon_test(access_token):
     line = test_output.readline()
     failed_post = True
     while line:
-        if failed_post and line and line.find('token') != -1:
+        if failed_post and line and line.find('error') != -1:
             post_test5 = "PASSED: Anonymous posts should not be empty."
             failed_post = False
             break

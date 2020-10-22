@@ -34,6 +34,7 @@ def post_test(access_token):
 
     line = test_output.readline()
     failed_post = True
+    valid_post1 = ""
     while line:
         if failed_post and line and line.find('token') != -1:
             post_test1 = "PASSED: Check that a valid text post should always be posted."
@@ -71,6 +72,7 @@ def post_test(access_token):
 
     line = test_output.readline()
     failed_post = True
+    valid_post2 = ""
     while line:
         if failed_post and line and line.find('token') != -1:
             post_test5 = "PASSED: Check that a text post without a topic should be created in general."
@@ -100,7 +102,7 @@ def post_test(access_token):
     line = test_output.readline()
     failed_post = True
     while line:
-        if failed_post and line and line.find('token') != -1:
+        if failed_post and line and line.find('error') != -1:
             post_test2 = "PASSED: Check that blank posts can't be posted."
             failed_post = False
             break

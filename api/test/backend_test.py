@@ -6,6 +6,7 @@ from test_login import login_test
 from test_profile import profile_test
 from test_post import post_test
 from test_anon import anon_test
+from test_follow import follow_test
 
 # Tests (only) backend functionality with curl commands.
 # Before running this script, start the Flask server for Weave.
@@ -43,6 +44,10 @@ create_commands = createtables.split(";")
 for query in create_commands:
 	init_cursor.execute(query)
 init_cursor.close()
+print("Database rebuilt...")
+
+
+
 
 # RUNS THE BACKEND TESTS
 # See separate files for more information on each test.
@@ -55,13 +60,15 @@ access_token = login_tests[len(login_tests) - 1]           # Access token needed
 pro_tests = profile_test(access_token)                     # Profile tests.
 access_token = pro_tests[len(pro_tests) - 1]               # Access token needs to update for later tests.
 
-post_tests = post_test(access_token)                       # Post tests.
+post_tests = post_test(access_token)                       # Post and topic tests.
 access_token = post_tests[len(post_tests) - 1]             # Access token needs to update for later tests.
-valid_post1 = post_tests[len(post_tests) - 2]              # Pulls first valid post's ID from the database.
-valid_post2 = post_tests[len(post_tests) - 3]              # Pulls first valid post's ID from the database.
+vp_1 = post_tests[len(post_tests) - 2]                     # Pulls first valid post's ID (001) from the database.
+vp_2 = post_tests[len(post_tests) - 3]                     # Pulls first valid post's ID (002) from the database.
 
 anon_tests = anon_test(access_token)                       # Anonymous post tests.
 access_token = anon_tests[len(anon_tests) - 1]             # Access token needs to update for later tests.
+
+# follow_tests = follow_test(access_token, vp_1, vp_2)       # Following and timeline tests.
 
             
 # vote curl
