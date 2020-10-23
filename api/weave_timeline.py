@@ -38,10 +38,12 @@ def weave_render_timeline():
 
         # This SQL statement will pull everything the we need from the database for timeline display.
         # Not only is this thing long and ugly, but it is also insecure and requires the limits to be validated above. B)
-        # TODO: THIS SHOWS THE ANONYMOUS POSTS OF OTHER USERS AS WELL AS ONE'S OWN ANON POSTS.
-        timeline_query = "SELECT post_id FROM Post WHERE creator = %s " + \
-            "OR topic_name IN (SELECT topic_followed AS topic_name FROM FollowTopic WHERE user_follower = %s) " + \
-            "OR creator IN (SELECT user_followed AS creator FROM FollowUser WHERE user_follower = %s) " + \
+        timeline_query = "SELECT post_id FROM Post " + \
+            "WHERE post_id IN (SELECT post_id FROM Post WHERE creator = %s AND anon_flag = 0 ) " + \
+            "OR post_id IN ( SELECT post_id FROM Post AS P, FollowTopic AS T " + \
+                "WHERE T.topic_followed = P.topic_name AND T.user_follower = %s )" + \
+            "OR post_id IN ( SELECT post_id FROM Post AS P, FollowUser AS F " + \
+                "WHERE F.user_followed = P.creator AND P.anon_flag = 0 AND F.user_follower = %s)" + \
             "ORDER BY date_created DESC " + \
             "LIMIT " + str(timeline_info["start"]) + ", " + str(timeline_info["end"]) + ";"
         timeline_values = (username, username, username)

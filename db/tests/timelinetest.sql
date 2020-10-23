@@ -116,3 +116,48 @@ VALUES (
     0,
     0
 );
+
+INSERT INTO Post
+VALUES (
+	009,
+    'art',
+    'followtest_1',
+    '2020-10-17 23:22:22',
+    'Visible Post 6',
+    'This post should show in the final select statement',
+    NULL,
+    0,
+    0,
+    1,
+    0
+);
+
+INSERT INTO Post
+VALUES (
+	010,
+    'general',
+    'followtest_2',
+    '2020-10-17 23:22:22',
+    'Invisible Post 2',
+    'This post should not show in the final select statement',
+    NULL,
+    0,
+    0,
+    1,
+    0
+);
+
+INSERT INTO Post
+VALUES (
+    011,
+    'general',
+    'testname',
+    '2020-10-17 22:22:22',
+    'Invisible Post 3',
+    'This post should not show in the final select statement',
+    NULL,
+    0,
+    0,
+    1,
+    0
+);

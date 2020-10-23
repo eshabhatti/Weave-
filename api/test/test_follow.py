@@ -63,11 +63,10 @@ def follow_test(access_token, valid_post_1, valid_post_2):
 
     # Follow User Timeline Modifications
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-    cursor.execute("SELECT post_id FROM Post WHERE creator = \"followtest_2\"")
+    cursor.execute("SELECT post_id FROM Post WHERE creator = \"followtest_2\" AND anon_flag = 0")
     valid_posts = [str(valid_post_1), str(valid_post_2)]
     for row in cursor:
         valid_posts.append(str(row[0]))
-    print("Valid = " + str(valid_posts))
 
     follow_command = open('follow_test.cmd', 'w+')
     follow_command.seek(0)
@@ -87,11 +86,12 @@ def follow_test(access_token, valid_post_1, valid_post_2):
         if line and follow_search == True and re.search("[0-9]+", line) != None:
             displayed_posts.append(line.strip("\n\t ,"))
         line = test_output.readline()
-    print("Displayed = " + str(displayed_posts))
 
     follow_test2 = "FAILED: Proper posts display properly on the timeline after following a user."
     valid_posts.sort()
     displayed_posts.sort()
+    # print("Valid = " + str(valid_posts))
+    # print("Displayed = " + str(displayed_posts))
     if (valid_posts == displayed_posts):
         follow_test2 = "PASSED: Proper posts display properly on the timeline after following a user."
     test_output.close()
