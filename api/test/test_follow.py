@@ -175,7 +175,7 @@ def follow_test(access_token, valid_post_1, valid_post_2):
 
     follow_command = open('follow_test.cmd', 'w+')
     follow_command.seek(0)
-    follow_command.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"start\\":0,\\"end\\":5}" http://localhost:5000/timeline > test_output.txt""")
+    follow_command.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"start\\":0,\\"end\\":10}" http://localhost:5000/timeline > test_output.txt""")
     follow_command.truncate()
     follow_command.close()
 
