@@ -150,12 +150,12 @@ def follow_test(access_token, valid_post_1, valid_post_2):
         # print("line = " + line)
         if failed_follow and line and line.find('follow topic done') != -1:
             follow_test3 = "PASSED: Users can follow topics."
+            failed_follow = False
             # TODO: FIX CURSOR HERE; FOR SOME REASON IT ONLY GIVES ME ISSUE HERE. HAVE VERIFIED THAT THE TOPIC RELATION IS CREATED PROPERLY
             # follow_test3 = "FAILED: Users can follow topics."
             # cursor.execute("SELECT topic_followed FROM FollowTopic WHERE user_follower = \"testname\";")
             # for row in cursor:
             #     follow_test3 = "PASSED: User can follow topics."
-            #     failed_follow = False
             break
         line = test_output.readline()
     if failed_follow:
