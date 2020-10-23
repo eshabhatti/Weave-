@@ -409,6 +409,7 @@ def weave_pull_saves():
         save_list = []
         for row in cursor:
             save_list.append(row["post_id"])
+        print(str(save_list)) # debugging
         
         # Return as list
         return {'pull_list': save_list}

@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../../Shared_Components/NavBar";
 import Post from "../../Shared_Components/Post";
-import './savedposts.css';
+import './timeline.css';
 
-export default function SavedPosts() {
+export default function TimelinePosts() {
+  
   const [postData, setPostData] = useState([]);
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
     window.location = "/login"
   }
+  
   useEffect(() => {
-    const endpoint = "http://localhost:5000/savedposts/"
+    const endpoint = "http://localhost:5000/timeline"
     fetch(endpoint, {
       method: "POST",
       headers: {
@@ -22,7 +24,7 @@ export default function SavedPosts() {
         end: 5
       })
     }).then(response => response.json()).then(data => {
-	    const { pull_list: post_ids } = data;
+      const { pull_list: post_ids } = data;
       setPostData(post_ids);
     }).catch(err => {
       console.log(err);
@@ -43,13 +45,13 @@ export default function SavedPosts() {
   return (
     <div>
       <NavBar />
-      <div className="saved-posts-page-content">
+      <div className="timeline-page-content">
         {/* List of posts */}
-        <h1 className="saved-posts-heading">Your saved posts</h1>
-        <div className="saved-posts-container">
-          {postsContent}
+        <h1 className="timeline-heading">Your timeline</h1>
+        <div className="timeline-container">
+          {/* {postsContent} */}
         </div>
-        <a href="javascript:history.back()" className="saved-posts-return">go back</a>
+        <a href="javascript:history.back()" className="timeline-return">go back</a>
       </div>
     </div>
   );

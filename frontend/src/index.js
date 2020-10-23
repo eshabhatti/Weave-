@@ -12,10 +12,11 @@ import Register from "./auth/Register/Register";
 import Profile from "./user_info/Profile/Profile"
 import EditProfile from "./user_info/Profile/EditProfile"
 import NotFound from "./error_pages/NotFound"
-import Timeline from "./user_info/Timeline/Timeline"
+import CreatePost from "./post_info/CreatePost/CreatePost"
 import SavedPosts from './user_info/SavedPosts/SavedPosts';
-import PostPage from './user_info/Posts/PostPage';
+import PostPage from './post_info/Posts/PostPage';
 import TopicPage from './user_info/Topics/TopicPage';
+import Timeline from './post_info/Timeline/Timeline';
 //import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 
 function AppRouter() {
@@ -46,12 +47,15 @@ function AppRouter() {
         <Route path="/timeline">
           <Timeline />
         </Route>
-		<Route path="/post/:post_id">
-		  <PostPage />
-		</Route>
-		<Route path="/topic/:topic_name">
-		  <TopicPage />
-		</Route>
+        <Route path="/createpost">
+          <CreatePost />
+        </Route>
+        <Route path="/post/:post_id">
+          <PostPage />
+        </Route>
+        <Route path="/topic/:topic_name">
+          <TopicPage />
+        </Route>
         <Route path="/">
           <NotFound />
         </Route>

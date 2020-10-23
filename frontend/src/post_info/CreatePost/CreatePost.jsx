@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import ImageUploader from 'react-images-upload';
 
-import "./timeline.css";
+import "./createpost.css";
 
 export default function Timeline() {
 	const [postContent, updatePostContent] = useState("");

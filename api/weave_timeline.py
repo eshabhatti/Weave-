@@ -53,7 +53,7 @@ def weave_render_timeline():
         timeline_list = []
         for row in cursor:
             timeline_list.append(row["post_id"])
-        print(timeline_list) #debugging
+        print(str(timeline_list)) #debugging
 
         # Return as list
         return {'timeline_list': timeline_list}
