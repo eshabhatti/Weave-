@@ -86,8 +86,8 @@ export default function Post({
     const { topic_name, date_created, post_type, pic_path, title, content, creator } = postdata;
 
     {/* sends the votes to the server and receives the change in score */ }
-    const vote = (value) => {
-        setVoted(value);
+    const vote = (value, arrow) => {
+        setVoted(arrow);
         const body = {
             username: userName,
             type: '1',
@@ -160,16 +160,16 @@ export default function Post({
                     <div className="post-vote-container">
                         {/* replace with upvote and downvote */}
                         {voteCheck > 0 ? (
-                            <i class="fa fa-arrow-circle-up" style={{ fontSize: '36px', color: 'red' }} onClick={() => vote(0)} ></i>
+                            <i class="fa fa-arrow-circle-up" style={{ fontSize: '36px', color: 'red' }} onClick={() => vote(1, 0)} ></i>
 
                         ) : (
-                                <i class="fa fa-arrow-circle-up" style={{ fontSize: '36px' }} onClick={() => vote(1)} ></i>
+                                <i class="fa fa-arrow-circle-up" style={{ fontSize: '36px' }} onClick={() => vote(1, 1)} ></i>
                             )}
                         <p className="post-vote-score">{votes}</p>
                         {voteCheck < 0 ? (
-                            <i class="fa fa-arrow-circle-down" style={{ fontSize: '36px', color: 'red' }} onClick={() => vote(0)} ></i>
+                            <i class="fa fa-arrow-circle-down" style={{ fontSize: '36px', color: 'red' }} onClick={() => vote(-1, 0)} ></i>
                         ) : (
-                                <i class="fa fa-arrow-circle-down" style={{ fontSize: '36px' }} onClick={() => vote(-1)} ></i>
+                                <i class="fa fa-arrow-circle-down" style={{ fontSize: '36px' }} onClick={() => vote(-1, -1)} ></i>
                             )}
                     </div>
                     <div className="post-text-container">

@@ -5,6 +5,127 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 weave_vote = Blueprint('weave_vote', __name__)
 
 
+# Essentially a constant that handles errors between functions.
+VOTE_ERROR = -50
+
+# # # # Backend function that handles post voting on Weave.
+# # This is not a route itself, but its parameter is the JSON information that is originally passed into weave_voting()
+# # Returns an integer that will update the change field in the return JSON
+def weave_post_vote(vote_info):
+    
+    # Initializes MySQL cursor
+    cursor = mysql.connection.cursor()
+
+    # # # Handles upvotes to posts.
+    if (vote_info["vote"] == 1):
+
+        # Checks for repeated votes.
+        cursor.execute("SELECT score FROM PostVote WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
+        
+        # If there is no repeated vote, the new vote can just be added into the database.
+        if (cursor.rowcount == 0):
+
+            # Adds the actual vote entity into the database.
+            vote_query = "INSERT INTO PostVote VALUES (%s, %s, %s);"
+            vote_values = (vote_info["username"], vote_info["id"], vote_info["vote"])
+            cursor.execute(vote_query, vote_values)
+
+            # Updates the post table with the upvote.
+            cursor.execute("UPDATE Post SET upvote_count = upvote_count + 1 WHERE post_id = %s;", (vote_info["id"],))
+
+            mysql.connection.commit()
+            return 1
+
+        # If there is a repeated vote, we need to see if the score is different.
+        # If so, delete the downvote and change to an upvote. If not, delete the upvote completely.
+        else:
+            
+            # Gets old score.
+            oldvote = cursor.fetchall()
+            oldvote = (oldvote[0])["score"]
+
+            # If the old score was an upvote, we will delete it from the database.
+            if (oldvote == 1):
+                
+                # Deletes the vote entity from the database.
+                cursor.execute("DELETE FROM PostVote WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
+            
+                # Removes upvote from the appropriate post.
+                cursor.execute("UPDATE Post SET upvote_count = upvote_count - 1 WHERE post_id = %s", (vote_info["id"],))
+                
+                mysql.connection.commit()
+                return -1
+
+            # If the old score was a downvote, remove it and add an upvote instead.
+            else:
+
+                # Modifies the PostVote entity.
+                cursor.execute("UPDATE PostVote SET score = 1 WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
+
+                # Removes downvote and adds upvote to the appropriate post.
+                cursor.execute("UPDATE Post SET downvote_count = downvote_count - 1, upvote_count = upvote_count + 1 WHERE post_id = %s;", (vote_info["id"],))
+
+                mysql.connection.commit()
+                return 2
+    # # #
+
+    # # # Handles downvotes to posts.
+    elif (vote_info["vote"] == -1):
+
+        # Checks for repeated votes.
+        cursor.execute("SELECT score FROM PostVote WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
+        
+        # If there is no repeated vote, the new vote can just be added into the database.
+        if (cursor.rowcount == 0):
+
+            # Adds the actual vote entity into the database.
+            vote_query = "INSERT INTO PostVote VALUES (%s, %s, %s);"
+            vote_values = (vote_info["username"], vote_info["id"], vote_info["vote"])
+            cursor.execute(vote_query, vote_values)
+
+            # Updates the post table with the downvote.
+            cursor.execute("UPDATE Post SET downvote_count = downvote_count + 1 WHERE post_id = %s;", (vote_info["id"],))
+    
+            mysql.connection.commit()
+            return -1
+
+        # If there is a repeated vote, we need to see if the score is different.
+        # If so, delete the upvote and change to a downvote. If not, remove the old vote from the database.
+        else: 
+
+            # Gets old score.
+            oldvote = cursor.fetchall()
+            oldvote = (oldvote[0])["score"]
+
+            # If the old score was an downvote, we will remove it from the database.
+            if (oldvote == -1):
+
+                # Deletes the vote entity from the database.
+                cursor.execute("DELETE FROM PostVote WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
+
+                # Removes the downvote from the post entity.
+                cursor.execute("UPDATE Post SET downvote_count = downvote_count - 1 WHERE post_id = %s", (vote_info["id"],))
+
+                mysql.connection.commit()
+                return 1
+
+            # If the old score was a upvote, remove it and add an downvote instead.
+            else:
+
+                # Modifies the PostVote entity.
+                cursor.execute("UPDATE PostVote SET score = -1 WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
+
+                # Removes downvote and adds upvote to the appropriate post.
+                cursor.execute("UPDATE Post SET downvote_count = downvote_count + 1, upvote_count = upvote_count - 1 WHERE post_id = %s;", (vote_info["id"],))
+
+                mysql.connection.commit()
+                return -2
+    # # #
+
+    # # # This should never happen. It catches bad vote errors. 
+    else:
+        return VOTE_ERROR
+
 # # # # Backend code for adding votes to posts (this should also scale to voting on comments)
 # # Like saving posts, this method assumes we can call routes without navigating to that page on the frontend.
 # # Expects a POST request with a JSON. Details are discussed in "/api/README.md".
@@ -17,9 +138,6 @@ def weave_voting():
 
     # The backend has recieved information that needs to go into the database.
     if request.method == "POST":
-
-        # Initializes MySQL cursor
-        cursor = mysql.connection.cursor()
         
         # Initializes return values
         ret = {
@@ -31,7 +149,6 @@ def weave_voting():
             return jsonify({'error_message':'Request Error: Not JSON.'}), 400
         vote_info = request.get_json()
         vote_info["username"] = get_jwt_identity()
-        print(vote_info) # debugging
 
         # Checks for all needed elements in the JSON.
         if ("username" not in vote_info or "id" not in vote_info or "type" not in vote_info or "vote" not in vote_info):
@@ -43,127 +160,14 @@ def weave_voting():
         # Handles votes for posts.
         if (vote_info["type"] == "1"):
 
-            # Adds an upvote to the post.
-            if (vote_info["vote"] == 1):
-
-                # Checks for repeated votes.
-                cursor.execute("SELECT score FROM PostVote WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
-                
-                # If there is no repeated vote, the new vote can just be added into the database.
-                if (cursor.rowcount == 0):
-
-                    # Adds the actual vote entity into the database.
-                    vote_query = "INSERT INTO PostVote VALUES (%s, %s, %s);"
-                    vote_values = (vote_info["username"], vote_info["id"], vote_info["vote"])
-                    cursor.execute(vote_query, vote_values)
-
-                    # Updates the post table with the upvote.
-                    cursor.execute("UPDATE Post SET upvote_count = upvote_count + 1 WHERE post_id = %s;", (vote_info["id"],))
-        
-                    mysql.connection.commit()
-                    ret["change"] = 1
-                    return ret
-
-                # If there is a repeated vote, we need to see if the score is different.
-                # If so, return an error. If not, delete the downvote and change to an upvote.
-                else:
-                    
-                    # Gets old score.
-                    oldvote = cursor.fetchall()
-                    oldvote = (oldvote[0])["score"]
-
-                    # If the old score was an upvote, we will not modify the post score.
-                    if (oldvote == 1):
-                        return jsonify({'error_message':'User has already upvoted this post.'}), 400
-                    # If the old score was a downvote, remove it and add an upvote instead.
-                    else:
-
-                        # Modifies the PostVote entity.
-                        cursor.execute("UPDATE PostVote SET score = 1 WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
-
-                        # Removes downvote and adds upvote to the appropriate post.
-                        cursor.execute("UPDATE Post SET downvote_count = downvote_count - 1, upvote_count = upvote_count + 1 WHERE post_id = %s;", (vote_info["id"],))
-
-                        mysql.connection.commit()
-                        ret["change"] = 2
-                        return ret
-
-            # Adds a downvote to the post.
-            elif (vote_info["vote"] == -1):
-
-                # Checks for repeated votes.
-                cursor.execute("SELECT score FROM PostVote WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
-                
-                # If there is no repeated vote, the new vote can just be added into the database.
-                if (cursor.rowcount == 0):
-
-                    # Adds the actual vote entity into the database.
-                    vote_query = "INSERT INTO PostVote VALUES (%s, %s, %s);"
-                    vote_values = (vote_info["username"], vote_info["id"], vote_info["vote"])
-                    cursor.execute(vote_query, vote_values)
-
-                    # Updates the post table with the upvote.
-                    cursor.execute("UPDATE Post SET downvote_count = downvote_count + 1 WHERE post_id = %s;", (vote_info["id"],))
+            # Modifies the vote table and post table separate from the main route.
+            ret["change"] = weave_post_vote(vote_info)
             
-                    mysql.connection.commit()
-                    ret["change"] = -1
-                    return ret
-
-                # If there is a repeated vote, we need to see if the score is different.
-                # If so, return an error. If not, delete the upvote and change to a downvote.
-                else: 
-
-                    # Gets old score.
-                    oldvote = cursor.fetchall()
-                    oldvote = (oldvote[0])["score"]
-
-                    # If the old score was an downvote, we will not modify the post score.
-                    if (oldvote == -1):
-                        return jsonify({'error_message':'User has already downvoted this post.'}), 400
-
-                    # If the old score was a upvote, remove it and add an downvote instead.
-                    else:
-
-                        # Modifies the PostVote entity.
-                        cursor.execute("UPDATE PostVote SET score = -1 WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
-
-                        # Removes upvote and adds downvote to the appropriate post.
-                        cursor.execute("UPDATE Post SET downvote_count = downvote_count + 1, upvote_count = upvote_count - 1 WHERE post_id = %s;", (vote_info["id"],))
-
-                        mysql.connection.commit()
-                        ret["change"] = -2
-                        return ret
-
-            # Removes a vote from the post.
-            elif (vote_info["vote"] == 0):
-
-                # The backend needs to know whether the vote was up or down to update the Post table correctly.
-                # So the first thing we do is pull the old vote entity out of the database.
-                cursor.execute("SELECT score FROM PostVote WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
-                if (cursor.rowcount == 0):
-                    return jsonify({'error_message':'User has not voted on this post.'}), 400
-                oldvote = cursor.fetchall()
-                oldvote = (oldvote[0])["score"]
-
-                # Deletes the vote entity from the database.
-                cursor.execute("DELETE FROM PostVote WHERE post_id = %s AND username = %s;", (vote_info["id"], vote_info["username"]))
-
-                # If the old vote was an upvote, it must be removed.
-                if (oldvote == 1):
-                    ret["change"] = -1
-                    cursor.execute("UPDATE Post SET upvote_count = upvote_count - 1 WHERE post_id = %s", (vote_info["id"],))
-
-                # If the old vote was an downvote, it must be removed.
-                else:
-                    ret["change"] = 1
-                    cursor.execute("UPDATE Post SET downvote_count = downvote_count - 1 WHERE post_id = %s", (vote_info["id"],))
-
-                mysql.connection.commit()
-                return ret
-
-            # This should never happen. It catches bad vote errors. 
+            # Checks for errors and then returns.
+            if ret["change"] == VOTE_ERROR:
+                return jsonify({'error_message':'Bad vote score'}), 400
             else:
-                return jsonify({'error_message':'Invalid vote score.'}), 400
+                return ret
 
         # Handles votes for comments.
         elif (vote_info["type"] == "2"):
@@ -175,3 +179,5 @@ def weave_voting():
 
     else:
         return jsonify({'error_message':'Not POST request.'}), 400
+
+
