@@ -5,6 +5,8 @@ import NavBar from "../../Shared_Components/NavBar";
 import Sidebar from '../../Shared_Components/Sidebar/Sidebar';
 import Post from "../../Shared_Components/Post";
 
+import './topicpage.css';
+
 export default function TopicPosts() {
   const {topic_name: topic } = useParams();
   const [postData, setPostData] = useState([]);
@@ -47,11 +49,13 @@ export default function TopicPosts() {
   return (
     <div>
       <NavBar />
-      <div className="topic-posts-page-content">
+      <div className="topic-page-content">
+        <h1 className="topic-heading">Welcome to the 'topic_name' topic:</h1>
         {/* List of posts */}
-        <div className="topic-posts-container">
+        <div className="topic-container">
           {postsContent}
         </div>
+        <a href="javascript:history.back()" className="topic-return">go back</a>
       </div>
     </div>
   );

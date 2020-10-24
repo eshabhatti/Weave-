@@ -15,7 +15,7 @@ import NotFound from "./error_pages/NotFound"
 import CreatePost from "./post_info/CreatePost/CreatePost"
 import SavedPosts from './user_info/SavedPosts/SavedPosts';
 import PostPage from './post_info/Posts/PostPage';
-import TopicPage from './user_info/Topics/TopicPage';
+import TopicPage from './post_info/Topics/TopicPage';
 import Timeline from './post_info/Timeline/Timeline';
 //import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 
