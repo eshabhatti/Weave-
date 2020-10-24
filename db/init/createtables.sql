@@ -62,7 +62,7 @@ CREATE TABLE Topic (
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		post_id: Unique ID value assigned to a post upon creation
 -- 		topic_name: The one topic that the post is assigned to; foreign key that applies to Topic
--- 		username: The creator of the post's username; foreign key that applies to UserAccount
+-- 		creator: The creator of the post's username; foreign key that applies to UserAccount
 -- 		date_created: The date and time of the post's creation
 -- 		post_type: A flag that states whether the post is pure text (1) or picture-caption (2) -- maybe not needed?
 -- 		title: A string that holds the post's title
