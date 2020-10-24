@@ -24,7 +24,7 @@ export default function TimelinePosts() {
         end: 5
       })
     }).then(response => response.json()).then(data => {
-      const { pull_list: post_ids } = data;
+      const { timeline_list: post_ids } = data;
       setPostData(post_ids);
     }).catch(err => {
       console.log(err);
@@ -49,7 +49,7 @@ export default function TimelinePosts() {
         {/* List of posts */}
         <h1 className="timeline-heading">Your timeline</h1>
         <div className="timeline-container">
-          {/* {postsContent} */}
+          {postsContent}
         </div>
         <a href="javascript:history.back()" className="timeline-return">go back</a>
       </div>
