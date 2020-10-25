@@ -82,7 +82,7 @@ def weave_comment_data(comment_id):
 @jwt_required
 def weave_comment_pull():
 
-    # The backend has received a profile GET request.
+    # The backend has received a profile POST request.
     if request.method == "POST":
     
         # Initializes MySQL cursor.
