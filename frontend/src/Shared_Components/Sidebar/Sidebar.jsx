@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./sidebar.css";
 
 export default function Sidebar() {
-  const [xPosition, setX] = React.useState(-250);
+  const [xPosition, setX] = React.useState(-180);
 
   useEffect(() => {
     setX(0);
@@ -12,7 +12,7 @@ export default function Sidebar() {
     if (xPosition < 0) {
       setX(0);
     } else {
-      setX(-250);
+      setX(-180);
     }
   };
 
@@ -60,7 +60,7 @@ export default function Sidebar() {
           onClick={() => toggleMenu()}
           className="profile-toggle-menu"
           style={{
-            transform: `translate(${250}px, 20vh)`
+            transform: `translate(${180}px, 20vh)`
           }}
         ></button>
         <div className="side-bar-menu">

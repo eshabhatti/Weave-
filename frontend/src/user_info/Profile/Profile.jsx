@@ -85,7 +85,7 @@ function UserInfo({ userData, pageUsername }) {
       <div className="profile-info">
         <ProfilePicture user_pic={user_pic} />
         <h1 className="profile-name">{first_name + " " + last_name}</h1>
-        <p className="profile-username">{username}</p>
+        <p className="profile-username">{pageUsername}</p>
         <EditProfileButton pageUsername={pageUsername} username={username} />
         <button type="button" className="profile-follow-button">Follow</button>
         <p className="profile-followers">{follower_count} Followers</p>
