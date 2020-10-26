@@ -14,7 +14,7 @@ export default function Profile() {
 
   const [userData, setUserData] = useState([]);
   const [postdata, setPostData] = useState([]);
-
+  const [interactiondata, setInteractionData] = useState([]);
   // replace with API call to /secure to validate token
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
@@ -57,6 +57,28 @@ export default function Profile() {
       }
       const { pull_list: post_ids } = data;
       setPostData(post_ids);
+    }).catch(err => {
+      console.error(err);
+    });
+
+	fetch('http://localhost:5000/usercomments/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + access_token
+      },
+      body: JSON.stringify({
+        username: pageUsername,
+        start: 0,
+        end: 5,
+      })
+    }).then(response => response.json()).then(data => {
+      const errorMessage = data.error_message || data.msg;
+      if (errorMessage) {
+        updateErrorMessage(errorMessage);
+      }
+      const { pull_list: post_ids } = data;
+      setInteractionData(post_ids);
     }).catch(err => {
       console.error(err);
     });
