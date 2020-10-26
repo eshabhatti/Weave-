@@ -123,3 +123,54 @@ def weave_comment_pull():
 
         # Return as list
         return {'pull_list': pull_list}
+
+# # # # # Backend code for pulling comments ids for a user
+# # # # # this will show on a users "interactions" feed
+@weave_comment.route("/pullusercomments/", methods=["POST"])
+@jwt_required
+def weave_user_comment_pull():
+# The backend has received a profile POST request.
+    if request.method == "POST":
+    
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
+        pull_info = request.get_json()
+        pull_info["username"] = get_jwt_identity()
+        
+        # Checks for all needed JSON elements.
+        if ("username" not in pull_info or "start" not in pull_info or "end" not in pull_info):
+            return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+        
+        # Checks if user exists in db and grabs relevant data.
+        cursor.execute("SELECT username FROM UserAccount WHERE username = %s;", (pull_info["username"],))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message': 'Post does not exist'}), 404
+        
+        # Validates start and end conditions because of the insecure query.
+        # This SHOULD never return an error if called legitimately from the frontend.
+        if (re.search("^[0-9]+$", str(pull_info["start"])) == None):
+            return jsonify({'error_message': 'Bad start value'}), 400
+        if (re.search("^[0-9]+$", str(pull_info["end"])) == None):
+            return jsonify({'error_message': 'Bad end value'}), 400
+        
+        # Pulls comment ids for specific user
+        # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
+        pull_query = "SELECT comment_id FROM PostComment WHERE user_parent = \"" + \
+            str(pull_info["username"]) + "\" ORDER BY comment_id DESC LIMIT " + \
+            str(pull_info["start"]) + ", " + str(pull_info["end"]) + ";"
+        cursor.execute(pull_query)
+
+        # Adds the user's comments to a list that will then be returned.
+        pull_list = []
+        for row in cursor:
+            pull_list.append(row["comment_id"])
+
+        # Return as list
+        return {'pull_list': pull_list}
+
+
+
