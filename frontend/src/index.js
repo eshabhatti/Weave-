@@ -7,17 +7,18 @@ import {
   Route,
 } from "react-router-dom";
 
-import Login from "./auth/Login/Login";
-import Register from "./auth/Register/Register";
+import Login from "./pages/auth/Login/Login";
+import Register from "./pages/auth/Register/Register";
 import Profile from "./user_info/Profile/Profile"
 import EditProfile from "./user_info/Profile/EditProfile"
 import NotFound from "./error_pages/NotFound"
-import CreatePost from "./post_info/CreatePost/CreatePost"
+import CreatePost from "./pages/post_info/CreatePost/CreatePost"
 import SavedPosts from './user_info/SavedPosts/SavedPosts';
-import PostPage from './post_info/Posts/PostPage';
-import TopicPage from './post_info/Topics/TopicPage';
-import Timeline from './post_info/Timeline/Timeline';
+import PostPage from './pages/post_info/Posts/PostPage';
+import TopicPage from './pages/post_info/Topics/TopicPage';
+import Timeline from './pages/post_info/Timeline/Timeline';
 //import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
+// import PostPage from "./pages/PostsPage/PostsPage";
 
 function AppRouter() {
   return (

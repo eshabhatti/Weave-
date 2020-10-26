@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import NavBar from "../../../Shared_Components/NavBar";
+import Post from "./../../../Shared_Components/Post/Post";
+import './timeline.css';
 
-import NavBar from "../../Shared_Components/NavBar";
-import Sidebar from '../../Shared_Components/Sidebar/Sidebar';
-import Post from "../../Shared_Components/Post";
-
-import './topicpage.css';
-
-export default function TopicPosts() {
-  const {topic_name: topic } = useParams();
+export default function TimelinePosts() {
+  
   const [postData, setPostData] = useState([]);
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
     window.location = "/login"
   }
+  
   useEffect(() => {
-    const endpoint = "http://localhost:5000/topicposts/"
+    const endpoint = "http://localhost:5000/timeline"
     fetch(endpoint, {
       method: "POST",
       headers: {
@@ -24,11 +21,10 @@ export default function TopicPosts() {
       },
       body: JSON.stringify({
         start: 0,
-        end: 5,
-		topic: topic
+        end: 5
       })
     }).then(response => response.json()).then(data => {
-	  const { pull_list: post_ids } = data;
+      const { timeline_list: post_ids } = data;
       setPostData(post_ids);
     }).catch(err => {
       console.log(err);
@@ -49,13 +45,13 @@ export default function TopicPosts() {
   return (
     <div>
       <NavBar />
-      <div className="topic-page-content">
-        <h1 className="topic-heading">Welcome to the <b>{topic}</b> topic:</h1>
+      <div className="timeline-page-content">
         {/* List of posts */}
-        <div className="topic-container">
+        <h1 className="timeline-heading">Your timeline</h1>
+        <div className="timeline-container">
           {postsContent}
         </div>
-        <a href="javascript:history.back()" className="topic-return">go back</a>
+        <a href="javascript:history.back()" className="timeline-return">go back</a>
       </div>
     </div>
   );

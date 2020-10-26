@@ -5,7 +5,7 @@ import './profile.css';
 // import components
 import NavBar from '../../Shared_Components/NavBar';
 import Sidebar from '../../Shared_Components/Sidebar/Sidebar';
-import Post from '../../Shared_Components/Post';
+import Post from '../../Shared_Components/Post/Post';
 
 export default function Profile() {
   const { username: pageUsername } = useParams();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../../Shared_Components/NavBar";
-import Post from "../../Shared_Components/Post";
+import Post from "../../Shared_Components/Post/Post";
 import NextBackButtons from "../../Shared_Components/FeedUtility/NextBackButtons";
 import './savedposts.css';
 
