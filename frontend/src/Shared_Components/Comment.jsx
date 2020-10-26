@@ -80,7 +80,7 @@ export default function Comment({
         });
     }, [])
 
-    const { topic_name, date_created, content, creator } = commentdata;
+    const {date_created, content, user_parent } = commentdata;
 
     {/* sends the votes to the server and receives the change in score */ }
     const vote = (value, arrow) => {
@@ -114,10 +114,8 @@ export default function Comment({
 
         });
     };
-	
-	const postLink = "/post/" + postId;
-	const profileLink = "/profile/" + creator;
-	const topicLink = "/topic/" + topic_name;
+
+	const profileLink = "/profile/" + user_parent;
 	
     return (
         <div>
@@ -141,9 +139,8 @@ export default function Comment({
                     </div>
                     <div className="comment-text-container">
                         {/* align these better later */}
-                        <p className="comment-text"><a href={profileLink}>{creator}</a></p>
+                        <p className="comment-text"><a href={profileLink}>{user_parent}</a></p>
                         <p className="comment-text">{date_created}</p>
-                        <p className="comment-text"><a href={topicLink}>{topic_name}</a></p>
                         <p className="comment-content">{content}</p>
                     </div>
                 </div>
