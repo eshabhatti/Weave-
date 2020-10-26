@@ -50,7 +50,7 @@ export default function TopicPosts() {
     <div>
       <NavBar />
       <div className="topic-page-content">
-        <h1 className="topic-heading">Welcome to the 'topic_name' topic:</h1>
+        <h1 className="topic-heading">Welcome to the <b>{topic}</b> topic:</h1>
         {/* List of posts */}
         <div className="topic-container">
           {postsContent}
