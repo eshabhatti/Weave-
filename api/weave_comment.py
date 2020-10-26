@@ -176,7 +176,7 @@ def weave_user_comment_pull():
 # # # # Backend code for getting a post's special qualities according to a specific user.
 # # Expects a JSON with details defined in "api/README.md".
 # # Returns a JSON  that defines whether a comment has been voted on by the user passed.
-@weave_post.route("/commentstates/", methods=["POST"])
+@weave_comment.route("/commentstates/", methods=["POST"])
 @jwt_required
 def weave_comment_state():
     
