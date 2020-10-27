@@ -291,7 +291,7 @@ def weave_voting():
             ret["score"] = cursor.fetchall()[0]["score"]
             
             # Checks for errors and then returns.
-            if ret["change"] == VOTE_ERROR:
+            if ret["voteState"] == VOTE_ERROR:
                 return jsonify({'error_message':'Bad vote score'}), 400
             else:
                 return ret
@@ -300,7 +300,7 @@ def weave_voting():
         elif (vote_info["type"] == "2"):
             
             # Modifies the vote table and the comment table separate from the main route.
-            ret["change"] = weave_comment_vote(vote_info)
+            ret["voteState"] = weave_comment_vote(vote_info)
 
             # Queries the database for the comment's new score.
             vote_query = "SELECT upvote_count - downvote_count AS score FROM PostComment WHERE comment_id = %s;"
@@ -308,7 +308,7 @@ def weave_voting():
             ret["score"] = cursor.fetchall()[0]["score"]
 
             # Checks for errors and then returns.
-            if ret["change"] == VOTE_ERROR:
+            if ret["voteState"] == VOTE_ERROR:
                 return jsonify({'error_message':'Bad vote score'}), 400
             else:
                 return ret
