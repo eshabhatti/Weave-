@@ -81,6 +81,7 @@ export default function Post({
       alert(err);
 
     });
+    setVoted(postdata.score);
   }, [])
 
   const { topic_name, date_created, post_type, pic_path, title, content, creator, score } = postdata;
@@ -110,11 +111,11 @@ export default function Post({
       if (data.msg) {
         window.location = "/login"
       }
-      const { change } = data;
-      setVotes(votes + change);
+      const { score, voteState } = data;
+      setVotes(score);
+      setVoted(voteState);
     }).catch(err => {
       console.error(err);
-
     });
   };
 
@@ -157,7 +158,7 @@ export default function Post({
   const topicLink = "/topic/" + topic_name;
 
   if (redesign)
-    return PostComponent({ author: creator, title, text: content, topic_name, score, isSaved: saveCheck, savePost, voteCheck, vote });
+    return PostComponent({ author: creator, title, text: content, topic_name, score: votes, isSaved: saveCheck, savePost, voteCheck, vote });
 
 
   return (
@@ -205,6 +206,7 @@ export default function Post({
 }
 
 function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isSaved, savePost, voteCheck, vote }) {
+  console.log("re-render " + voteCheck);
   const bookmarkFill = isSaved ? "red" : "rgba(225, 225, 225, 1)";
   const bookmarkClicked = () => {
     if (isSaved) {
@@ -216,18 +218,10 @@ function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isS
   let isUpvotedFlag = voteCheck == 1;
   let isDownVotedFlag = voteCheck == -1;
   const upvote = () => {
-    if (isUpvotedFlag) {
-      vote(0);
-    } else {
-      vote(1);
-    }
+    vote(1);
   }
   const downvote = () => {
-    if (isDownVotedFlag) {
-      vote(0);
-    } else {
-      vote(-1);
-    }
+    vote(-1);
   }
   return (
     <div className="post-component-container">
