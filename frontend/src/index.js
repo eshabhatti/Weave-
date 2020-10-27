@@ -17,6 +17,7 @@ import SavedPosts from './user_info/SavedPosts/SavedPosts';
 import PostPage from './pages/post_info/Posts/PostPage';
 import TopicPage from './pages/post_info/Topics/TopicPage';
 import Timeline from './pages/post_info/Timeline/Timeline';
+import Settings from "./user_info/Settings/Settings";
 //import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 // import PostPage from "./pages/PostsPage/PostsPage";
 
@@ -45,6 +46,9 @@ function AppRouter() {
         <Route path="/editprofile">
           <EditProfile />
         </Route>
+		<Route path="/settings">
+		  <Settings />
+		</Route>
         <Route path="/timeline">
           <Timeline />
         </Route>
