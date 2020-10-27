@@ -1,6 +1,9 @@
 /*
 These classes will be avaialable to ALL components of the project
 */
+
 body {
   margin: 0px;
+  background-color: #F6F6F6;
+  font-family: Open Sans;
 }

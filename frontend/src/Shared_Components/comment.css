@@ -1,0 +1,132 @@
+.comment-content-header {
+    background: #7448BA;
+    border-radius: 10px;
+    color: white;
+    padding: 3px;
+    padding-left: 10px;
+    font-weight: 500;
+    transition-duration: 0.50s;
+    margin-bottom: 5px;
+  }
+  
+  .comment-trigger:hover {
+    cursor: pointer;
+  }
+  
+  .comment-content-header-open {
+    padding: 3px;
+    padding-left: 0px;
+    font-weight: 500;
+    transition-duration: 0.50s;
+  }
+  
+  .comment-trigger-open {
+    color: #b59ddb;
+  }
+  
+  .comment-trigger-open:hover {
+    cursor: pointer;
+    color: #7448BA;
+    transition-duration: 0.2s;
+  }
+  
+  .comment-content-container {
+    background: rgba(255, 255, 255, 0.91);
+    border-radius: 30px;
+    min-height: 250px;
+    width: 100%;
+    display: flex;
+    margin: 0px auto;
+    margin-bottom: 30px;
+    margin-top: 20px;
+    padding: 10px;
+  }
+  
+  .comment-vote-container {
+    height: 100px;
+    width: 10%;
+  }
+  
+  .comment-vote-score {
+    margin-left: 30%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .comment-text-container {
+    display: block;
+    padding-left: 15px;
+  }
+  
+  .comment-text {
+    display: block;
+    font-family: 'Courier New', 'Consolas', 'Open Sans', sans-serif;
+    font-size: 8pt;
+    padding-left: 5px;
+    margin-bottom: 1px;
+  }
+
+  .comment-content {
+    display: block;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 10pt;
+    color: darkslategray;
+    padding-left: 3px;
+  }
+  
+  /*
+  start css for post-component, an attempt to redesign posts
+  */
+  
+  .comment-component-container {
+    width: 700px;
+    height: 300px;
+    background-color: white;
+    display: block;
+    border-radius: 20px;
+    position: relative;
+  }
+  
+  .comment-component-content {
+    margin-left: 60px;
+    position: relative;
+  }
+  
+  .comment-component-vertical-vote-bar {
+    background-color: rgba(225, 225, 225, 1);
+    height: 100%;
+    width: 50px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    border-radius: 20px 0px 0px 20px;
+  }
+  
+  .comment-component-vertical-vote-container {
+    position: relative;
+    height: 80px;
+    margin-top: 10px;
+    margin-left: 13px;
+  }
+  
+  .comment-component-score {
+    position: absolute;
+    top: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 0px;
+    margin: 0px;
+    left: -1px;
+  }
+  
+  .comment-component-vote-arrow-upvote {
+    position: absolute;
+    transform: rotate(180deg);
+    cursor: pointer;
+  }
+  
+  .comment-component-vote-arrow-downvote {
+    position: absolute;
+    top: 50px;
+    cursor: pointer;
+  }

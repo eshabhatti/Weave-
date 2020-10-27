@@ -73,6 +73,7 @@ def weave_comment_data(comment_id):
 
         # Adds identity of requester to the JSON.
         comment_info["username"] = get_jwt_identity()
+        comment_info["score"] = comment_info["upvote_count"] - comment_info["downvote_count"]
 
         # Returns post info as JSON object.
         return comment_info
@@ -172,5 +173,43 @@ def weave_user_comment_pull():
         # Return as list
         return {'pull_list': pull_list}
 
+# # # # Backend code for getting a post's special qualities according to a specific user.
+# # Expects a JSON with details defined in "api/README.md".
+# # Returns a JSON  that defines whether a comment has been voted on by the user passed.
+@weave_comment.route("/commentstates/", methods=["POST"])
+@jwt_required
+def weave_comment_state():
+    
+    # The backend has received a post state POST request.
+    if request.method == "POST":
 
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+
+        # Initializes post state variables.
+        voted = 0
+
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
+        comment_info = request.get_json()
+        comment_info["username"] = get_jwt_identity()
+
+        # Checks that JSON has all needed elements.
+        if ("username" not in comment_info or "comment_id" not in comment_info):
+            return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+
+        # Checks if post is upvoted/downvoted.
+        vote_query = "SELECT score FROM CommentVote WHERE username = %s and comment_id = %s;"
+        vote_values = (comment_info["username"], comment_info["comment_id"])
+        cursor.execute(vote_query, vote_values)
+        if (cursor.rowcount > 0):
+            voted = (cursor.fetchall())[0]["score"]
+
+        # Returns states
+        ret_states = {
+            "voted": voted
+        }
+        print(ret_states)
+        return jsonify(ret_states)
 
