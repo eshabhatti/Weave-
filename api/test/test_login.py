@@ -20,6 +20,7 @@ def login_test():
 
     line = test_output.readline()
     failed_login = True
+    access_token = ""
     while line:
         if failed_login and line and line.find('access_token') != -1:
             login_test1 = "PASSED: Checking a valid username and password."

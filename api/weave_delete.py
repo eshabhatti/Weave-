@@ -31,16 +31,30 @@ def weave_delete_account():
 
 
         # deletes account from database by setting username to DELETED
-        delete_query = "UPDATE UserAccount SET moderation_status = %d WHERE username = %s;"
-        delete_values = (1, user_info["username"])
+        delete_query = "UPDATE UserAccount SET moderation_status = 2 WHERE username = %s;"
+        delete_values = (user_info["username"])
+
+        # changes posts made by user to show DELETED as creator
+        post_delete_query = 'UPDATE post SET creator = "DELETED" WHERE creator = %s;'
+        post_delete_values = (user_info["username"])
+
+        # changes comments made by user to show DELETED as creator
+        comment_delete_query = 'UPDATE postcomment SET user_parent = "DELETED" WHERE user_parent = %s;'
+        comment_delete_values = (user_info["username"])
+
+        #executes queries in database
         cursor.execute(delete_query, delete_values)
+        mysql.connection.commit()
+
+        cursor.execute(post_delete_query, post_delete_values)
+        mysql.connection.commit()
+
+        cursor.execute(comment_delete_query, comment_delete_values)
         mysql.connection.commit()
     
 
         ret = {
             'account_deletion' : 'account successfully deleted'
-            'access_token': create_access_token(identity=user_info["username"]),
-            'refresh_token': create_refresh_token(identity=user_info["username"]),
             'username': user_info["username"]
         }
         return jsonify(ret), 200
