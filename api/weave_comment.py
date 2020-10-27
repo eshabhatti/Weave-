@@ -7,6 +7,10 @@ import json
 
 weave_comment = Blueprint('weave_comment', __name__)
 
+
+# # # # Backend code for inserting comments into the database.
+# # Expects a POST request that includes a JSON. Details are in 'api/README.md'.
+# # Returns a JSON with a new set of JWT tokens along with confirmation of the user's identity.
 @weave_comment.route("/createcomment/", methods=["POST"])
 @jwt_required
 def weave_comment_create():
@@ -23,28 +27,31 @@ def weave_comment_create():
         comment_info = request.get_json()
         comment_info["creator"] = get_jwt_identity()
         
+        # Checks for all needed JSON elements.
         if ("creator" not in comment_info or "content" not in comment_info or "post_id" not in comment_info):
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
             
-        if (len(comment_info["content"]) > 750 or len(comment_info["content"]) == 0):
+        # Checks for valid content length
+        if (len(comment_info["content"]) > 400 or len(comment_info["content"]) == 0):
             return jsonify({'error_message': 'Invalid Comment Body.'}), 400
 
+        # Caches the current date and time in the proper format.
         current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
         
-        # Creating new comment id
+        # Creates the new comment ID based on the last one.
         comment_id = 1
         id_query = "SELECT comment_id FROM PostComment ORDER BY comment_id DESC LIMIT 1;"
         cursor.execute(id_query)
         for row in cursor:
             comment_id = row["comment_id"] + 1
         
-        # Insert new comment into the database.
+        # Inserts the new comment into the database.
         comment_query = "INSERT INTO PostComment VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);"
         comment_values = (comment_id, comment_info["post_id"], comment_info["creator"], 0, current_date, comment_info["content"], 0, 0, 0)
         cursor.execute(comment_query, comment_values)
         mysql.connection.commit()
         
-        # Return values
+        # Returns a set of refreshed tokens.
         ret = {
             'access_token': create_access_token(identity=comment_info["creator"]),
             'refresh_token': create_refresh_token(identity=comment_info["creator"]),
@@ -52,7 +59,10 @@ def weave_comment_create():
         }
         return jsonify(ret), 200
 
-# # # # # Backend code for viewing comments
+
+# # # # Backend code for viewing comments on Weave.
+# # Expects a GET request on a unique URL.
+# # Returns the comment information as a JSON object.
 @weave_comment.route("/comment/<comment_id>", methods=["GET"])
 @jwt_required
 def weave_comment_data(comment_id):
@@ -77,8 +87,11 @@ def weave_comment_data(comment_id):
 
         # Returns post info as JSON object.
         return comment_info
-        
-# # # # # Backend code for pulling comments ids for a post
+
+
+# # # # Backend code for pulling comments IDs for a post.
+# # Expects a POST request with a JSON. Details are in 'api/README.md'. 
+# # Returns a list of comments that belong to a certain post.
 @weave_comment.route("/pullcomments/", methods=["POST"])
 @jwt_required
 def weave_comment_pull():
@@ -110,7 +123,7 @@ def weave_comment_pull():
         if (re.search("^[0-9]+$", str(pull_info["end"])) == None):
             return jsonify({'error_message': 'Bad end value'}), 400
         
-        # Pulls comment ids for specific post
+        # Pulls comment ids for a specific post.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
         pull_query = "SELECT comment_id FROM PostComment WHERE post_parent = \"" + \
             str(pull_info["post_id"]) + "\" ORDER BY comment_id DESC LIMIT " + \
@@ -125,12 +138,16 @@ def weave_comment_pull():
         # Return as list
         return {'pull_list': pull_list}
 
-# # # # # Backend code for pulling comments ids for a user
-# # # # # this will show on a users "interactions" feed
+
+# # # # Backend code for pulling comments IDs for a user
+# # This will show on a users "interactions" feed
+# # Expects a POST request with a JSON. Details are in 'api/README.md'.
+# # Returns a list of comments that are attached to the specified user.
 @weave_comment.route("/pullusercomments/", methods=["POST"])
 @jwt_required
 def weave_user_comment_pull():
-# The backend has received a profile POST request.
+
+    # The backend has received a profile POST request.
     if request.method == "POST":
     
         # Initializes MySQL cursor.
@@ -158,7 +175,7 @@ def weave_user_comment_pull():
         if (re.search("^[0-9]+$", str(pull_info["end"])) == None):
             return jsonify({'error_message': 'Bad end value'}), 400
         
-        # Pulls comment ids for specific user
+        # Pulls comment ids for specific user.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
         pull_query = "SELECT comment_id FROM PostComment WHERE user_parent = \"" + \
             str(pull_info["username"]) + "\" ORDER BY comment_id DESC LIMIT " + \
@@ -173,9 +190,10 @@ def weave_user_comment_pull():
         # Return as list
         return {'pull_list': pull_list}
 
+
 # # # # Backend code for getting a post's special qualities according to a specific user.
 # # Expects a JSON with details defined in "api/README.md".
-# # Returns a JSON  that defines whether a comment has been voted on by the user passed.
+# # Returns a JSON that defines whether a comment has been voted on by the user passed.
 @weave_comment.route("/commentstates/", methods=["POST"])
 @jwt_required
 def weave_comment_state():

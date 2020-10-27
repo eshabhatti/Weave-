@@ -76,17 +76,33 @@ POST requests to the following routes require JSON objects formatted as shown:
     * end: \[end-value\]
         * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).
 
-* Timeline post pulling (`/timeline/`) requires a JSON object where JSON = 
+* Timeline post pulling (`/timeline`) requires a JSON object where JSON = 
     * start: \[begin-value\]
     * end: \[end-value\]
         * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).
 
-* Following users (`/followuser/`) requires a JSON object where JSON = 
+* Following users (`/followuser`) requires a JSON object where JSON = 
     * following: \[username-to-follow\]
     * type: \[follow-or-unfollow\]
         * Note that type will be 1 if the user is being followed, and -1 is the user is being unfollowed.
 
-* Following topics (`/followtopic/`) requires a JSON object where JSON = 
+* Following topics (`/followtopic`) requires a JSON object where JSON = 
     * following: \[topic-to-follow\]
     * type: \[follow-or-unfollow\]
         * Note that type will be 1 if the topic is being followed, and -1 is the topic is being unfollowed.
+
+* Comment pulling per post (`/pullcomments/`) requires a JSON object where JSON = 
+    * post_id: \[post-id\]
+    * start: \[begin-value\]
+    * end: \[end-value\]
+        * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).
+
+* Comment pulling per user (`/pullusercomments/`) requires a JSON object where JSON = 
+    * username: \[username-string\]
+    * start: \[begin-value\]
+    * end: \[end-value\]
+        * Note that begin-value will start at 0 and end value will be exclusive (range 0-10 will give 10 posts).
+
+* Special per-user comment data pulling (`/commentstates/`) requires a JSON object where JSON = 
+    * username: \[username-string\]
+    * comment_id: \[comment-id\]
