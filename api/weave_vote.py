@@ -288,6 +288,7 @@ def weave_voting():
             # Queries the database for the post's new score.
             vote_query = "SELECT upvote_count - downvote_count AS score FROM Post WHERE post_id = %s;"
             vote_values = (vote_info["id"],)
+            cursor.execute(vote_query, vote_values)
             ret["score"] = cursor.fetchall()[0]["score"]
             
             # Checks for errors and then returns.
@@ -305,6 +306,7 @@ def weave_voting():
             # Queries the database for the comment's new score.
             vote_query = "SELECT upvote_count - downvote_count AS score FROM PostComment WHERE comment_id = %s;"
             vote_values = (vote_info["id"],)
+            cursor.execute(vote_query, vote_values)
             ret["score"] = cursor.fetchall()[0]["score"]
 
             # Checks for errors and then returns.
