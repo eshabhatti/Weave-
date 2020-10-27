@@ -91,6 +91,11 @@ POST requests to the following routes require JSON objects formatted as shown:
     * type: \[follow-or-unfollow\]
         * Note that type will be 1 if the topic is being followed, and -1 is the topic is being unfollowed.
 
+* Comment creation (`/createcomment/`) requires a JSON object where JSON = 
+    * creator: \[user-creator\]
+    * content: \[comment-content\]
+    * post_id: \[post-above-comment\]
+
 * Comment pulling per post (`/pullcomments/`) requires a JSON object where JSON = 
     * post_id: \[post-id\]
     * start: \[begin-value\]

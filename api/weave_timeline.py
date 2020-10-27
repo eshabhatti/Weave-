@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_tok
 import re
 weave_timeline = Blueprint('weave_timeline', __name__)
 
+
 # # # # Backend code for displaying a user's timeline on Weave.
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
 # # Returns a JSON with a list of the posts made by a user within the specified range.
