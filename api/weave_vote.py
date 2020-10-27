@@ -52,7 +52,7 @@ def weave_post_vote(vote_info):
                 cursor.execute("UPDATE Post SET upvote_count = upvote_count - 1 WHERE post_id = %s", (vote_info["id"],))
                 
                 mysql.connection.commit()
-                return -1
+                return 0
 
             # If the old score was a downvote, remove it and add an upvote instead.
             else:
@@ -64,7 +64,7 @@ def weave_post_vote(vote_info):
                 cursor.execute("UPDATE Post SET downvote_count = downvote_count - 1, upvote_count = upvote_count + 1 WHERE post_id = %s;", (vote_info["id"],))
 
                 mysql.connection.commit()
-                return 2
+                return 1
     # # #
 
     # # # Handles downvotes to posts.
@@ -105,7 +105,7 @@ def weave_post_vote(vote_info):
                 cursor.execute("UPDATE Post SET downvote_count = downvote_count - 1 WHERE post_id = %s", (vote_info["id"],))
 
                 mysql.connection.commit()
-                return 1
+                return 0
 
             # If the old score was a upvote, remove it and add an downvote instead.
             else:
@@ -117,7 +117,7 @@ def weave_post_vote(vote_info):
                 cursor.execute("UPDATE Post SET downvote_count = downvote_count + 1, upvote_count = upvote_count - 1 WHERE post_id = %s;", (vote_info["id"],))
 
                 mysql.connection.commit()
-                return -2
+                return -1
     # # #
 
     # # # This should never happen. It catches bad vote errors. 
@@ -171,7 +171,7 @@ def weave_comment_vote(vote_info):
                 cursor.execute("UPDATE PostComment SET upvote_count = upvote_count - 1 WHERE comment_id = %s", (vote_info["id"],))
                 
                 mysql.connection.commit()
-                return -1
+                return 0
 
             # If the old score was a downvote, remove it and add an upvote instead.
             else:
@@ -183,7 +183,7 @@ def weave_comment_vote(vote_info):
                 cursor.execute("UPDATE PostComment SET downvote_count = downvote_count - 1, upvote_count = upvote_count + 1 WHERE comment_id = %s;", (vote_info["id"],))
 
                 mysql.connection.commit()
-                return 2
+                return 1
     # # #
 
     # # # Handles downvotes to comments.
@@ -224,7 +224,7 @@ def weave_comment_vote(vote_info):
                 cursor.execute("UPDATE PostComment SET downvote_count = downvote_count - 1 WHERE comment_id = %s", (vote_info["id"],))
 
                 mysql.connection.commit()
-                return 1
+                return 0
 
             # If the old score was a upvote, remove it and add an downvote instead.
             else:
@@ -236,7 +236,7 @@ def weave_comment_vote(vote_info):
                 cursor.execute("UPDATE PostComment SET downvote_count = downvote_count + 1, upvote_count = upvote_count - 1 WHERE comment_id = %s;", (vote_info["id"],))
 
                 mysql.connection.commit()
-                return -2
+                return -1
     # # #
 
     # # # This should never happen. It catches bad vote errors. 
@@ -257,9 +257,13 @@ def weave_voting():
     # The backend has recieved information that needs to go into the database.
     if request.method == "POST":
         
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+
         # Initializes return values
         ret = {
-            "change": 0
+            "voteState": 0
+            "score": 0
         }
         
         # Checks for JSON format.
@@ -279,7 +283,12 @@ def weave_voting():
         if (vote_info["type"] == "1"):
 
             # Modifies the vote table and post table separate from the main route.
-            ret["change"] = weave_post_vote(vote_info)
+            ret["voteState"] = weave_post_vote(vote_info)
+
+            # Queries the database for the post's new score.
+            vote_query = "SELECT upvote_count - downvote_count AS score FROM Post WHERE post_id = %s;"
+            vote_values = (vote_info["id"],)
+            ret["score"] = cursor.fetchall()[0]["score"]
             
             # Checks for errors and then returns.
             if ret["change"] == VOTE_ERROR:
@@ -292,6 +301,11 @@ def weave_voting():
             
             # Modifies the vote table and the comment table separate from the main route.
             ret["change"] = weave_comment_vote(vote_info)
+
+            # Queries the database for the comment's new score.
+            vote_query = "SELECT upvote_count - downvote_count AS score FROM PostComment WHERE comment_id = %s;"
+            vote_values = (vote_info["id"],)
+            ret["score"] = cursor.fetchall()[0]["score"]
 
             # Checks for errors and then returns.
             if ret["change"] == VOTE_ERROR:
