@@ -262,7 +262,7 @@ def weave_voting():
 
         # Initializes return values
         ret = {
-            "voteState": 0
+            "voteState": 0,
             "score": 0
         }
         
