@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_tok
 import re
 weave_timeline = Blueprint('weave_timeline', __name__)
 
+
 # # # # Backend code for displaying a user's timeline on Weave.
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
 # # Returns a JSON with a list of the posts made by a user within the specified range.
@@ -39,11 +40,11 @@ def weave_render_timeline():
         # This SQL statement will pull everything the we need from the database for timeline display.
         # Not only is this thing long and ugly, but it is also insecure and requires the limits to be validated above. B)
         timeline_query = "SELECT post_id FROM Post " + \
-            "WHERE post_id IN (SELECT post_id FROM Post WHERE creator = %s AND anon_flag = 0 ) " + \
+            "WHERE post_id IN ( SELECT post_id FROM Post WHERE creator = %s AND anon_flag = 0 ) " + \
             "OR post_id IN ( SELECT post_id FROM Post AS P, FollowTopic AS T " + \
-                "WHERE T.topic_followed = P.topic_name AND T.user_follower = %s )" + \
+                "WHERE T.topic_followed = P.topic_name AND T.user_follower = %s ) " + \
             "OR post_id IN ( SELECT post_id FROM Post AS P, FollowUser AS F " + \
-                "WHERE F.user_followed = P.creator AND P.anon_flag = 0 AND F.user_follower = %s)" + \
+                "WHERE F.user_followed = P.creator AND P.anon_flag = 0 AND F.user_follower = %s ) " + \
             "ORDER BY date_created DESC " + \
             "LIMIT " + str(timeline_info["start"]) + ", " + str(timeline_info["end"]) + ";"
         timeline_values = (username, username, username)

@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import mysql.connector
+
 from test_registration import registration_test
 from test_login import login_test
 from test_profile import profile_test
@@ -8,6 +9,7 @@ from test_post import post_test
 from test_anon import anon_test
 from test_follow import follow_test
 from test_postvote import post_vote_test
+from test_comment import comment_test
 
 # Tests (only) backend functionality with curl commands.
 # Before running this script, start the Flask server for Weave.
@@ -66,8 +68,8 @@ access_token = pro_tests[len(pro_tests) - 1]               # Access token needs 
 
 post_tests = post_test(access_token)                       # Post and topic tests.
 access_token = post_tests[len(post_tests) - 1]             # Access token needs to update for later tests.
-vp_1 = post_tests[len(post_tests) - 2]                     # Pulls first valid post's ID (001) from the database.
-vp_2 = post_tests[len(post_tests) - 3]                     # Pulls first valid post's ID (002) from the database.
+vp_1 = post_tests[len(post_tests) - 2]                     # Pulls first valid post's ID (001).
+vp_2 = post_tests[len(post_tests) - 3]                     # Pulls first valid post's ID (002).
 
 anon_tests = anon_test(access_token)                       # Anonymous post tests.
 access_token = anon_tests[len(anon_tests) - 1]             # Access token needs to update for later tests.
@@ -75,6 +77,12 @@ access_token = anon_tests[len(anon_tests) - 1]             # Access token needs 
 postvote_tests = post_vote_test(access_token)              # Post vote tests.
 
 follow_tests = follow_test(access_token, vp_1, vp_2)       # Following and timeline tests.
+
+comment_tests = comment_test(access_token)                 # Comment tests.
+access_token = comment_tests[len(comment_tests) - 1]       # Access token needs to update for later tests.
+vc_1 = comment_tests[len(comment_tests) - 2]               # Pulls the valid comment ID (001).
+
+
 
 
 
@@ -114,3 +122,8 @@ print(" ")
 print("Timeline and Following Tests")
 for row in range(len(follow_tests)):
 	print(follow_tests[row])
+
+print (" ")
+print("Comment Tests")
+for row in range(len(comment_tests) - 2):
+	print(comment_tests[row])
