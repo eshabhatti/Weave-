@@ -302,15 +302,15 @@ def weave_pull_userposts():
             str(pull_info["start"]) + ", " + str(pull_info["end"]) + ";"
         cursor.execute(pull_query)
 
-        # Pulls the count of all the posts that the user made.
-        count_query = "SELECT COUNT(post_id) AS count FROM Post WHERE creator = %s;"
-        cursor.execute(count_query, (save_info["username"],))
-        count = cursor.fetchall()[0]["count"]
-
         # Adds the user's posts to a list that will then be returned.
         pull_list = []
         for row in cursor:
             pull_list.append(row["post_id"])
+
+        # Pulls the count of all the posts that the user made.
+        count_query = "SELECT COUNT(post_id) AS count FROM Post WHERE creator = %s;"
+        cursor.execute(count_query, (pull_info["username"],))
+        count = cursor.fetchall()[0]["count"]
 
         # Return as list
         return {
@@ -477,7 +477,7 @@ def weave_pull_topicposts():
             pull_list.append(row["post_id"])
         print(pull_list)
 
-        # Pulls the count of all the saved posts of the user.
+        # Pulls the count of all the posts of the topic.
         count_query = "SELECT COUNT(post_id) AS count FROM Post WHERE topic_name = %s;"
         cursor.execute(count_query, (pull_info["topic"],))
         count = cursor.fetchall()[0]["count"]

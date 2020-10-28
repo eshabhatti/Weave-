@@ -135,9 +135,9 @@ def weave_comment_pull():
         for row in cursor:
             pull_list.append(row["comment_id"])
 
-        # Pulls the count of all the saved posts of the user.
+        # Pulls the count of all the comments of the post.
         count_query = "SELECT COUNT(comment_id) AS count FROM PostComment WHERE post_parent = %s;"
-        cursor.execute(count_query, (save_info["post_id"],))
+        cursor.execute(count_query, (pull_info["post_id"],))
         count = cursor.fetchall()[0]["count"]
 
         # Return as list
@@ -195,9 +195,9 @@ def weave_user_comment_pull():
         for row in cursor:
             pull_list.append(row["comment_id"])
 
-        # Pulls the count of all the saved posts of the user.
+        # Pulls the count of all the comments of the user.
         count_query = "SELECT COUNT(comment_id) AS count FROM PostComment WHERE user_parent = %s;"
-        cursor.execute(count_query, (save_info["username"],))
+        cursor.execute(count_query, (pull_info["username"],))
         count = cursor.fetchall()[0]["count"]
 
         # Return as list
