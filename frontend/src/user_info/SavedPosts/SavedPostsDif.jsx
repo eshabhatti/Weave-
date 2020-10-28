@@ -35,7 +35,7 @@ export default function SavedPosts() {
       console.log(err);
       alert("Error in console");
     });
-  }, [newPage]);
+  }, [currentPage]);
 
   let postsContent = [];
   postData.forEach((postId) => {
@@ -53,7 +53,7 @@ export default function SavedPosts() {
   return (
     <div>
         <NavBar />
-        {data}
+        {postsContent}
        <ReactPaginate
                     previousLabel={"<"}
                     nextLabel={">"}
