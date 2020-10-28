@@ -19,35 +19,41 @@ export default function SavedPosts() {
   useEffect(() => {
     const endpoint = "http://localhost:5000/savedposts/"
     const offset = currentPage * perPage
+    const body = {
+      start: offset,
+      end: perPage
+    }
     fetch(endpoint, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + access_token
       },
-      body: JSON.stringify({
-        start: offset,
-        end: 5
-      })
+      body: JSON.stringify(body)
     }).then(response => response.json()).then(data => {
         const { pull_list: post_ids, rowCount: rowCount} = data;
         setPageCount(Math.ceil(rowCount/perPage))
         setPostData(post_ids);
-		  setPostsContent([]);
-		  let tester = [];
-		  postData.forEach((postId) => {
-			tester.push(<Post postId={postId} userName={"sahilkapur"} />)
-		  });
-		  if (postsContent.length === 0) {
-			tester = <p>No Posts!</p>;
-		  }
-		  console.log(post_ids);
-		  setPostsContent(tester);
+        console.log(post_ids)
+        console.log(postData)
     }).catch(err => {
       console.log(err);
       alert("Error in console");
     });
   }, [currentPage]);
+
+  useEffect(() => {
+    let tester = [];
+    postData.forEach((postId) => {
+      //console.log(postId)
+      tester.push(<Post key={postId} postId={postId} userName={"schikyal"} />)
+    });
+    if (postsContent.length === 0) {
+      tester = <p>No Posts!</p>;
+    }
+    console.log(postData);
+    setPostsContent(tester);
+  }, [postData])
 
 
   const handlePageClick = (e) => {
