@@ -10,6 +10,7 @@ from test_anon import anon_test
 from test_follow import follow_test
 from test_postvote import post_vote_test
 from test_comment import comment_test
+from test_commentvote import comment_vote_test
 
 # Tests (only) backend functionality with curl commands.
 # Before running this script, start the Flask server for Weave.
@@ -82,6 +83,8 @@ comment_tests = comment_test(access_token)                 # Comment tests.
 access_token = comment_tests[len(comment_tests) - 1]       # Access token needs to update for later tests.
 vc_1 = comment_tests[len(comment_tests) - 2]               # Pulls the valid comment ID (001).
 
+commentvote_tests = comment_vote_test(access_token)        # Comment vote tests.
+
 
 
 
@@ -127,3 +130,8 @@ print (" ")
 print("Comment Tests")
 for row in range(len(comment_tests) - 2):
 	print(comment_tests[row])
+
+print (" ")
+print("Comment Vote Tests")
+for row in range(len(commentvote_tests)):
+	print(commentvote_tests[row])
