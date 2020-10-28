@@ -28,8 +28,9 @@ export default function SavedPosts() {
         end: offset + perPage
       })
     }).then(response => response.json()).then(data => {
-	    const { pull_list: post_ids } = data;
-      setPostData(post_ids);
+        const { pull_list: post_ids, rowCount: rowCount} = data;
+        setPageCount(Math.ceil(rowCount/perPage))
+        setPostData(post_ids);
     }).catch(err => {
       console.log(err);
       alert("Error in console");

@@ -410,9 +410,18 @@ def weave_pull_saves():
         for row in cursor:
             save_list.append(row["post_id"])
         print(str(save_list)) # debugging
+
+        ############### REMOVE IF CAUSES BUGS
+        # Pulls the count of all the saved posts of the user
+        count_query = "SELECT COUNT(post_id) FROM SavedPost WHERE username = \"" + \
+            save_info["username"] + "\" ;"
+        cursor.execute(count_query)
+        result = cursor.fetchone
+        count = result[0]
         
         # Return as list
-        return {'pull_list': save_list}
+        return {'pull_list': save_list,
+                'rowCount': count}
         
         
 # # # # Backend code for pulling a list of posts that have a certain topic
