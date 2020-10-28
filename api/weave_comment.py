@@ -135,8 +135,16 @@ def weave_comment_pull():
         for row in cursor:
             pull_list.append(row["comment_id"])
 
+        # Pulls the count of all the saved posts of the user.
+        count_query = "SELECT COUNT(comment_id) AS count FROM PostComment WHERE post_parent = %s;"
+        cursor.execute(count_query, (save_info["post_id"],))
+        count = cursor.fetchall()[0]["count"]
+
         # Return as list
-        return {'pull_list': pull_list}
+        return {
+            'pull_list': pull_list,
+            'rowCount': count
+        }
 
 
 # # # # Backend code for pulling comments IDs for a user
@@ -187,8 +195,17 @@ def weave_user_comment_pull():
         for row in cursor:
             pull_list.append(row["comment_id"])
 
+        # Pulls the count of all the saved posts of the user.
+        count_query = "SELECT COUNT(comment_id) AS count FROM PostComment WHERE user_parent = %s;"
+        cursor.execute(count_query, (save_info["username"],))
+        count = cursor.fetchall()[0]["count"]
+
         # Return as list
-        return {'pull_list': pull_list}
+        return {
+            'pull_list': pull_list,
+            'rowCount': count
+        }
+
 
 
 # # # # Backend code for getting a post's special qualities according to a specific user.
