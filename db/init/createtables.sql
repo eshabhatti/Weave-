@@ -198,3 +198,23 @@ CREATE TABLE Blacklist (
 	token VARCHAR(256) NOT NULL,
     PRIMARY KEY (token)
 );
+
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+-- Adds the 'DELETED' user into the database to hold posts and comments of deleted users.
+-- The password should not match anything and thus be inaccessible on the frontend.
+INSERT INTO UserAccount
+VALUES (
+    "DELETED",
+    "admin@weave.com",
+    "XAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAX",
+    "Deleted",
+    "Graveyard",
+    "2020-10-28 07:31:11",
+    "This is a fake account that holds all posts and comments from users who have deleted their accounts", 
+    NULL, 
+    0, 
+    0
+);

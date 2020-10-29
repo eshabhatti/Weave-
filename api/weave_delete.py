@@ -9,11 +9,9 @@ import re
 weave_delete = Blueprint('weave_delete', __name__)
 
 
-#Backend code for account deletion
-#expects a JSON that contains a user's username to delete
-#sets moderation status on account to 2 to indicate a deletion
-#returns JSON that tells whether the account was successfully deleted
-
+# # # # Backend code for account deletion.
+# # Expects a GET request and a JWT token.
+# # Returns JSON that tells whether the account was successfully deleted.
 @weave_delete.route("/deleteaccount/", methods=["GET"])
 @jwt_required
 def weave_delete_account():
@@ -24,22 +22,18 @@ def weave_delete_account():
         # Initializes MySQL cursor.
         cursor = mysql.connection.cursor()
 
-        #checks for JSON format
+        # Gets username in JSON format.
         user_info = {"username" : get_jwt_identity()}
 
-        # changes posts made by user to show DELETED as creator
+        # Changes posts made by user to show DELETED as creator
         post_delete_query = 'UPDATE post SET creator = "DELETED" WHERE creator = %s;'
         post_delete_values = (user_info["username"],)
 
-        # changes comments made by user to show DELETED as creator
+        # Changes comments made by user to show DELETED as creator
         comment_delete_query = 'UPDATE postcomment SET user_parent = "DELETED" WHERE user_parent = %s;'
         comment_delete_values = (user_info["username"],)
         
-        #deletes saved posts
-        save_delete_query = "DELETE FROM SavedPost WHERE username = %s;"
-        save_delete_values = (user_info["username"],)
-        
-        # deletes account from database by setting username to DELETED
+        # Deletes account from database by setting username to DELETED
         delete_query = "DELETE FROM UserAccount WHERE username = %s;"
         delete_values = (user_info["username"],)
 
