@@ -86,7 +86,7 @@ CREATE TABLE Post (
     anon_flag INT NOT NULL,
     moderation_status INT NOT NULL,
     PRIMARY KEY (post_id),
-    FOREIGN KEY (creator) REFERENCES UserAccount(username) ON UPDATE CASCADE,
+    FOREIGN KEY (creator) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (topic_name) REFERENCES Topic(topic_name)
 );
 
@@ -115,8 +115,8 @@ CREATE TABLE PostComment (
     downvote_count INT NOT NULL,
     moderation_status INT NOT NULL,
     PRIMARY KEY (comment_id),
-    FOREIGN KEY (post_parent) REFERENCES Post(post_id),
-    FOREIGN KEY (user_parent) REFERENCES UserAccount(username) ON UPDATE CASCADE
+    FOREIGN KEY (post_parent) REFERENCES Post(post_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_parent) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Initializes the SavedPost table.
@@ -130,8 +130,8 @@ CREATE TABLE SavedPost (
     post_id INT NOT NULL,
     date_saved DATETIME NOT NULL,
     PRIMARY KEY (username, post_id),
-    FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE, 
-    FOREIGN KEY (post_id) REFERENCES Post(post_id)
+    FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE, 
+    FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE
 );
 
 -- Initializes the PostVote table.
@@ -145,8 +145,8 @@ CREATE TABLE PostVote (
     post_id INT NOT NULL,
     score INT NOT NULL,
     PRIMARY KEY (username, post_id),
-    FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE,
-    FOREIGN KEY (post_id) REFERENCES Post(post_id)
+    FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES Post(post_id) ON DELETE CASCADE
 );
 
 -- Initializes the PostVote table.
@@ -160,8 +160,8 @@ CREATE TABLE CommentVote (
     comment_id INT NOT NULL,
     score INT NOT NULL,
 	PRIMARY KEY (username, comment_id),
-    FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE,
-    FOREIGN KEY (comment_id) REFERENCES PostComment(comment_id)
+    FOREIGN KEY (username) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (comment_id) REFERENCES PostComment(comment_id) ON DELETE CASCADE
 );
 
 -- Initializes the FollowUser table
@@ -174,8 +174,8 @@ CREATE TABLE FollowUser (
 	user_follower VARCHAR(20) NOT NULL,
     user_followed VARCHAR(20) NOT NULL,
     PRIMARY KEY (user_follower, user_followed),
-    FOREIGN KEY (user_follower) REFERENCES UserAccount(username),
-    FOREIGN KEY (user_followed) REFERENCES UserAccount(username)
+    FOREIGN KEY (user_follower) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (user_followed) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Initializes the FollowTopic table
@@ -187,7 +187,7 @@ CREATE TABLE FollowTopic (
 	user_follower VARCHAR(20) NOT NULL,
     topic_followed VARCHAR(50) NOT NULL,
     PRIMARY KEY (user_follower, topic_followed),
-    FOREIGN KEY (user_follower) REFERENCES UserAccount(username),
+    FOREIGN KEY (user_follower) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (topic_followed) REFERENCES Topic(topic_name)
 );
 
@@ -197,4 +197,24 @@ CREATE TABLE FollowTopic (
 CREATE TABLE Blacklist (
 	token VARCHAR(256) NOT NULL,
     PRIMARY KEY (token)
+);
+
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+-- Adds the 'DELETED' user into the database to hold posts and comments of deleted users.
+-- The password should not match anything and thus be inaccessible on the frontend.
+INSERT INTO UserAccount
+VALUES (
+    "DELETED",
+    "admin@weave.com",
+    "XAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAXAX",
+    "Deleted",
+    "Graveyard",
+    "2020-10-28 07:31:11",
+    "This is a fake account that holds all posts and comments from users who have deleted their accounts", 
+    NULL, 
+    0, 
+    0
 );

@@ -14,22 +14,51 @@ export default function Settings(){
 		window.location = '/login';
 	}
 	const DeleteAccount = () => {
-		//TODO account deletion fetch
-	fetch('http://localhost:5000/deleteaccount/', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + access_token
-      },
-    }).then(response => response.json()).then(data => {
-      const errorMessage = data.error_message || data.msg;
-      if (errorMessage) {
-        alert(errorMessage);
-      }
-      window.location = "/login";
-    }).catch(err => {
-      console.error(err);
-    });
+		fetch('http://localhost:5000/deleteaccount/', {
+      		method: 'GET',
+      		headers: {
+        		'Content-Type': 'application/json',
+        		'Authorization': 'Bearer ' + access_token
+      		},
+    	}).then(response => response.json()).then(data => {
+      		const errorMessage = data.error_message || data.msg;
+      		if (errorMessage) {
+        		alert(errorMessage);
+	  		}
+			  
+			// Blacklists the current JWT tokens; mirrors logout.
+			const access_token = localStorage.getItem('access_token');
+			const logoutEndpoint = "http://localhost:5000/logout";
+			fetch(logoutEndpoint, {
+			  method: "DELETE",
+			  headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + access_token
+			  },
+			}).then(response => response.json()).then(data => {
+			  const { refresh_token } = data;
+			  const endpoint2 = "http://localhost:5000/logout2";
+			  fetch(endpoint2, {
+				method: "DELETE",
+				headers: {
+				  'Content-Type': 'application/json',
+				  'Authorization': 'Bearer ' + refresh_token
+				},
+			  }).then(response => response.json()).then(data => {
+				localStorage.clear("access_token");
+				localStorage.clear("refresh_token");
+				window.location = "/login";
+			  }).catch(err => {
+				console.error(err);
+				alert("error: check console for details");
+			  });
+			}).catch(err => {
+			  console.error(err);
+			  alert("error: check console for details");
+			});
+    	}).catch(err => {
+      		console.error(err);
+    	});
 	}
 
 	return (

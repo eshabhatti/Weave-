@@ -92,7 +92,7 @@ def weave_comment_data(comment_id):
 # # # # Backend code for pulling comments IDs for a post.
 # # Expects a POST request with a JSON. Details are in 'api/README.md'. 
 # # Returns a list of comments that belong to a certain post.
-@weave_comment.route("/pullcomments/", methods=["POST"])
+@weave_comment.route("/postcomments/", methods=["POST"])
 @jwt_required
 def weave_comment_pull():
 
@@ -151,7 +151,7 @@ def weave_comment_pull():
 # # This will show on a users "interactions" feed
 # # Expects a POST request with a JSON. Details are in 'api/README.md'.
 # # Returns a list of comments that are attached to the specified user.
-@weave_comment.route("/pullusercomments/", methods=["POST"])
+@weave_comment.route("/usercomments/", methods=["POST"])
 @jwt_required
 def weave_user_comment_pull():
 
@@ -165,7 +165,6 @@ def weave_user_comment_pull():
         if (not request.is_json):
             return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
         pull_info = request.get_json()
-        pull_info["username"] = get_jwt_identity()
         
         # Checks for all needed JSON elements.
         if ("username" not in pull_info or "start" not in pull_info or "end" not in pull_info):
