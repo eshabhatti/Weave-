@@ -48,9 +48,6 @@ def weave_delete_account():
 
         cursor.execute(comment_delete_query, comment_delete_values)
         mysql.connection.commit()
-    
-        cursor.execute(save_delete_query, save_delete_values)
-        mysql.connection.commit()
         
         cursor.execute(delete_query, delete_values)
         mysql.connection.commit()
