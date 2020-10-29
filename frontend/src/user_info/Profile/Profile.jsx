@@ -5,14 +5,13 @@ import './profile.css';
 // import components
 import NavBar from '../../Shared_Components/NavBar';
 import Sidebar from '../../Shared_Components/Sidebar/Sidebar';
-import Post from '../../Shared_Components/Post/Post';
-import Comment from '../../Shared_Components/Comment/Comment';
 import Feed from "../../Shared_Components/Feed/Feed";
 
 export default function Profile() {
   const { username: pageUsername } = useParams();
   const [errorMessage, updateErrorMessage] = useState('');
   const [userData, setUserData] = useState([]);
+  const [contentView, setContentView] = useState(0);
   // replace with API call to /secure to validate token
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
@@ -41,6 +40,10 @@ export default function Profile() {
   useEffect(() => {
     // TODO - handle errors
   }, [errorMessage]);
+  
+  useEffect(() => {
+
+  }, [contentView])
 
   return (
     <div>
@@ -48,7 +51,7 @@ export default function Profile() {
       <div className="profile-container">
         <Sidebar />
         <UserInfo userData={userData} pageUsername={pageUsername} />
-        <UserPosts pageUsername={pageUsername} />
+        <UserPosts pageUsername={pageUsername} setContentView={setContentView} contentView={contentView}/>
       </div>
     </div>
   );
@@ -89,16 +92,21 @@ function ProfilePicture({ user_pic }) {
     );
 }
 
-function UserPosts({pageUsername}) {
+function UserPosts({pageUsername, setContentView, contentView}) {
   return (
     <div className="profile-choice">
       <div className="profile-buttons">
-        <button type="button" className="profile-posts-button">Posts</button>
-        <button type="button" className="profile-interactions-button">Interactions</button>
+        <button type="button" className="profile-posts-button" onClick={(e) => setContentView(0)}>Posts</button>
+        <button type="button" className="profile-interactions-button" onClick={(e) => setContentView(1)}>Interactions</button>
       </div>
       <div className="profile-display">
-		<Feed route="userposts/" username={pageUsername} />
+		{contentView === 0 ? (
+			<Feed route="userposts/" username={pageUsername} />
+		) : (
+			<Feed route="usercomments/" username={pageUsername} elementType="comment" />
+		)}
       </div>
     </div>
   );
 }
+
