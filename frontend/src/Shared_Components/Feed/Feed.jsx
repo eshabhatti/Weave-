@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Post from "../../Shared_Components/Post/Post";
+import Comment from '../../Shared_Components/Comment/Comment';
 import ReactPaginate from 'react-paginate';
 
 import './Feed.css';
 
-export default function PostFeed({route, topic, post_id, username}) {
+export default function Feed({route, topic, post_id, username, elementType}) {
   const [postData, setPostData] = useState([]);
   const [postsContent, setPostsContent] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -47,7 +48,12 @@ export default function PostFeed({route, topic, post_id, username}) {
     let tester = [];
     postData.forEach((postId) => {
       //console.log(postId)
-      tester.push(<Post key={postId} postId={postId} userName={"schikyal"} />)
+	  if (elementType == "comment") {
+		tester.push(<Comment key={postId} commentId={postId} userName={"schikyal"} />)
+	  }
+	  else {
+		tester.push(<Post key={postId} postId={postId} userName={"schikyal"} />)  
+	  }
     });
     if (postsContent.length === 0) {
       tester = <p>No Posts!</p>;
