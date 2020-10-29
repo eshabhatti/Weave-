@@ -170,7 +170,7 @@
 .profile-choice {
   background: rgba(227, 227, 238, 0.91);
   border-radius: 30px;
-  height: 600px;
+  height: 700px;
   width: 600px;
   margin-left: 200px;
   display: block;
@@ -178,7 +178,7 @@
   padding-bottom: 30px;
   margin-bottom: 100px;
   margin-top: 40px;
-
+  overflow: scroll;
 }
 
 .profile-buttons {
