@@ -17,7 +17,7 @@ export default function SavedPosts() {
         <NavBar />
 		<div className="saved-posts-container">
 			<Sidebar />
-			<Feed route="saved" />
+			<Feed route="savedposts/" />
 		</div>
     </div>
   );

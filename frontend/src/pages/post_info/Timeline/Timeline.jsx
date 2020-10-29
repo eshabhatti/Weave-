@@ -2,45 +2,14 @@ import React, { useState, useEffect } from "react";
 import NavBar from "../../../Shared_Components/NavBar";
 import Sidebar from '../../../Shared_Components/Sidebar/Sidebar';
 import Post from "./../../../Shared_Components/Post/Post";
+import Feed from "../../../Shared_Components/Feed/Feed";
 import './timeline.css';
 
 export default function TimelinePosts() {
   
-  const [postData, setPostData] = useState([]);
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
     window.location = "/login"
-  }
-  
-  useEffect(() => {
-    const endpoint = "http://localhost:5000/timeline"
-    fetch(endpoint, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + access_token
-      },
-      body: JSON.stringify({
-        start: 0,
-        end: 5
-      })
-    }).then(response => response.json()).then(data => {
-      const { timeline_list: post_ids } = data;
-      setPostData(post_ids);
-    }).catch(err => {
-      console.log(err);
-      alert("Error in console");
-    });
-  }, []);
-
-  let postsContent = [];
-  
-  postData.forEach((postId) => {
-    postsContent.push(<Post postId={postId} userName={"sahilkapur"} />)
-  });
-
-  if (postsContent.length === 0) {
-    postsContent = <p>Posts are loading</p>;
   }
 
   return (
@@ -50,8 +19,8 @@ export default function TimelinePosts() {
         {/* List of posts */}
 		<Sidebar />
         <div className="timeline-display">
-		  <h1 className="timeline-heading">Your timeline</h1>
-          {postsContent}
+		  <h1 className="timeline-heading">Your timeline:</h1>
+          <Feed route="timeline"/>
 		  <a href="javascript:history.back()" className="timeline-return">go back</a>
         </div>        
       </div>

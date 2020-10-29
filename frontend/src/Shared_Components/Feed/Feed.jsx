@@ -4,7 +4,7 @@ import ReactPaginate from 'react-paginate';
 
 import './Feed.css';
 
-export default function SavedPosts({route}) {
+export default function PostFeed({route, topic, post_id}) {
   const [postData, setPostData] = useState([]);
   const [postsContent, setPostsContent] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -15,11 +15,13 @@ export default function SavedPosts({route}) {
     window.location = "/login"
   }
   useEffect(() => {
-    const endpoint = "http://localhost:5000/" + route + "posts/"
+    const endpoint = "http://localhost:5000/" + route
     const offset = currentPage * perPage
     const body = {
       start: offset,
-      end: perPage
+      end: perPage,
+	  topic: topic,
+	  post_id, post_id,
     }
     fetch(endpoint, {
       method: "POST",

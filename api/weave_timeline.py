@@ -63,14 +63,13 @@ def weave_render_timeline():
                 "WHERE T.topic_followed = P.topic_name AND T.user_follower = %s ) " + \
             "OR post_id IN ( SELECT post_id FROM Post AS P, FollowUser AS F " + \
                 "WHERE F.user_followed = P.creator AND P.anon_flag = 0 AND F.user_follower = %s ) " + \
-            "ORDER BY date_created DESC " + \
-            "LIMIT " + str(timeline_info["start"]) + ", " + str(timeline_info["end"]) + ";"
+            "ORDER BY date_created DESC;"
         timeline_values = (username, username, username)
         cursor.execute(timeline_query, timeline_values)
         count = cursor.fetchall()[0]["count"]
 
         # Return as list
         return {
-            'timeline_list': timeline_list,
+            'pull_list': timeline_list,
             'rowCount': count
         }
