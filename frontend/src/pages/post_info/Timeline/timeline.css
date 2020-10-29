@@ -11,9 +11,16 @@
 }
   
 .timeline-container {
+  background: rgba(255, 255, 255, 0.91);
+  display: flex;
+  margin: 0px auto;
+}
+
+.timeline-display {
     display: block;
-    width: 90%;
-    margin: 0px auto;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
 }
   
 .timeline-return {

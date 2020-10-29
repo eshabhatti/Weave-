@@ -49,13 +49,14 @@ export default function TopicPosts() {
   return (
     <div>
       <NavBar />
-      <div className="topic-page-content">
-        <h1 className="topic-heading">Welcome to the <b>{topic}</b> topic:</h1>
+      <div className="topic-container">
+		<Sidebar />
         {/* List of posts */}
-        <div className="topic-container">
+        <div className="topic-display">
+		  <h1 className="topic-heading">Welcome to the <b>{topic}</b> topic:</h1>
           {postsContent}
+		  <a href="javascript:history.back()" className="topic-return">go back</a>
         </div>
-        <a href="javascript:history.back()" className="topic-return">go back</a>
       </div>
     </div>
   );
