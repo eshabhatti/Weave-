@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import NavBar from '../../../Shared_Components/NavBar';
 import Sidebar from '../../../Shared_Components/Sidebar/Sidebar';
 import Post from '../../../Shared_Components/Post/Post';
+import Comment from '../../../Shared_Components/Comment/Comment';
 import CommentCreator from '../CommentCreator/CommentCreator';
 
 export default function Profile() {
@@ -12,6 +13,7 @@ export default function Profile() {
 
   const [errorMessage, updateErrorMessage] = useState("");
   const [postdata, setPostData] = useState([]);
+  const [commentsData, setCommentsData] = useState([]);
   {/* keeps track if user has saved or voted */ }
   const [saveCheck, setSaved] = useState(0);
   const [voteCheck, setVoted] = useState(0);
@@ -27,6 +29,7 @@ export default function Profile() {
   const votepoint = "http://localhost:5000/vote/"
   const savepoint = "http://localhost:5000/save/"
   const statepoint = "http://localhost:5000/poststates/"
+  const commentpoint = "http://localhost:5000/pullcomments/"
 
   {/* renders the post with fetch data and the states of the save and voting buttons */ }
   useEffect(() => {
@@ -77,6 +80,36 @@ export default function Profile() {
       const { saved, voted } = data;
       setSaved(saved);
       setVoted(voted);
+    }).catch(err => {
+      console.error(err);
+      alert(err);
+
+    });
+	
+	fetch(commentpoint, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + access_token
+      },
+      body: JSON.stringify({
+		post_id: pagePost,
+        start: 0,
+        end: 5
+      })
+    }).then(response => response.json()).then(data => {
+      if (data.error_message) {
+        updateErrorMessage(data.error_message);
+        window.location = "/404"
+      }
+	  const { pull_list: comment_ids } = data;
+	  setCommentsData(comment_ids);
+      /* catches jwt errors that don't use the form "error_message:" */
+      if (data.msg) {
+        window.location = "/login"
+      }
+      
+      
     }).catch(err => {
       console.error(err);
       alert(err);
@@ -146,13 +179,24 @@ export default function Profile() {
 
     });
   };
+  
+  let commentsContent = [];
+  
+  commentsData.forEach((commentId) => {
+    commentsContent.push(<Comment commentId={commentId} userName={"sahilkapur"} />)
+  });
+
+  if (commentsContent.length === 0) {
+    commentsContent = <p>Comments are loading</p>;
+  }
 
   return (
     <div>
       <p>Need the post information in a different format than this</p>
       <Post postId={pagePost} redesign={true} />
       <CommentCreator postId={pagePost} />
-      <p>List of comments below</p>
+      <p>Comments</p>
+	  {commentsContent}
     </div>
 
   );

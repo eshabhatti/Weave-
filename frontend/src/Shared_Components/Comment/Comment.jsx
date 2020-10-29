@@ -120,7 +120,7 @@ export default function Comment({
     return (
         <div>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
-            <Collapsible className="comment-content-header" openedClassName="comment-content-header-open" triggerClassName="comment-trigger" triggerOpenedClassName="comment-trigger-open" trigger={userParent}>
+            <Collapsible className="comment-content-header" openedClassName="comment-content-header-open" triggerClassName="comment-trigger" triggerOpenedClassName="comment-trigger-open" trigger={user_parent}>
                 <div className="comment-content-container">
                     <div className="comment-vote-container">
                         {/* replace with upvote and downvote */}
