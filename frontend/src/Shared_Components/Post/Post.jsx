@@ -4,7 +4,7 @@ import Collapsible from 'react-collapsible';
 import "./post.css";
 
 export default function Post({
-  postId, userName, redesign
+  postId, userName, redesign, isMinimized
 }) {
 
   const [errorMessage, updateErrorMessage] = useState("");
@@ -157,56 +157,11 @@ export default function Post({
   const profileLink = "/profile/" + creator;
   const topicLink = "/topic/" + topic_name;
 
-  if (redesign)
-    return PostComponent({ author: creator, title, text: content, topic_name, score: votes, isSaved: saveCheck, savePost, voteCheck, vote });
-
-
-  return (
-    <div>
-      {/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link> */}
-      <Collapsible className="post-content-header" openedClassName="post-content-header-open" triggerClassName="post-trigger" triggerOpenedClassName="post-trigger-open" trigger={title}>
-        <div className="post-content-container">
-          <div className="post-vote-container">
-
-            {voteCheck > 0 ? (
-              <i class="fa fa-arrow-circle-up" style={{ fontSize: '36px', color: 'red' }} onClick={() => vote(1, 0)} ></i>
-
-            ) : (
-                <i class="fa fa-arrow-circle-up" style={{ fontSize: '36px' }} onClick={() => vote(1, 1)} ></i>
-              )}
-            <p className="post-vote-score">{votes}</p>
-            {voteCheck < 0 ? (
-              <i class="fa fa-arrow-circle-down" style={{ fontSize: '36px', color: 'red' }} onClick={() => vote(-1, 0)} ></i>
-            ) : (
-                <i class="fa fa-arrow-circle-down" style={{ fontSize: '36px' }} onClick={() => vote(-1, -1)} ></i>
-              )}
-          </div>
-          <div className="post-text-container">
-
-            <p className="post-text"><a href={profileLink}>{creator}</a></p>
-            <p className="post-text">{date_created}</p>
-            <p className="post-text"><a href={topicLink}>{topic_name}</a></p>
-            <h1 className="post-title">{title}</h1>
-            <p className="post-content">{content}</p>
-            <p><a href={postLink}>View Comments</a></p>
-            {saveCheck === -1 ? (
-              <button className="post-save-button" onClick={() => savePost(1)}>Save</button>
-            ) : (
-                <button className="post-save-button" onClick={() => savePost(-1)}>Unsave</button>
-              )}
-          </div>
-          <div className="post-pic-container">
-            {pic_path ? <img src={pic_path} className="post-pic" alt="" /> : null}
-          </div>
-        </div>
-      </Collapsible>
-    </div>
-  );
+  return PostComponent({ author: creator, title, text: content, topic_name, score: votes, isSaved: saveCheck, savePost, voteCheck, vote, isMinimized, postId });
 
 }
 
-function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isSaved, savePost, voteCheck, vote }) {
-  console.log("re-render " + voteCheck);
+function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isSaved, savePost, voteCheck, vote, isMinimized, postId }) {
   const bookmarkFill = isSaved ? "red" : "rgba(225, 225, 225, 1)";
   const bookmarkClicked = () => {
     if (isSaved) {
@@ -223,8 +178,14 @@ function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isS
   const downvote = () => {
     vote(-1);
   }
+  const containerClass = isMinimized ? "post-component-container post-component-container-collapsed" : "post-component-container";
+  const onClick = () => {
+    if (isMinimized) {
+      window.location.href = "/post/" + postId;
+    }
+  }
   return (
-    <div className="post-component-container">
+    <div className={containerClass} onClick={() => onClick()}>
       <VerticalVoteBar
         isUpvoted={isUpvotedFlag}
         isDownVoted={isDownVotedFlag}

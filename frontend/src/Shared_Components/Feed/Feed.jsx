@@ -52,7 +52,7 @@ export default function Feed({route, topic, post_id, username, elementType}) {
 		tester.push(<Comment key={postId} commentId={postId} userName={"schikyal"} />)
 	  }
 	  else {
-		tester.push(<Post key={postId} postId={postId} userName={"schikyal"} />)  
+		tester.push(<Post key={postId} postId={postId} userName={"schikyal"} redesign={true} isMinimized={true} />)  
 	  }
     });
     if (postsContent.length === 0) {
