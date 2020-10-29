@@ -14,7 +14,7 @@ export default function NavBar(){
             />
             {/* Navbar */}
             <Navbar expand="lg" bg="dark" variant="dark" sticky="top">
-                <Navbar.Brand href="/login">
+                <Navbar.Brand href="/timeline">
                     <img src="/img/weave-icon.svg" width="50" height="50"
                          className="d-inline-block align-top" alt="" />
                 </Navbar.Brand>
