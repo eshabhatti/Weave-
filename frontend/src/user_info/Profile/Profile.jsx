@@ -6,15 +6,13 @@ import './profile.css';
 import NavBar from '../../Shared_Components/NavBar';
 import Sidebar from '../../Shared_Components/Sidebar/Sidebar';
 import Post from '../../Shared_Components/Post/Post';
+import Comment from '../../Shared_Components/Comment/Comment';
+import Feed from "../../Shared_Components/Feed/Feed";
 
 export default function Profile() {
   const { username: pageUsername } = useParams();
-  console.log(pageUsername);
   const [errorMessage, updateErrorMessage] = useState('');
-
   const [userData, setUserData] = useState([]);
-  const [postdata, setPostData] = useState([]);
-  const [interactiondata, setInteractionData] = useState([]);
   // replace with API call to /secure to validate token
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
@@ -38,52 +36,8 @@ export default function Profile() {
     }).catch(err => {
       console.error(err);
     });
-
-    fetch('http://localhost:5000/userposts/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + access_token
-      },
-      body: JSON.stringify({
-        username: pageUsername,
-        start: 0,
-        end: 5,
-      })
-    }).then(response => response.json()).then(data => {
-      const errorMessage = data.error_message || data.msg;
-      if (errorMessage) {
-        updateErrorMessage(errorMessage);
-      }
-      const { pull_list: post_ids } = data;
-      setPostData(post_ids);
-    }).catch(err => {
-      console.error(err);
-    });
-
-	fetch('http://localhost:5000/usercomments/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + access_token
-      },
-      body: JSON.stringify({
-        username: pageUsername,
-        start: 0,
-        end: 5,
-      })
-    }).then(response => response.json()).then(data => {
-      const errorMessage = data.error_message || data.msg;
-      if (errorMessage) {
-        updateErrorMessage(errorMessage);
-      }
-      const { pull_list: post_ids } = data;
-      setInteractionData(post_ids);
-    }).catch(err => {
-      console.error(err);
-    });
   }, []);
-
+  
   useEffect(() => {
     // TODO - handle errors
   }, [errorMessage]);
@@ -94,7 +48,7 @@ export default function Profile() {
       <div className="profile-container">
         <Sidebar />
         <UserInfo userData={userData} pageUsername={pageUsername} />
-        <UserPosts postdata={postdata} username={pageUsername} />
+        <UserPosts pageUsername={pageUsername} />
       </div>
     </div>
   );
@@ -135,7 +89,7 @@ function ProfilePicture({ user_pic }) {
     );
 }
 
-function UserPosts({ postdata, username }) {
+function UserPosts({pageUsername}) {
   return (
     <div className="profile-choice">
       <div className="profile-buttons">
@@ -143,18 +97,8 @@ function UserPosts({ postdata, username }) {
         <button type="button" className="profile-interactions-button">Interactions</button>
       </div>
       <div className="profile-display">
-        {Posts(postdata, username)}
+		<Feed route="userposts/" username={pageUsername} />
       </div>
     </div>
   );
-}
-
-// post_ids: list of post ID's
-// could return before completion
-function Posts(postIds, username) {
-  const postComponents = [];
-  postIds.forEach((id) => {
-    postComponents.push(<Post userName={username} postId={id} />);
-  });
-  return postComponents;
 }

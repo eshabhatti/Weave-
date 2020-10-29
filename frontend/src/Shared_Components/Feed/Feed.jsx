@@ -4,7 +4,7 @@ import ReactPaginate from 'react-paginate';
 
 import './Feed.css';
 
-export default function PostFeed({route, topic, post_id}) {
+export default function PostFeed({route, topic, post_id, username}) {
   const [postData, setPostData] = useState([]);
   const [postsContent, setPostsContent] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -21,7 +21,8 @@ export default function PostFeed({route, topic, post_id}) {
       start: offset,
       end: perPage,
 	  topic: topic,
-	  post_id, post_id,
+	  post_id: post_id,
+	  username: username,
     }
     fetch(endpoint, {
       method: "POST",
