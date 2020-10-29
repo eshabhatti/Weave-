@@ -185,7 +185,7 @@ function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isS
     }
   }
   return (
-    <div className={containerClass} onClick={() => onClick()}>
+    <div className={containerClass}>
       <VerticalVoteBar
         isUpvoted={isUpvotedFlag}
         isDownVoted={isDownVotedFlag}
@@ -194,7 +194,7 @@ function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isS
         downvoteClick={() => downvote()}
       />
       <BookmarkIcon className="post-component-bookmark" fill={bookmarkFill} onClick={() => bookmarkClicked()} />
-      <div className="post-component-content">
+      <div className="post-component-content" onClick={() => onClick()}>
         <p className="post-component-author">@{author}</p>
         <h2 className="post-component-title">{title}</h2>
         <p className="post-component-content-text">
