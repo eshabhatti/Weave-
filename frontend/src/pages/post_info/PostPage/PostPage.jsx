@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
+import "./postpage.css";
 
 // import components
 import NavBar from '../../../Shared_Components/NavBar';
@@ -7,6 +8,7 @@ import Sidebar from '../../../Shared_Components/Sidebar/Sidebar';
 import Post from '../../../Shared_Components/Post/Post';
 import Feed from "../../../Shared_Components/Feed/Feed";
 import CommentCreator from '../CommentCreator/CommentCreator';
+import { Nav } from "react-bootstrap";
 
 export default function Profile() {
   const { post_id: pagePost } = useParams();
@@ -152,13 +154,16 @@ export default function Profile() {
 
   return (
     <div>
-      <p>Need the post information in a different format than this</p>
-      <Post postId={pagePost} redesign={true} />
+      <div className="post-page-container">
+        <div className="post-wrapper">
+          <Post postId={pagePost} redesign={true} />
+        </div>
+      </div>
       <CommentCreator postId={pagePost} />
       <p>Comments:</p>
-	  <div className="comments-container" >
-		<Feed route="postcomments/" post_id={pagePost} elementType="comment" />
-	  </div>
+      <div className="comments-container" >
+        <Feed route="postcomments/" post_id={pagePost} elementType="comment" />
+      </div>
     </div>
 
   );

@@ -3,3 +3,13 @@
   display: flex;
   margin: 0px auto;
 }
+
+.post-page-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.post-wrapper {
+  margin: 0px auto;
+}

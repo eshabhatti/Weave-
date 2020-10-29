@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Collapsible from 'react-collapsible';
 
 import "./post.css";
 
@@ -22,8 +21,6 @@ export default function Post({
   }
 
   const endpoint = "http://localhost:5000/post/" + postId;
-  const votepoint = "http://localhost:5000/vote/"
-  const savepoint = "http://localhost:5000/save/"
   const statepoint = "http://localhost:5000/poststates/"
 
   {/* renders the post with fetch data and the states of the save and voting buttons */ }
@@ -95,7 +92,7 @@ export default function Post({
       id: postId,
       vote: value,
     }
-    fetch(votepoint, {
+    fetch("http://localhost:5000/vote/", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -127,7 +124,7 @@ export default function Post({
       post: postId,
       type: value,
     }
-    fetch(savepoint, {
+    fetch("http://localhost:5000/save/", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -164,6 +161,7 @@ export default function Post({
 function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isSaved, savePost, voteCheck, vote, isMinimized, postId }) {
   const bookmarkFill = isSaved ? "red" : "rgba(225, 225, 225, 1)";
   const bookmarkClicked = () => {
+    console.log(isSaved);
     if (isSaved) {
       savePost(0);
     } else {
