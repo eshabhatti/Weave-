@@ -14,7 +14,7 @@ import EditProfile from "./user_info/Profile/EditProfile"
 import NotFound from "./error_pages/NotFound"
 import CreatePost from "./pages/post_info/CreatePost/CreatePost"
 import SavedPosts from './user_info/SavedPosts/SavedPosts';
-import PostPage from './pages/post_info/Posts/PostPage';
+import PostPage from './pages/post_info/PostPage/PostPage';
 import TopicPage from './pages/post_info/Topics/TopicPage';
 import Timeline from './pages/post_info/Timeline/Timeline';
 import Settings from "./user_info/Settings/Settings";
