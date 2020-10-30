@@ -21,9 +21,9 @@ export default function Feed({route, topic, post_id, username, elementType}) {
     const body = {
       start: offset,
       end: perPage,
-	  topic: topic,
-	  post_id: post_id,
-	  username: username,
+      topic: topic,
+      post_id: post_id,
+      username: username,
     }
     fetch(endpoint, {
       method: "POST",
