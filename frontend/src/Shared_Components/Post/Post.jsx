@@ -158,7 +158,7 @@ export default function Post({
 
 }
 
-function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isSaved, savePost, voteCheck, vote, isMinimized, postId, src }) {
+function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isSaved, savePost, voteCheck, vote, isMinimized, postId, src, topic_name }) {
   const bookmarkFill = isSaved ? "red" : "rgba(225, 225, 225, 1)";
   const bookmarkClicked = () => {
     console.log(isSaved);
@@ -193,7 +193,8 @@ function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isS
       />
       <BookmarkIcon className="post-component-bookmark" fill={bookmarkFill} onClick={() => bookmarkClicked()} />
       <div className="post-component-content" onClick={() => onClick()}>
-        <p className="post-component-author">@{author}</p>
+        <p className="post-component-author"><a href = {"/profile/" + author}> @{author}</a></p>
+        <p className="post-component-author"><a href = {"/topic/" + topic_name}> {topic_name}</a></p>
         <h2 className="post-component-title">{title}</h2>
         <p className="post-component-content-text">
           {text}
