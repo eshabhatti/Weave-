@@ -53,14 +53,17 @@ def follow_test(access_token, valid_post_1, valid_post_2):
         if line and follow_search == False and re.search("\[", line) != None:
             follow_search = True
         if line and follow_search == True and re.search("[0-9]+", line) != None:
+            if (re.search("rowCount", line) != None):
+                follow_search = False
+                break 
             displayed_posts.append(line.strip("\n\t ,"))
         line = test_output.readline()
 
-    follow_test0 = "FAILED: Proper posts display properly on the timeline before following."
+    follow_test0 = "FAILED: Proper posts display properly on the timeline before following.\n\tValid = " + str(valid_posts) + "\n\tDisplayed = " + str(displayed_posts)
     valid_posts.sort()
     displayed_posts.sort()
     if (valid_posts == displayed_posts):
-        follow_test0 = "PASSED: Proper posts display properly on the timeline before following."
+        follow_test0 = "PASSED: Proper posts display properly on the timeline before following.\n\tValid = " + str(valid_posts) + "\n\tDisplayed = " + str(displayed_posts)
     test_output.close()
     follow_tests.append(follow_test0)
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -80,7 +83,7 @@ def follow_test(access_token, valid_post_1, valid_post_2):
     line = test_output.readline()
     failed_follow = True
     while line:
-        if failed_follow and line and line.find('follow user done') != -1:
+        if failed_follow and line and line.find('\"followState\": 1') != -1:
             follow_test1 = "FAILED: Users can follow other users."
             cursor.execute("SELECT user_followed FROM FollowUser WHERE user_follower = \"testname\" LIMIT 0, 1;")
             for row in cursor:
@@ -119,14 +122,17 @@ def follow_test(access_token, valid_post_1, valid_post_2):
         if line and follow_search == False and re.search("\[", line) != None:
             follow_search = True
         if line and follow_search == True and re.search("[0-9]+", line) != None:
+            if (re.search("rowCount", line) != None):
+                follow_search = False
+                break 
             displayed_posts.append(line.strip("\n\t ,"))
         line = test_output.readline()
 
-    follow_test2 = "FAILED: Proper posts display properly on the timeline after following a user."
     valid_posts.sort()
     displayed_posts.sort()
+    follow_test2 = "FAILED: Proper posts display properly on the timeline after following a user.\n\tValid = " + str(valid_posts) + "\n\tDisplayed = " + str(displayed_posts)
     if (valid_posts == displayed_posts):
-        follow_test2 = "PASSED: Proper posts display properly on the timeline after following a user."
+        follow_test2 = "PASSED: Proper posts display properly on the timeline after following a user.\n\tValid = " + str(valid_posts) + "\n\tDisplayed = " + str(displayed_posts)
     test_output.close()
     follow_tests.append(follow_test2)
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -148,7 +154,7 @@ def follow_test(access_token, valid_post_1, valid_post_2):
     failed_follow = True
     while line:
         # print("line = " + line)
-        if failed_follow and line and line.find('follow topic done') != -1:
+        if failed_follow and line and line.find('\"followState\": 1') != -1:
             follow_test3 = "PASSED: Users can follow topics."
             failed_follow = False
             # TODO: FIX CURSOR HERE; FOR SOME REASON IT ONLY GIVES ME ISSUE HERE. HAVE VERIFIED THAT THE TOPIC RELATION IS CREATED PROPERLY
@@ -189,17 +195,17 @@ def follow_test(access_token, valid_post_1, valid_post_2):
         if line and follow_search == False and re.search("\[", line) != None:
             follow_search = True
         if line and follow_search == True and re.search("[0-9]+", line) != None:
+            if (re.search("rowCount", line) != None):
+                follow_search = False
+                break 
             displayed_posts.append(line.strip("\n\t ,"))
         line = test_output.readline()
-
-    print("Valid = " + str(valid_posts))
-    print("Displayed = " + str(displayed_posts))
-
-    follow_test4 = "FAILED: Proper posts display properly on the timeline after following a topic."
+    
     valid_posts.sort()
     displayed_posts.sort()
+    follow_test4 = "FAILED: Proper posts display properly on the timeline after following a topic.\n\tValid = " + str(valid_posts) + "\n\tDisplayed = " + str(displayed_posts)
     if (valid_posts == displayed_posts):
-        follow_test4 = "PASSED: Proper posts display properly on the timeline after following a topic."
+        follow_test4 = "PASSED: Proper posts display properly on the timeline after following a topic.\n\tValid = " + str(valid_posts) + "\n\tDisplayed = " + str(displayed_posts)
     test_output.close()
     cursor.close()
     follow_tests.append(follow_test4)

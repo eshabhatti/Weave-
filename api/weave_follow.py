@@ -32,6 +32,12 @@ def weave_follow_user():
         # Initializes MySQL cursor
         cursor = mysql.connection.cursor()
 
+        # Initializes the return JSON.
+        ret = {
+            "followState": 0,
+            "followCount": 0
+        }
+
         # Handles instances where a new follow instance is being created.
         if (follow_info["type"] == 1):
             
@@ -45,6 +51,9 @@ def weave_follow_user():
             update_values = (followed,)
             cursor.execute(update_query, update_values)
             mysql.connection.commit()
+
+            # Updates the follow state.
+            ret["followState"] = 1
 
         # Handles instances where a follow instance is being deleted.
         elif (follow_info["type"] == -1):
@@ -60,7 +69,16 @@ def weave_follow_user():
             cursor.execute(update_query, update_values)
             mysql.connection.commit()
 
-        return "follow user done"
+            # Updates the follow state.
+            ret["followState"] = 0
+
+        # Gets the total number of followers for the user that is being followed.
+        follow_query = "SELECT follower_count FROM UserAccount WHERE username = %s;"
+        follow_values = (followed,)
+        cursor.execute(follow_query, follow_values)
+        ret["followCount"] = cursor.fetchall()[0]["follower_count"]
+
+        return ret
 
 
 # # # # Backend route for allowing the user to follow a topic on Weave.
@@ -89,6 +107,12 @@ def weave_follow_topic():
         # Initializes MySQL cursor
         cursor = mysql.connection.cursor()
 
+        # Initializes the return JSON.
+        ret = {
+            "followState": 0,
+            "followCount": 0
+        }
+
         # Handles instances where a new follow instance is being created.
         if (follow_info["type"] == 1):
             
@@ -104,6 +128,9 @@ def weave_follow_topic():
             
             # Commits database.
             mysql.connection.commit()
+
+            # Updates the follow state.
+            ret["followState"] = 1
 
         # Handles instances where a follow instance is being deleted.
         elif (follow_info["type"] == -1):
@@ -121,4 +148,13 @@ def weave_follow_topic():
             # Commits database.
             mysql.connection.commit()
 
-        return "follow topic done"
+            # Updates the follow state.
+            ret["followState"] = 0
+        
+        # Gets the total number of followers for the topic that is being followed.
+        follow_query = "SELECT follower_count FROM Topic WHERE topic_name = %s;"
+        follow_values = (followed,)
+        cursor.execute(follow_query, follow_values)
+        ret["followCount"] = cursor.fetchall()[0]["follower_count"]
+        
+        return ret

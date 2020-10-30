@@ -9,6 +9,7 @@
 * Cannot switch between posts and interactions on a user's profile.
 * Saving posts does not work right -- each click of the button seems to call the save route twice, and the database sends an exception when saving posts for this reason.
 * Somewhat minor, but deleting an account will also rewrite the account's anonymous posts as DELETED, which breaks the garuntee of anonymousness that the functionality was supposed to have.
+* For some reason, the cursor doesn't work in the forth follow test and thus the test only relies on what the backend says rather than the actual database entity. 
 
 ### Style Errors
 
