@@ -71,7 +71,7 @@ function UserInfo({ userData, pageUsername }) {
         <p className="profile-following"># Following</p>
         <h1 className="profile-bio-title">Bio</h1>
         <p className="profile-bio">{user_bio}</p>
-        <h1 className="profile-about-title">About</h1>
+        <h1 className="profile-about-title">Joined</h1>
         <p className="profile-about">{date_joined}</p>
       </div>
     </div>
