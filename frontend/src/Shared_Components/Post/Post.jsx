@@ -81,7 +81,7 @@ export default function Post({
     setVoted(postdata.score);
   }, [])
 
-  const { topic_name, date_created, post_type, pic_path, title, content, creator, score, src: pic_path } = postdata;
+  const { topic_name, date_created, post_type, pic_path: src, title, content, creator, score} = postdata;
 
   {/* sends the votes to the server and receives the change in score */ }
   const vote = (value) => {
