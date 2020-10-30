@@ -80,12 +80,8 @@ function UserInfo({ userData, pageUsername }) {
 
 function EditProfileButton({ pageUsername, username }) {
   const canUserEditProfile = (username === pageUsername);
-  if (canUserEditProfile){
-    return <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> ;
-  }
-  else{
-    return <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> ;
-  }
+  return canUserEditProfile ?
+    <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : null;
 }
 
 function ProfilePicture({ user_pic }) {
@@ -113,4 +109,3 @@ function UserPosts({pageUsername, setContentView, contentView}) {
     </div>
   );
 }
-
