@@ -81,7 +81,7 @@ export default function Post({
     setVoted(postdata.score);
   }, [])
 
-  const { topic_name, date_created, post_type, pic_path, title, content, creator, score } = postdata;
+  const { topic_name, date_created, post_type, pic_path, title, content, creator, score, src: pic_path } = postdata;
 
   {/* sends the votes to the server and receives the change in score */ }
   const vote = (value) => {
@@ -154,11 +154,11 @@ export default function Post({
   const profileLink = "/profile/" + creator;
   const topicLink = "/topic/" + topic_name;
 
-  return PostComponent({ author: creator, title, text: content, topic_name, score: votes, isSaved: saveCheck, savePost, voteCheck, vote, isMinimized, postId });
+  return PostComponent({ author: creator, title, text: content, topic_name, score: votes, isSaved: saveCheck, savePost, voteCheck, vote, isMinimized, postId, src });
 
 }
 
-function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isSaved, savePost, voteCheck, vote, isMinimized, postId }) {
+function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isSaved, savePost, voteCheck, vote, isMinimized, postId, src }) {
   const bookmarkFill = isSaved ? "red" : "rgba(225, 225, 225, 1)";
   const bookmarkClicked = () => {
     console.log(isSaved);
@@ -198,6 +198,7 @@ function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isS
         <p className="post-component-content-text">
           {text}
         </p>
+        <img src = {src} className = "post-component-image"></img>
       </div>
     </div>
   )
