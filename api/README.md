@@ -111,3 +111,6 @@ POST requests to the following routes require JSON objects formatted as shown:
 * Special per-user comment data pulling (`/commentstates/`) requires a JSON object where JSON = 
     * username: \[username-string\]
     * comment_id: \[comment-id\]
+
+* User following and blocking states (`/userstates/`) requires a JSON object where JSON = 
+    * username: \[user-being-checked\]
