@@ -36,7 +36,6 @@ def weave_profile_data(username):
         else:
             profile_data["user_pic"] = "http://localhost:5000/profile_picture/" + username
             
-
         # Checks if the current user is following the given user.
         follow_query = "SELECT * FROM FollowUser WHERE user_follower = %s AND user_followed = %s;"
         follow_values = (profile_data["username"], username)

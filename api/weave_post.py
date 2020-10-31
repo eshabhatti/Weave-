@@ -161,7 +161,7 @@ def weave_post_data(post_id):
 
         # Checks and updates return items if post is anonymous.
         post_info = (cursor.fetchall())[0]
-        print(post_info)
+        
         if (post_info["anon_flag"] == 1):
             post_info["creator"] = "anonymous"
         post_info.pop("anon_flag", None)

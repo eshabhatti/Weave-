@@ -20,6 +20,7 @@ from weave_timeline import weave_timeline
 from weave_comment import weave_comment
 from weave_follow import weave_follow
 from weave_delete import weave_delete
+from weave_topic import weave_topic
 
 # Initializes Flask
 app = Flask(__name__)
@@ -69,6 +70,7 @@ with app.app_context():
     app.register_blueprint(weave_comment)
     app.register_blueprint(weave_follow)
     app.register_blueprint(weave_delete)
+    app.register_blueprint(weave_topic)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
