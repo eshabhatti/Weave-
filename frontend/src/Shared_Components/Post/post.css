@@ -124,12 +124,13 @@ start css for post-component, an attempt to redesign posts
 .post-component-container {
   width: 700px;
   max-width: 100%;
-  height: 300px;
+  min-height: 300px;
   background-color: white;
   display: block;
   border-radius: 20px;
   position: relative;
   margin-bottom: 20px;
+  padding-bottom: 30px;
 }
 
 /*container for content of the page*/
@@ -189,6 +190,16 @@ start css for post-component, an attempt to redesign posts
   margin-bottom: 0px;
 }
 
+.post-component-topic {
+  position: absolute;
+  padding-top: 10px;
+  font-size: 10px;
+  color: #CACACA;
+  margin-bottom: 0px;
+  right: 20px;
+  top: 30px;
+}
+
 .post-component-title {
   margin-top: 3px;
 }
@@ -201,16 +212,19 @@ start css for post-component, an attempt to redesign posts
 .post-component-bookmark {
   position: absolute;
   right: 20px;
-  bottom: 8px;
+  top: 10px;
   width: 30px;
 }
 
 .post-component-container-collapsed {
-  height: 120px;
+  min-height: 0px;
+  max-height: 120px;
   overflow: hidden;
   cursor: pointer;
 }
 
 .post-component-image {
-  width: 200px;
+  width: 60%;
+  display: block;
+  margin: 0px auto;
 }
