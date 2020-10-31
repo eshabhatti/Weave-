@@ -5,3 +5,23 @@
     margin-right: auto;
 }
 
+.pagination {
+    margin: 15px auto;
+    display: flex;
+    list-style: none;
+    outline: none;
+  }
+
+  .pagination > .active > a{
+    background-color:#7448BA;
+    background: #7448BA;
+    border-color: #7448BA;
+    color: #fff;
+  }
+  
+  .pagination > li > a{
+    border: 1px solid#7448BA;
+    padding: 5px 10px;
+    outline: none;
+    cursor: pointer;
+  }
