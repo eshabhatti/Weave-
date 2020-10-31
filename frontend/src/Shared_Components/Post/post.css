@@ -210,3 +210,7 @@ start css for post-component, an attempt to redesign posts
   overflow: hidden;
   cursor: pointer;
 }
+
+.post-component-image {
+  width: 200px;
+}
