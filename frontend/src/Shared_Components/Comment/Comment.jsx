@@ -83,8 +83,8 @@ export default function Comment({
     const {date_created, content, user_parent } = commentdata;
 
     {/* sends the votes to the server and receives the change in score */ }
-    const vote = (value, arrow) => {
-        setVoted(arrow);
+    const vote = (value) => {
+        setVoted(value);
         const body = {
             username: userName,
             type: '2',
@@ -99,16 +99,17 @@ export default function Comment({
             },
             body: JSON.stringify(body)
         }).then(response => response.json()).then(data => {
-            if (data.error_message) {
-                updateErrorMessage(data.error_message);
-                window.location = "/404"
-            }
+            //if (data.error_message) {
+            //    updateErrorMessage(data.error_message);
+            //    window.location = "/404"
+           // }
             /* catches jwt errors that don't use the form "error_message:" */
             if (data.msg) {
                 window.location = "/login"
             }
-            const { change } = data;
-            setVotes(votes + change);
+            const { score, voteState } = data;
+            setVotes(score);
+            setVoted(voteState);
         }).catch(err => {
             console.error(err);
 
