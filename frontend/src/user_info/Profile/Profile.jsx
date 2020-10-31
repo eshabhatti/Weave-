@@ -37,11 +37,11 @@ export default function Profile() {
       console.error(err);
     });
   }, []);
-  
+
   useEffect(() => {
     // TODO - handle errors
   }, [errorMessage]);
-  
+
   useEffect(() => {
 
   }, [contentView])
@@ -52,7 +52,7 @@ export default function Profile() {
       <div className="profile-container">
         <Sidebar />
         <UserInfo userData={userData} pageUsername={pageUsername} />
-        <UserPosts pageUsername={pageUsername} setContentView={setContentView} contentView={contentView}/>
+        <UserPosts pageUsername={pageUsername} setContentView={setContentView} contentView={contentView} />
       </div>
     </div>
   );
@@ -66,8 +66,7 @@ function UserInfo({ userData, pageUsername }) {
         <ProfilePicture user_pic={user_pic} />
         <h1 className="profile-name">{first_name + " " + last_name}</h1>
         <p className="profile-username">{pageUsername}</p>
-        <EditProfileButton pageUsername={pageUsername} username={username} />
-        <Follow followType="user" toFollow={pageUsername} initialState={follow}/>
+        <EditProfileButton pageUsername={pageUsername} username={username} follow={follow} />
         <p className="profile-followers">{follower_count} Followers</p>
         <p className="profile-following"># Following</p>
         <h1 className="profile-bio-title">Bio</h1>
@@ -79,10 +78,11 @@ function UserInfo({ userData, pageUsername }) {
   );
 }
 
-function EditProfileButton({ pageUsername, username }) {
+function EditProfileButton({ pageUsername, username, follow }) {
   const canUserEditProfile = (username === pageUsername);
   return canUserEditProfile ?
-    <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : null;
+    <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : <Follow className="profile-follow-button" followType="user" toFollow={pageUsername} initialState={follow} />
+    ;
 }
 
 function ProfilePicture({ user_pic }) {
@@ -93,7 +93,7 @@ function ProfilePicture({ user_pic }) {
     );
 }
 
-function UserPosts({pageUsername, setContentView, contentView}) {
+function UserPosts({ pageUsername, setContentView, contentView }) {
 
   useEffect(() => {
     {/*let tester = [];
@@ -115,11 +115,11 @@ function UserPosts({pageUsername, setContentView, contentView}) {
         <button type="button" className="profile-interactions-button" onClick={(e) => setContentView(1)}>Interactions</button>
       </div>
       <div className="profile-display">
-		{contentView === 0 ? (
-			<Feed route="userposts/" username={pageUsername} />
-		) : (
-			<Feed route="usercomments/" username={pageUsername} elementType="comment" />
-    )}
+        {contentView === 0 ? (
+          <Feed route="userposts/" username={pageUsername} />
+        ) : (
+            <Feed route="usercomments/" username={pageUsername} elementType="comment" />
+          )}
       </div>
     </div>
   );

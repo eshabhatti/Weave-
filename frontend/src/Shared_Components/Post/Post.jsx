@@ -162,10 +162,10 @@ function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isS
   const bookmarkFill = isSaved ? "red" : "rgba(225, 225, 225, 1)";
   const bookmarkClicked = () => {
     console.log(isSaved);
-    if (isSaved) {
-      savePost(0);
-    } else {
+    if (isSaved === -1) {
       savePost(1);
+    } else {
+      savePost(-1);
     }
   }
   let isUpvotedFlag = voteCheck == 1;
