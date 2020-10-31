@@ -9,7 +9,7 @@ weave_follow = Blueprint('weave_follow', __name__)
 # # # # Backend route for allowing the user to follow a user on Weave.
 # # Expects a POST request with a JSON. Details will be in 'api/README.md'.
 # # Returns a message of success as a string. 
-@weave_follow.route("/followuser", methods=["POST"])
+@weave_follow.route("/followuser/", methods=["POST"])
 @jwt_required
 def weave_follow_user():
 
@@ -60,7 +60,7 @@ def weave_follow_user():
             
             # Deletes relationship entity.
             follow_query = "DELETE FROM FollowUser WHERE user_follower = %s AND user_followed = %s;"
-            follow_values - (follower, followed)
+            follow_values = (follower, followed)
             cursor.execute(follow_query, follow_values)
             
             # Updates the ex-followed user's follower count attribute.
@@ -84,7 +84,7 @@ def weave_follow_user():
 # # # # Backend route for allowing the user to follow a topic on Weave.
 # # Expects a POST request with a JSON. Details will be in 'api/README.md'.
 # # Returns a message of success as a string. 
-@weave_follow.route("/followtopic", methods=["POST"])
+@weave_follow.route("/followtopic/", methods=["POST"])
 @jwt_required
 def weave_follow_topic():
 

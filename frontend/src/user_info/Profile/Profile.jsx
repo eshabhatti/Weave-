@@ -6,6 +6,7 @@ import './profile.css';
 import NavBar from '../../Shared_Components/NavBar';
 import Sidebar from '../../Shared_Components/Sidebar/Sidebar';
 import Feed from "../../Shared_Components/Feed/Feed";
+import Follow from "../../Shared_Components/Follow/Follow";
 
 export default function Profile() {
   const { username: pageUsername } = useParams();
@@ -66,7 +67,7 @@ function UserInfo({ userData, pageUsername }) {
         <h1 className="profile-name">{first_name + " " + last_name}</h1>
         <p className="profile-username">{pageUsername}</p>
         <EditProfileButton pageUsername={pageUsername} username={username} />
-        <button type="button" className="profile-follow-button">Follow</button>
+        <Follow followType="user" toFollow={pageUsername}/>
         <p className="profile-followers">{follower_count} Followers</p>
         <p className="profile-following"># Following</p>
         <h1 className="profile-bio-title">Bio</h1>
