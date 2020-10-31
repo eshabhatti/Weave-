@@ -35,6 +35,17 @@ def weave_profile_data(username):
             profile_data["user_pic"] = None
         else:
             profile_data["user_pic"] = "http://localhost:5000/profile_picture/" + username
+            
+
+        # Checks if the current user is following the given user.
+        follow_query = "SELECT * FROM FollowUser WHERE user_follower = %s AND user_followed = %s;"
+        follow_values = (profile_data["username"], username)
+        cursor.execute(follow_query, follow_values)
+        if (cursor.rowcount > 0):
+            profile_data["follow"] = 1
+        else:
+            profile_data["follow"] = 0
+            
         return profile_data
 
 # # # # Backend code for editing user profile pictures on Weave.

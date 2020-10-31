@@ -137,7 +137,7 @@ def weave_follow_topic():
             
             # Deletes the old relationship entity.
             follow_query = "DELETE FROM FollowTopic WHERE user_follower = %s AND topic_followed = %s;"
-            follow_values - (follower, followed)
+            follow_values = (follower, followed)
             cursor.execute(follow_query, follow_values)
             
             # Updates the ex-followed topic's follow count attribute.

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 
-export default function Follow({followType, toFollow}) {
-	const [followed, setFollowed] = useState(0);
+export default function Follow({followType, toFollow, initialState}) {
+	const [followed, setFollowed] = useState(initialState);
 	
 	const access_token = localStorage.getItem('access_token');
 	if (access_token == null) {

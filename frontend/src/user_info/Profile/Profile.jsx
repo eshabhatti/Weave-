@@ -59,7 +59,7 @@ export default function Profile() {
 }
 
 function UserInfo({ userData, pageUsername }) {
-  const { user_bio, user_pic, follower_count, first_name, last_name, date_joined, username } = userData;
+  const { user_bio, user_pic, follower_count, first_name, last_name, date_joined, username, follow } = userData;
   return (
     <div className="profile-container">
       <div className="profile-info">
@@ -67,7 +67,7 @@ function UserInfo({ userData, pageUsername }) {
         <h1 className="profile-name">{first_name + " " + last_name}</h1>
         <p className="profile-username">{pageUsername}</p>
         <EditProfileButton pageUsername={pageUsername} username={username} />
-        <Follow followType="user" toFollow={pageUsername}/>
+        <Follow followType="user" toFollow={pageUsername} initialState={follow}/>
         <p className="profile-followers">{follower_count} Followers</p>
         <p className="profile-following"># Following</p>
         <h1 className="profile-bio-title">Bio</h1>
