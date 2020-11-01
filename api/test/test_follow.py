@@ -73,7 +73,7 @@ def follow_test(access_token, valid_post_1, valid_post_2):
     cursor = db.cursor()
     follow_command = open('follow_test.cmd', 'w+')
     follow_command.seek(0)
-    follow_command.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"following\\":\\"followtest_2\\",\\"type\\":1}" http://localhost:5000/followuser > test_output.txt""")
+    follow_command.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"following\\":\\"followtest_2\\",\\"type\\":1}" http://localhost:5000/followuser/ > test_output.txt""")
     follow_command.truncate()
     follow_command.close()
 
@@ -143,7 +143,7 @@ def follow_test(access_token, valid_post_1, valid_post_2):
     cursor = db.cursor()
     follow_command = open('follow_test.cmd', 'w+')
     follow_command.seek(0)
-    follow_command.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"following\\":\\"art\\",\\"type\\":1}" http://localhost:5000/followtopic > test_output.txt""")
+    follow_command.write("""curl -i -X POST -H "Authorization: Bearer """ + access_token + """\" -H "Content-Type:application/json" -d "{\\"following\\":\\"art\\",\\"type\\":1}" http://localhost:5000/followtopic/ > test_output.txt""")
     follow_command.truncate()
     follow_command.close()
 
