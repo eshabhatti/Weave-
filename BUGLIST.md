@@ -16,7 +16,6 @@
 * There needs to be navigation to the user's profile page somewhere on the website. The Weave icon in the navigation bar could be used for this.
 * After successful post creation, the form should refresh to prevent spam and to show successful post creation.
 * After successful comment creation, the post page should refresh to prevent spam and to show successful comment creation.  
-* The user's name on their profile should not say "NULL NULL" before a name is added to the account.
 * There are a lot of warnings in the NPM compile output. May want to look into some of these.
 * Sidebar doesn't stretch all the way down on the topic or the post page. (It is especially noticeable on the latter. It probably has to do with flexboxes in CSS.)
 * The settings page needs some CSS as well.
