@@ -8,7 +8,6 @@
 * Somewhat minor, but deleting an account will also rewrite the account's anonymous posts as DELETED, which breaks the garuntee of anonymousness that the functionality was supposed to have.
 * For some reason, the cursor doesn't work in the forth follow test and thus the test only relies on what the backend says rather than the actual database entity. 
 * Users oftentimes have to refresh upon a modification to their profile page, probably caused by how we route back to this page.
-* Not having any input in the edit profile fields deletes any previous modifications, instead of keeping them the same.
 * Following count still needs to be implemented (may be a sprint three thing).
 
 ### Style Errors
