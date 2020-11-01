@@ -8,7 +8,7 @@ import Sidebar from '../../../Shared_Components/Sidebar/Sidebar';
 import Post from '../../../Shared_Components/Post/Post';
 import Feed from "../../../Shared_Components/Feed/Feed";
 import CommentCreator from '../CommentCreator/CommentCreator';
-import { Nav } from "react-bootstrap";
+import { Nav, Navbar } from "react-bootstrap";
 
 export default function Profile() {
   const { post_id: pagePost } = useParams();
@@ -154,16 +154,35 @@ export default function Profile() {
 
   return (
     <div>
-      <div className="post-page-container">
+      <NavBar />
+      <div className="post-page-content">
+        <Sidebar className="post-sidebar" />
+        <div className="not-post-sidebar">
+          <div className="post-wrapper">
+            <Post postId={pagePost} redesign={true} />
+          </div>
+          <div className="comment-wrapper">
+            <CommentCreator postId={pagePost} />
+          </div>
+          <p className="comment-heading">Comments:</p>
+          <div className="comments-container" >
+            <Feed route="postcomments/" post_id={pagePost} elementType="comment" />
+          </div>
+          <a href="javascript:history.back()" className="topic-return">go back</a>
+        </div>
+      </div>
+
+      {/* <div className="post-page-container">
         <div className="post-wrapper">
           <Post postId={pagePost} redesign={true} />
         </div>
       </div>
       <CommentCreator postId={pagePost} />
-      <p>Comments:</p>
+      <p className="comment-heading">Comments:</p>
       <div className="comments-container" >
         <Feed route="postcomments/" post_id={pagePost} elementType="comment" />
       </div>
+      <a href="javascript:history.back()" className="topic-return">go back</a> */}
     </div>
 
   );

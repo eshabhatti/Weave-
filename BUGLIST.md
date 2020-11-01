@@ -18,9 +18,9 @@
 * After successful comment creation, the post page should refresh to prevent spam and to show successful comment creation.  
 * The user's name on their profile should not say "NULL NULL" before a name is added to the account.
 * There are a lot of warnings in the NPM compile output. May want to look into some of these.
-* Sidebar doesn't stretch all the way down on the topic page.
+* Sidebar doesn't stretch all the way down on the topic or the post page. (It is especially noticeable on the latter. It probably has to do with flexboxes in CSS.)
 * The settings page needs some CSS as well.
+* Post text only takes up about 40% of the avaliable space on a post container, making the whole thing look very lopsided. 
 * The posts on most feed pages are centered with the page and not with the non-sidebar white space and this makes me very upset.
-* The post page needs to have some more navigation and general signposting.
 * Inputs on Weave should eventually have some sort of help icon that shows the constraints behind each input.
 * There really should be some way for the user to see what picture is currently in the upload queue. 

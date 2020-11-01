@@ -1,15 +1,44 @@
-.comments-container {
+.post-page-content {
   background: rgba(255, 255, 255, 0.91);
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   margin: 0px auto;
 }
 
-.post-page-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 40px;
+.post-sidebar {
+  flex-basis: 180px;
+  flex-grow: 1;
+  align-self: stretch;
+  /* height: 100%; */
+}
+
+.not-post-sidebar {
+  flex-basis: 0px;
+  flex-grow: 999;
+  display: block;
 }
 
 .post-wrapper {
   margin: 0px auto;
+  margin-top: 40px;
+  width: 75%;
+  margin-right: auto;
+  margin-left: 20%;
+}
+
+.comment-wrapper {
+  margin: 0px auto;
+  margin-top: 40px;
+}
+
+.comment-heading {
+  padding-left: 50px;
+}
+
+.comments-container {
+  background: rgba(255, 255, 255, 0.91);
+  /* display: flex; */
+  margin: 0px auto;
+  padding-left: 20px;
 }
