@@ -95,8 +95,19 @@ def weave_edit_profile():
         # Checks that the JSON has all elements.
         if ("newusername" not in mod_info or "firstname" not in mod_info or "lastname" not in mod_info or "biocontent" not in mod_info):
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
-
         mod_info["username"] = get_jwt_identity()
+
+        # Gets the current profile information to prevent overwriting.
+        current_firstname = ""
+        current_lastname = ""
+        current_bio = ""
+        current_query = "SELECT first_name, last_name, user_bio FROM UserAccount WHERE username = %s;"
+        cursor.execute(current_query, (mod_info["username"],))
+        for row in cursor:
+            current_firstname = row["first_name"]
+            current_lastname = row["last_name"]
+            current_bio = row["user_bio"]
+
         # The original username should not need to be validated since it is not user input. (?)
         # If newusername is the same as the old one, then once again no validation needs to be done.
         # If there is a difference, however, then the new username needs to be checked for proper format.
@@ -116,14 +127,14 @@ def weave_edit_profile():
         # If the name elements of the JSON are not empty strings, they also need to be checked.
         # Only capitals, lowercases, numbers, and spaces should be allow in names. (Maybe single quotes too?)
         # There should also not be more than 15 characters in each.
-        final_firstname = None
+        final_firstname = current_firstname
         if (mod_info["firstname"] != ""):
             if (re.search("^[A-Za-z0-9 ]{0,15}$", mod_info["firstname"]) == None):
                 return jsonify({'error_message': 'Your name is invalid.'}), 400
             else:
                 final_firstname = mod_info["firstname"]
 
-        final_lastname = None
+        final_lastname = current_lastname
         if (mod_info["lastname"] != ""):
             if (re.search("^[A-Za-z0-9 ]{0,15}$", mod_info["lastname"]) == None):
                 return jsonify({'error_message': 'Your name is invalid.'}), 400
@@ -132,7 +143,7 @@ def weave_edit_profile():
 
         # All biocontent should be fine. Quote characters should be replaced during the cursor execution statement.
         # Not sure how this might affect length, however. Very specific edge case to test if we have time.
-        final_biocontent = None
+        final_biocontent = current_bio
         if (mod_info["biocontent"] != ""):
             final_biocontent = mod_info["biocontent"]
         if (final_biocontent != None and len(final_biocontent) > 250):
