@@ -33,7 +33,7 @@ def weave_register_user():
         reg_info = request.get_json()
 
         # Checks that the JSON has all elements.
-        if ("username" not in reg_info or "password" not in reg_info or "email" not in reg_info):
+        if ("username" not in reg_info or "firstName" not in reg_info or "lastName" not in reg_info or "password" not in reg_info or "email" not in reg_info):
             return jsonify({'error_message':'Request Error: Missing JSON Element'}), 400  
 
         # Checks for valid username format.
@@ -85,7 +85,7 @@ def weave_register_user():
 
         # Insert new user into database.
         register_query = "INSERT INTO UserAccount VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-        register_values = (reg_info["username"], reg_info["email"], hash_password, None, None, current_date , None, None, "0", "0")
+        register_values = (reg_info["username"], reg_info["email"], hash_password, reg_info["firstName"], reg_info["lastName"], current_date , None, None, "0", "0")
         cursor.execute(register_query, register_values)
         mysql.connection.commit()         
             

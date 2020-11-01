@@ -6,6 +6,8 @@ import "./register.css";
 
 export default function Login() {
   const [loginName, updateLoginName] = useState("");
+  const [firstName, updateFirstName] = useState("");
+  const [lastName, updateLastName] = useState("");
   const [email, updateEmail] = useState("");
   const [password, updatePassword] = useState("");
   const [confirmPassword, updateConfirmPassword] = useState("");
@@ -15,9 +17,11 @@ export default function Login() {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    if (isFormValid({ loginName, password, confirmPassword, email, isOverThirteen,updateErrorMessage })) {
+    if (isFormValid({ loginName, firstName, lastName, password, confirmPassword, email, isOverThirteen,updateErrorMessage })) {
       const body = {
         username: loginName,
+        firstName: firstName,
+        lastName: lastName,
         password: password,
         email: email,
       }
@@ -55,7 +59,7 @@ export default function Login() {
       <div className="register-container">
         <img src="./img/weave-icon.svg" className="register-icon" alt="" />
         <form className="register-form">
-          <label className="register-form-label">username</label>
+          <label className="register-form-label">Username</label>
           <input
             value={loginName}
             onChange={e => {
@@ -64,7 +68,25 @@ export default function Login() {
             }} className="register-form-input"
           />
 
-          <label className="register-form-label">email</label>
+          <label className="register-form-label">First Name</label>
+          <input
+            value={firstName}
+            onChange={e => {
+              updateFirstName(e.target.value);
+              updateErrorMessage("");
+            }} className="register-form-input"
+          />
+
+          <label className="register-form-label">Last Name</label>
+          <input
+            value={lastName}
+            onChange={e => {
+              updateLastName(e.target.value);
+              updateErrorMessage("");
+            }} className="register-form-input"
+          />
+          
+          <label className="register-form-label">Email</label>
           <input
             value={email}
             onChange={e => {
@@ -73,7 +95,7 @@ export default function Login() {
             }} className="register-form-input"
           />
 
-          <label className="register-form-label">password</label>
+          <label className="register-form-label">Password</label>
           <input
             value={password}
             onChange={e => {
@@ -83,7 +105,7 @@ export default function Login() {
             type="password"
             className="register-form-input" />
 
-          <label className="register-form-label">confirm password</label>
+          <label className="register-form-label">Confirm Password</label>
           <input
             value={confirmPassword}
             onChange={e => {
@@ -116,9 +138,13 @@ export default function Login() {
   )
 }
 
-function isFormValid({ loginName, password, confirmPassword, isOverThirteen, email, updateErrorMessage }) {
+function isFormValid({ loginName, firstName, lastName, password, confirmPassword, isOverThirteen, email, updateErrorMessage }) {
   if (loginName === "") {
     updateErrorMessage("Please enter a username.");
+  } else if (firstName === "") {
+    updateErrorMessage("Please enter your first name.");
+  } else if (lastName === "") {
+    updateErrorMessage("Please enter your last name.");
   } else if (email === "") {
     updateErrorMessage("Please enter your email.");
   } else if (password === "") {
