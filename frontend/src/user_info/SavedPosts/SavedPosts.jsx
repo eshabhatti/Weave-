@@ -14,11 +14,15 @@ export default function SavedPosts() {
 
   return (
     <div>
-        <NavBar />
-		<div className="saved-posts-container">
-			<Sidebar />
-			<Feed route="savedposts/" />
-		</div>
+      <NavBar />
+		  <div className="saved-posts-content">
+			  <Sidebar />
+        <div className="saved-posts-container">
+          <h1 className="saved-posts-heading">Your saved posts:</h1>
+			    <Feed route="savedposts/" />
+          <a href="javascript:history.back()" className="saved-posts-return">go back</a>
+        </div>
+		  </div>
     </div>
   );
 }

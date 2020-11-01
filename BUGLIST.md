@@ -20,8 +20,6 @@
 * There are a lot of warnings in the NPM compile output. May want to look into some of these.
 * Sidebar doesn't stretch all the way down on the topic page.
 * The settings page needs some CSS as well.
-* Some CSS is broken on the saved post page: The buttons and posts are too close to the sidebar and the sidebar's button is not actually attached.
-* The saved post page also needs some signposting and some more navigation.
 * The posts on most feed pages are centered with the page and not with the non-sidebar white space and this makes me very upset.
 * The post page needs to have some more navigation and general signposting.
 * Inputs on Weave should eventually have some sort of help icon that shows the constraints behind each input.
