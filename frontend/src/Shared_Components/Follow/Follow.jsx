@@ -2,16 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 
 export default function Follow({ followType, toFollow, initialState, className }) {
-  const [followed, setFollowed] = useState(-1);
+  const [followed, setFollowed] = useState(initialState);
 
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
     window.location = '/login';
   }
-
-  if (followed == -1) {
-    setFollowed(initialState);
-  }
+  
+  useEffect(() => {
+	  setFollowed(initialState)
+	  
+  }, [initialState]);
+  
   const followpoint = "http://localhost:5000/follow" + followType + "/";
   const follow = (value) => {
     const body = {

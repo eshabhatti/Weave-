@@ -35,7 +35,7 @@ export default function TopicPosts() {
   }, []);
 
 
-  const { follower_count, topic_name } = topicData;
+  const { follower_count, topic_name, follow } = topicData;
   return (
     <div>
       <NavBar />
@@ -45,7 +45,7 @@ export default function TopicPosts() {
         <div className="topic-display">
 		  <h1 className="topic-heading">Welcome to the <b>{topic}</b> topic:</h1>
 		  <p>Topic Followers: {follower_count}</p>
-		  <Follow followType="topic" toFollow={topic} />
+		  <Follow followType="topic" toFollow={topic} initialState={follow}/>
           <Feed route="topicposts/" topic={topic} />
 		  <a href="javascript:history.back()" className="topic-return">go back</a>
         </div>
