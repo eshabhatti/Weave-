@@ -29,9 +29,12 @@ export default function Profile() {
     }).then(response => response.json()).then(data => {
       //TODO- check what data.msg does
       const errorMessage = data.error_message || data.msg;
-      if (errorMessage) {
-        updateErrorMessage(errorMessage);
+      if (data.error_message) {
+		window.location = "/404";
       }
+	  if (data.msg) {
+		  window.location = "/login";
+	  }
       setUserData(data);
     }).catch(err => {
       console.error(err);

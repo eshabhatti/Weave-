@@ -41,7 +41,6 @@ export default function Feed({route, topic, post_id, username, elementType}) {
         setCurrentPage(0)
     }).catch(err => {
       console.log(err);
-      alert("Error in console");
     });
   }, [route]);
 
