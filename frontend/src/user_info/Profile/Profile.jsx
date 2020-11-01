@@ -95,17 +95,18 @@ function ProfilePicture({ user_pic }) {
 
 function UserPosts({ pageUsername, setContentView, contentView }) {
 
+  const [route, setRoute] = useState("userposts/")
+  const [element, setElem] = useState("post")
+
   useEffect(() => {
-    {/*let tester = [];
-      //console.log(postId)
-    if (contentView === 1) {
-      tester.push(<Feed route="usercomments/" username={pageUsername} elementType="comment" />)
+    if (contentView == 1) {
+      setRoute("usercomments/")
+      setElem("comment")
     }
     else {
-      tester.push(<Feed route="userposts/" username={pageUsername} />)  
+      setRoute("userposts/")
+      setElem("post")
     }
-    //console.log(postData);
-  setFeedContent(tester);*/}
   }, [contentView])
 
   return (
@@ -115,11 +116,12 @@ function UserPosts({ pageUsername, setContentView, contentView }) {
         <button type="button" className="profile-interactions-button" onClick={(e) => setContentView(1)}>Interactions</button>
       </div>
       <div className="profile-display">
-        {contentView === 0 ? (
+        {/*{contentView === 0 ? (
           <Feed route="userposts/" username={pageUsername} />
         ) : (
             <Feed route="usercomments/" username={pageUsername} elementType="comment" />
-          )}
+        )}*/}
+        <Feed route={route} username={pageUsername} elementType={element} />
       </div>
     </div>
   );

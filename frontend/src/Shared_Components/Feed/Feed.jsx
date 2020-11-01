@@ -15,8 +15,40 @@ export default function Feed({route, topic, post_id, username, elementType}) {
   if (access_token == null) {
     window.location = "/login"
   }
+
   useEffect(() => {
     const endpoint = "http://localhost:5000/" + route
+    console.log(endpoint)
+    const offset = currentPage * perPage
+    const body = {
+      start: offset,
+      end: perPage,
+      topic: topic,
+      post_id: post_id,
+      username: username,
+    }
+    fetch(endpoint, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + access_token
+      },
+      body: JSON.stringify(body)
+    }).then(response => response.json()).then(data => {
+        const { pull_list: post_ids, rowCount: rowCount} = data;
+        setPageCount(Math.ceil(rowCount/perPage))
+        setPostData(post_ids);
+        console.log(post_ids)
+        console.log(postData)
+    }).catch(err => {
+      console.log(err);
+      alert("Error in console");
+    });
+  }, [route]);
+
+  useEffect(() => {
+    const endpoint = "http://localhost:5000/" + route
+    console.log(endpoint)
     const offset = currentPage * perPage
     const body = {
       start: offset,
