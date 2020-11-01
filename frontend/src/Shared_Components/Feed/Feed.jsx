@@ -38,8 +38,6 @@ export default function Feed({route, topic, post_id, username, elementType}) {
         const { pull_list: post_ids, rowCount: rowCount} = data;
         setPageCount(Math.ceil(rowCount/perPage))
         setPostData(post_ids);
-        console.log(post_ids)
-        console.log(postData)
     }).catch(err => {
       console.log(err);
       alert("Error in console");
@@ -68,8 +66,6 @@ export default function Feed({route, topic, post_id, username, elementType}) {
         const { pull_list: post_ids, rowCount: rowCount} = data;
         setPageCount(Math.ceil(rowCount/perPage))
         setPostData(post_ids);
-        console.log(post_ids)
-        console.log(postData)
     }).catch(err => {
       console.log(err);
       alert("Error in console");
@@ -79,19 +75,18 @@ export default function Feed({route, topic, post_id, username, elementType}) {
   useEffect(() => {
     let tester = [];
     postData.forEach((postId) => {
-      //console.log(postId)
-	  if (elementType == "comment") {
-		tester.push(<Comment key={postId} commentId={postId} userName={"schikyal"} />)
-	  }
-	  else {
-		tester.push(<Post key={postId} postId={postId} userName={"schikyal"} redesign={true} isMinimized={true} />)  
-	  }
+      console.log(postId)
+      if (elementType == "comment") {
+        tester.push(<Comment key={postId} commentId={postId} userName={"schikyal"} />)
+      }
+      else {
+        tester.push(<Post key={postId} postId={postId} userName={"schikyal"} redesign={true} isMinimized={true} />)  
+      }
     });
+    setPostsContent(tester);
     if (postsContent.length === 0) {
       tester = <p>No Posts!</p>;
     }
-    console.log(postData);
-    setPostsContent(tester);
   }, [postData])
 
 
