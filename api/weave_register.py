@@ -75,6 +75,15 @@ def weave_register_user():
             return jsonify({'error_message':'Passwords need a number.'}), 400        
         if (re.search("^[A-Za-z0-9!@#$%&?<>-_+]{6,20}$", reg_info["password"]) == None):
             return jsonify({'error_message':'Your password has an invalid character.'}), 400
+
+        # Checks for valid first and last names.
+        # Only capitals, lowercases, numbers, and spaces should be allow in names. (Maybe single quotes too?)
+        # There should also not be more than 15 characters in each.
+        if (re.search("^[A-Za-z0-9 ]{1,15}$", reg_info["firstName"]) == None):
+            return jsonify({'error_message': 'First name is invalid.'}), 400
+
+        if (re.search("^[A-Za-z0-9 ]{1,15}$", reg_info["lastName"]) == None):
+                return jsonify({'error_message': 'Last name is invalid.'}), 400
         
         # # # End validation
         # Hashes the password for security before storing it in the database (using bcrypt).
