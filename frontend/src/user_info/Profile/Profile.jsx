@@ -66,13 +66,13 @@ function UserInfo({ userData, pageUsername }) {
         <ProfilePicture user_pic={user_pic} />
         <h1 className="profile-name">{first_name + " " + last_name}</h1>
         <p className="profile-username">{pageUsername}</p>
-        <EditProfileButton pageUsername={pageUsername} username={username} follow={follow} />
-        <p className="profile-followers">{follower_count} Followers</p>
-        <p className="profile-following"># Following</p>
         <h1 className="profile-bio-title">Bio</h1>
         <p className="profile-bio">{user_bio}</p>
         <h1 className="profile-about-title">Joined</h1>
         <p className="profile-about">{date_joined}</p>
+        <EditProfileButton pageUsername={pageUsername} username={username} follow={follow} />
+        <p className="profile-followers">{follower_count} Followers</p>
+        <p className="profile-following"># Following</p>
       </div>
     </div>
   );

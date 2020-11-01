@@ -1,13 +1,38 @@
-.topic-page-content {
-  margin-top: 20px;
-}
-
 .topic-heading {
   text-align: center;
   font-family: 'Open Sans', sans-serif;
   font-size: 20pt;
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.topic-follow-button {
+  width: 120px;
+  height: 32px;
+  background: #7448BA;
+  border-radius: 12px;
+  display: block;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 13px;
+  transition-duration: 0.3s;
+  font-family: 'Open Sans', sans-serif;
+  margin-bottom: 40px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.topic-follow-button:hover {
+  background: #522a92;
+}
+
+.topic-followers {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11pt;
+  text-align: center;
 }
 
 .topic-container {
@@ -32,4 +57,5 @@
   transition-duration: 0.1s;
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
+  margin-bottom: 20px;
 }

@@ -85,6 +85,7 @@
   font-size: 24px;
   padding-left: 3px;
   padding-bottom: 5px;
+  padding-top: 10px;
 }
 
 .profile-username {
@@ -121,7 +122,8 @@
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
   padding-left: 3px;
-  padding-bottom: 5px;
+  margin-bottom: 0px;
+  margin-top: -30px;
 }
 
 .profile-following {
@@ -168,7 +170,7 @@
 
 .profile-choice {
   background: rgba(227, 227, 238, 0.91);
-  border-radius: 30px;
+  border-radius: 10px;
   height: 700px;
   width: 600px;
   margin-left: 200px;

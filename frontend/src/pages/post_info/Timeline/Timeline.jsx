@@ -17,11 +17,11 @@ export default function TimelinePosts() {
       <NavBar />
       <div className="timeline-container">
         {/* List of posts */}
-		<Sidebar />
+		    <Sidebar />
         <div className="timeline-display">
-		  <h1 className="timeline-heading">Your timeline:</h1>
+		      <h1 className="timeline-heading">Your timeline:</h1>
           <Feed route="timeline"/>
-		  <a href="javascript:history.back()" className="timeline-return">go back</a>
+		      <a href="javascript:history.back()" className="timeline-return">go back</a>
         </div>        
       </div>
     </div>

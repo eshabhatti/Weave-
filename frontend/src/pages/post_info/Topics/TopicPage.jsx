@@ -40,14 +40,14 @@ export default function TopicPosts() {
     <div>
       <NavBar />
       <div className="topic-container">
-		<Sidebar />
+		  <Sidebar />
         {/* List of posts */}
         <div className="topic-display">
-		  <h1 className="topic-heading">Welcome to the <b>{topic}</b> topic:</h1>
-		  <p>Topic Followers: {follower_count}</p>
-		  <Follow followType="topic" toFollow={topic} initialState={follow}/>
+		      <h1 className="topic-heading">Welcome to the <b>{topic}</b> topic:</h1>
+		      <p className="topic-followers">Topic Followers: {follower_count}</p>
+		      <Follow className="topic-follow-button" followType="topic" toFollow={topic} initialState={follow}/>
           <Feed route="topicposts/" topic={topic} />
-		  <a href="javascript:history.back()" className="topic-return">go back</a>
+		      <a href="javascript:history.back()" className="topic-return">go back</a>
         </div>
       </div>
     </div>
