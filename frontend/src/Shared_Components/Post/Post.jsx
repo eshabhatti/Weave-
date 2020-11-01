@@ -159,10 +159,10 @@ export default function Post({
 }
 
 function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isSaved, savePost, voteCheck, vote, isMinimized, postId, src, topic_name }) {
-  const bookmarkFill = isSaved ? "red" : "rgba(225, 225, 225, 1)";
+  const bookmarkFill = (isSaved == 1) ? "red" : "rgba(225, 225, 225, 1)";
   const bookmarkClicked = () => {
     console.log(isSaved);
-    if (isSaved === -1) {
+    if (isSaved == -1) {
       savePost(1);
     } else {
       savePost(-1);
@@ -241,7 +241,7 @@ function BookmarkIcon({ fill, className, onClick }) {
   return (
 
     <svg viewBox="-58 0 404 404.54135" width="404pt" xmlns="http://www.w3.org/2000/svg" className={className} onClick={() => onClick()}>
-      <path d="m277.527344 0h-267.257813c-5.523437 0-10 4.476562-10 10v374.527344c-.011719 7.503906 4.183594 14.378906 10.855469 17.804687 6.675781 3.429688 14.707031 2.832031 20.796875-1.550781l111.976563-80.265625 111.976562 80.269531c6.097656 4.367188 14.121094 4.960938 20.792969 1.535156 6.667969-3.425781 10.863281-10.292968 10.863281-17.792968v-374.527344c0-5.523438-4.480469-10-10.003906-10zm0 0" fill={fill} onClick={() => onClick()} />
+      <path d="m277.527344 0h-267.257813c-5.523437 0-10 4.476562-10 10v374.527344c-.011719 7.503906 4.183594 14.378906 10.855469 17.804687 6.675781 3.429688 14.707031 2.832031 20.796875-1.550781l111.976563-80.265625 111.976562 80.269531c6.097656 4.367188 14.121094 4.960938 20.792969 1.535156 6.667969-3.425781 10.863281-10.292968 10.863281-17.792968v-374.527344c0-5.523438-4.480469-10-10.003906-10zm0 0" fill={fill}  />
     </svg>
   )
 }
