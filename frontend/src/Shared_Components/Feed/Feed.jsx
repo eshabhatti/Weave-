@@ -38,6 +38,7 @@ export default function Feed({route, topic, post_id, username, elementType}) {
         const { pull_list: post_ids, rowCount: rowCount} = data;
         setPageCount(Math.ceil(rowCount/perPage))
         setPostData(post_ids);
+        setCurrentPage(0)
     }).catch(err => {
       console.log(err);
       alert("Error in console");
