@@ -55,6 +55,23 @@ export default function Timeline() {
 				if (data.error_message) {
 					updateErrorMessage(data.error_message);
 				} else {
+
+					//TO-DO: make sure this is being sent on the right post
+					console.log(image);
+					if (image !== null && image.length > 0) {
+						const formData = new FormData();
+						const lastImg = image[image.length - 1];
+						formData.append('image', lastImg, lastImg.name);
+						fetch("http://localhost:5000/createimage/", {
+							method: "POST",
+							headers: {
+								'Authorization': 'Bearer ' + access_token
+							},
+							body: formData,
+						}).then(response => response.json()).then(data => {
+							console.log(data);
+						});
+					}
 					updateSuccessMessage("Post Created!")
 				}
 			}).catch(err => {
@@ -62,22 +79,6 @@ export default function Timeline() {
 				alert(err);
 			});
 
-			//TO-DO: make sure this is being sent on the right post
-			console.log(image);
-			if (image !== null && image.length > 0) {
-				const formData = new FormData();
-				const lastImg = image[image.length - 1];
-				formData.append('image', lastImg, lastImg.name);
-				fetch("http://localhost:5000/createimage/", {
-					method: "POST",
-					headers: {
-						'Authorization': 'Bearer ' + access_token
-					},
-					body: formData,
-				}).then(response => response.json()).then(data => {
-					console.log(data);
-				});
-			}
 		}
 	}
 
