@@ -19,6 +19,12 @@ export default function Profile() {
   {/* keeps track if user has saved or voted */ }
   const [saveCheck, setSaved] = useState(0);
   const [voteCheck, setVoted] = useState(0);
+  const [reloadFlag, updateReloadFlag] = useState(0);
+
+  const reload = () => {
+    updateReloadFlag(!reloadFlag);
+  }
+
   {/* current score of post */ }
   const [votes, setVotes] = useState(0);
 
@@ -87,7 +93,7 @@ export default function Profile() {
       alert(err);
 
     });
-  }, [])
+  }, [reloadFlag])
 
   const { topic_name, date_created, post_type, pic_path, title, content, creator } = postdata;
 
@@ -162,7 +168,7 @@ export default function Profile() {
             <Post postId={pagePost} redesign={true} />
           </div>
           <div className="comment-wrapper">
-            <CommentCreator postId={pagePost} />
+            <CommentCreator postId={pagePost} reload={reload} />
           </div>
           <p className="comment-heading">Comments:</p>
           <div className="comments-container" >

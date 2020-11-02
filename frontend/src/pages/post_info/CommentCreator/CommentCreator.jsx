@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import "./commentcreator.css";
 
 export default function CommentCreator({
-  postId
+  postId,
+  reload
 }) {
   const [commentContent, updateCommentContent] = useState("");
   const [errorMessage, updateErrorMessage] = useState("");
@@ -36,6 +37,7 @@ export default function CommentCreator({
         updateErrorMessage(data.error_message);
       }
       updateSuccessMessage("comment added!");
+      reload();
       /* catches jwt errors that don't use the form "error_message:" */
       if (data.msg) {
         window.location = "/login"
