@@ -172,7 +172,7 @@ export default function Profile() {
           </div>
           <p className="comment-heading">Comments:</p>
           <div className="comments-container" >
-            <Feed route="postcomments/" post_id={pagePost} elementType="comment" />
+            <Feed route="postcomments/" post_id={pagePost} elementType="comment" reloadFlag={reloadFlag} />
           </div>
           <a href="javascript:history.back()" className="topic-return">go back</a>
         </div>
