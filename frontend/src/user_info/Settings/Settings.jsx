@@ -67,7 +67,7 @@ export default function Settings(){
 			<div className="settings-container">
 				<Sidebar />	
 				<div className="settings-display">
-				<button onClick={(e) => DeleteAccount(e)}>Delete My Account</button>
+				<button className="delete-button" onClick={(e) => DeleteAccount(e)}>Delete My Account</button>
 				</div>
 			</div>
 		</div>
