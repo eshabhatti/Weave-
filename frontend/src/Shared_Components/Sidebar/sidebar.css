@@ -9,6 +9,9 @@
   background-color: rgba(224, 219, 228, 0.1);
   transition: 0.8s ease;
   min-height: 800px;
+  position: sticky;
+  top: 0px;
+  z-index: 100;
 }
 
 .side-bar-menu {

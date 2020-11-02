@@ -1,3 +1,22 @@
+/* Non-flexbox implementation, try not to use this if possible. */
+/* .post-page-content {
+  background: rgba(255, 255, 255, 0.91);
+}
+
+.post-sidebar {
+  float: left;
+}
+
+.post-sidebar .sidebar {
+  min-height: 10000px;
+}
+
+.not-post-sidebar {
+  float: right;
+  margin-top: -760px;
+  margin-right: 20%;
+} */
+
 .post-page-content {
   background: rgba(255, 255, 255, 0.91);
   display: flex;
@@ -10,7 +29,6 @@
   flex-basis: 180px;
   flex-grow: 1;
   align-self: stretch;
-  /* height: 100%; */
 }
 
 .not-post-sidebar {
@@ -38,7 +56,6 @@
 
 .comments-container {
   background: rgba(255, 255, 255, 0.91);
-  /* display: flex; */
   margin: 0px auto;
   padding-left: 20px;
 }
