@@ -61,6 +61,7 @@ export default function CommentCreator({
             onChange={e => {
               updateCommentContent(e.target.value);
               updateSuccessMessage("");
+              updateErrorMessage("");
             }}
             className="comment-form-input-body"
           />
