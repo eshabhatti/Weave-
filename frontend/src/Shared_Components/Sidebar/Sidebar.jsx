@@ -51,7 +51,7 @@ export default function Sidebar() {
   };
 
   return (
-    <>
+    <div className="sidebar-wrapper">
       <div
         className="sidebar"
         style={{ transform: `translatex(${xPosition}px)` }}
@@ -67,12 +67,13 @@ export default function Sidebar() {
           {/* These need to link to actual pages eventually */}
           <h1 className="side-bar-heading">Explore your web:</h1>
           <a href="/timeline" className="side-bar-selection">Your timeline</a> <br />
+          <a href="/profile/" className="side-bar-selection">Profile</a> <br />
           <a href="/createpost" className="side-bar-selection">Create a post</a> <br />
           <a href="/savedposts" className="side-bar-selection">Saved posts</a> <br />
-		  <a href="/settings" className="side-bar-selection">Settings</a> <br />
+          <a href="/settings" className="side-bar-selection">Settings</a> <br />
           <button className="side-bar-logout" onClick={(e) => logout(e)}>Logout</button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
