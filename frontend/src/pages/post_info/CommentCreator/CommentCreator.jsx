@@ -35,8 +35,9 @@ export default function CommentCreator({
     }).then(response => response.json()).then(data => {
       if (data.error_message) {
         updateErrorMessage(data.error_message);
+      } else {
+        updateSuccessMessage("comment added!");
       }
-      updateSuccessMessage("comment added!");
       reload();
       /* catches jwt errors that don't use the form "error_message:" */
       if (data.msg) {
@@ -59,10 +60,11 @@ export default function CommentCreator({
             value={commentContent}
             onChange={e => {
               updateCommentContent(e.target.value);
+              updateSuccessMessage("");
             }}
             className="comment-form-input-body"
           />
-          
+
           <button type="submit" className="comment-submit-btn" onClick={(e) => onSubmit(e)}>Add Comment</button>
           {errObject}
           {successObject}
