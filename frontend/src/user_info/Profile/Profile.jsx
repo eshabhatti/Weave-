@@ -13,6 +13,7 @@ export default function Profile() {
   const [errorMessage, updateErrorMessage] = useState('');
   const [userData, setUserData] = useState([]);
   const [contentView, setContentView] = useState(0);
+  const [username, updateUsername] = useState(pageUsername);
   // replace with API call to /secure to validate token
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
@@ -20,26 +21,45 @@ export default function Profile() {
   }
 
   useEffect(() => {
-    fetch('http://localhost:5000/profile/' + pageUsername, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + access_token
-      },
-    }).then(response => response.json()).then(data => {
-      //TODO- check what data.msg does
-      const errorMessage = data.error_message || data.msg;
-      if (data.error_message) {
-		window.location = "/404";
-      }
-	  if (data.msg) {
-		  window.location = "/login";
-	  }
-      setUserData(data);
-    }).catch(err => {
-      console.error(err);
-    });
+    if (!username) {
+      fetch('http://localhost:5000/protected', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token
+        },
+      }).then(response => response.json()).then(data => {
+        updateUsername(data.logged_in);
+      }).catch(err => {
+        console.error(err);
+      });
+    }
   }, []);
+
+  useEffect(() => {
+    if (username) {
+      console.log(username);
+      fetch('http://localhost:5000/profile/' + username, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token
+        },
+      }).then(response => response.json()).then(data => {
+        //TODO- check what data.msg does
+        const errorMessage = data.error_message || data.msg;
+        if (data.error_message) {
+          window.location = "/404";
+        }
+        if (data.msg) {
+          window.location = "/login";
+        }
+        setUserData(data);
+      }).catch(err => {
+        console.error(err);
+      });
+    }
+  }, [username]);
 
   useEffect(() => {
     // TODO - handle errors

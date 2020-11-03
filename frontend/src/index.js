@@ -43,6 +43,9 @@ function AppRouter() {
         <Route path="/profile/:username">
           <Profile />
         </Route>
+        <Route path="/profile">
+          <Profile />
+        </Route>
         <Route path="/editprofile">
           <EditProfile />
         </Route>

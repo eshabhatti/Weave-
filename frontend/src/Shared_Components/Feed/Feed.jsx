@@ -74,18 +74,20 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
 
   useEffect(() => {
     let tester = [];
-    postData.forEach((postId) => {
-      console.log(postId)
-      if (elementType == "comment") {
-        tester.push(<Comment key={postId} commentId={postId} userName={"schikyal"} />)
+    if (postData) {
+      postData.forEach((postId) => {
+        console.log(postId)
+        if (elementType == "comment") {
+          tester.push(<Comment key={postId} commentId={postId} userName={"schikyal"} />)
+        }
+        else {
+          tester.push(<Post key={postId} postId={postId} userName={"schikyal"} redesign={true} isMinimized={true} />)
+        }
+      });
+      setPostsContent(tester);
+      if (postsContent.length === 0) {
+        tester = <p>No Posts!</p>;
       }
-      else {
-        tester.push(<Post key={postId} postId={postId} userName={"schikyal"} redesign={true} isMinimized={true} />)
-      }
-    });
-    setPostsContent(tester);
-    if (postsContent.length === 0) {
-      tester = <p>No Posts!</p>;
     }
   }, [postData, reloadFlag])
 
