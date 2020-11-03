@@ -29,7 +29,8 @@ export default function Profile() {
           'Authorization': 'Bearer ' + access_token
         },
       }).then(response => response.json()).then(data => {
-        updateUsername(data.logged_in);
+        // updateUsername(data.logged_in);
+        window.location.href = "/profile/"+data.logged_in;
       }).catch(err => {
         console.error(err);
       });
