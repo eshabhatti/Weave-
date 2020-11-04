@@ -26,11 +26,11 @@ def weave_delete_account():
         user_info = {"username" : get_jwt_identity()}
 
         # Changes posts made by user to show DELETED as creator
-        post_delete_query = 'UPDATE post SET creator = "DELETED" WHERE creator = %s;'
+        post_delete_query = 'UPDATE Post SET creator = "DELETED" WHERE creator = %s;'
         post_delete_values = (user_info["username"],)
 
         # Changes comments made by user to show DELETED as creator
-        comment_delete_query = 'UPDATE postcomment SET user_parent = "DELETED" WHERE user_parent = %s;'
+        comment_delete_query = 'UPDATE PostComment SET user_parent = "DELETED" WHERE user_parent = %s;'
         comment_delete_values = (user_info["username"],)
         
         # Deletes account from database by setting username to DELETED
