@@ -126,7 +126,7 @@ def weave_comment_pull():
         # Pulls comment ids for a specific post.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
         pull_query = "SELECT comment_id FROM PostComment WHERE post_parent = \"" + \
-            str(pull_info["post_id"]) + "\" ORDER BY upvote_count DESC LIMIT " + \
+            str(pull_info["post_id"]) + "\" ORDER BY upvote_count - downvote_count DESC LIMIT " + \
             str(pull_info["start"]) + ", " + str(pull_info["end"]) + ";"
         cursor.execute(pull_query)
 
@@ -185,7 +185,7 @@ def weave_user_comment_pull():
         # Pulls comment ids for specific user.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
         pull_query = "SELECT comment_id FROM PostComment WHERE user_parent = \"" + \
-            str(pull_info["username"]) + "\" ORDER BY upvote_count DESC LIMIT " + \
+            str(pull_info["username"]) + "\" ORDER BY upvote_count - downvote_count DESC LIMIT " + \
             str(pull_info["start"]) + ", " + str(pull_info["end"]) + ";"
         cursor.execute(pull_query)
 
