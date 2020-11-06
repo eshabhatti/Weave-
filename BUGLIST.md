@@ -3,14 +3,15 @@
 ### Functionality Errors
  
 * The back button on the profile modification page does not return the user to the correct profile if their username is modified.
+* Deleting a user's account does not remove votes (allowing spammers or trolls to make an account, vote on a post, delete their account, then make an account to do all this over again).
+* Deleting a user's account also does not remove follows, once again allowing people to inflate these numbers.
 * Somewhat minor, but deleting an account will also rewrite the account's anonymous posts as DELETED, which breaks the garuntee of anonymousness that the functionality was supposed to have.
 * Users oftentimes have to refresh upon a modification to their profile page, probably caused by how we route back to this page.
-* For some reason, the cursor doesn't work in the forth follow test and thus the test only relies on what the backend says rather than the actual database entity. (Super minor.)
-* Following count still needs to be implemented (may be a sprint three thing).
+* Following count on the profile page still needs to be implemented or removed.
+* For some reason, the cursor doesn't work in the fourth follow test and thus the test only relies on what the backend says rather than the actual database entity. (Super minor.)
 
 ### Style Errors
 
-* There needs to be navigation to the user's profile page somewhere on the website. The Weave icon in the navigation bar could be used for this.
 * After successful post creation, the form should refresh to prevent spam and to show successful post creation.
 * After successful comment creation, the post page should refresh to prevent spam and to show successful comment creation.  
 * There are a lot of warnings in the NPM compile output. May want to look into some of these.
