@@ -218,3 +218,13 @@ VALUES (
     0, 
     0
 );
+
+-- Adds the 'general' topic to Weave into the database for visitor functionality.
+-- Depending on how we set things up on the frontend, this may not be explicitly needed.
+INSERT INTO Topic
+VALUES (
+    "general",
+    "2020-11-12 01:28:30",
+    0,
+    0
+);

@@ -11,7 +11,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -36,7 +36,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"testtess@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"testtess@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -61,7 +61,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname111\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testname111\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"Gudpasswurd22\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -86,7 +86,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"\\",\\"password\\":\\"\\",\\"email\\":\\"\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"\\",\\"email\\":\\"\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -111,7 +111,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"test\\",\\"password\\":\\"Gudpassword3\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"test\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"Gudpassword3\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -136,7 +136,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testtesttetesttesttetesttesttetesttesttetesttesttetesttestte\\",\\"password\\":\\"testTEST33\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testtesttetesttesttetesttesttetesttesttetesttesttetesttestte\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"testTEST33\\",\\"email\\":\\"test@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -161,7 +161,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"testTEST3333333333333333333333333333333333\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"testTEST3333333333333333333333333333333333\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -186,7 +186,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"testTEST3\\",\\"email\\":\\"testtestatestststeststsasdfadsfafsdfasdfasdfljakfdlja@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"testTEST3\\",\\"email\\":\\"testtestatestststeststsasdfadsfafsdfasdfasdfljakfdlja@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -211,7 +211,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"testTEST3\\",\\"email\\":\\"testemail\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"testTEST3\\",\\"email\\":\\"testemail\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -236,7 +236,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"testTEST 33\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"testTEST 33\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -261,7 +261,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"testtest33\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"testtest33\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -286,7 +286,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"TESTTEST33\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"TESTTEST33\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
@@ -311,7 +311,7 @@ def registration_test():
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     new_register_test = open('registration_test.cmd', 'w+')
     new_register_test.seek(0)
-    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"password\\":\\"TESTtester\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
+    new_register_test.write("""curl -i -X POST -H "Content-Type:application/json" -d "{\\"username\\":\\"testertest\\",\\"firstName\\":\\"Test\\",\\"lastName\\":\\"Name\\",\\"password\\":\\"TESTtester\\",\\"email\\":\\"testtesta@tes.com\\"}" http://localhost:5000/register/ > test_output.txt""")
     new_register_test.truncate()
     new_register_test.close()
 
