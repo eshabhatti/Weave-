@@ -101,6 +101,27 @@ CREATE TABLE FollowTopic (
     FOREIGN KEY (topic_followed) REFERENCES Topic(topic_name)
 );
 
+CREATE TABLE DirectMessage (
+    message_id INT NOT NULL,
+    sender VARCHAR(20) NOT NULL,
+    receiver VARCHAR(20) NOT NULL,
+    sender_status INT NOT NULL,
+    receiver_status INT NOT NULL,
+    content VARCHAR(500) NOT NULL,
+    date_created DATETIME NOT NULL,
+    PRIMARY KEY (message_id),
+    FOREIGN KEY (sender) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (receiver) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE UserBlock (
+    user_blocker VARCHAR(20) NOT NULL,
+    user_blocked VARCHAR(20) NOT NULL,
+    PRIMARY KEY (user_blocker, user_blocked),
+    FOREIGN KEY (user_blocker) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (user_blocked) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 CREATE TABLE Blacklist (
 	token VARCHAR(256) NOT NULL,
     PRIMARY KEY (token)

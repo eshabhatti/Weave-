@@ -164,7 +164,7 @@ CREATE TABLE CommentVote (
     FOREIGN KEY (comment_id) REFERENCES PostComment(comment_id) ON DELETE CASCADE
 );
 
--- Initializes the FollowUser table
+-- Initializes the FollowUser table.
 -- Note that users can technically follow themselves, but the backend should be able to handle this.
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		user_follower: The user who is following someone
@@ -178,7 +178,7 @@ CREATE TABLE FollowUser (
     FOREIGN KEY (user_followed) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- Initializes the FollowTopic table
+-- Initializes the FollowTopic table.
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		user_follower: The user who is following the topic
 -- 		topic_followed: The topic that is being followed by the user
@@ -191,7 +191,45 @@ CREATE TABLE FollowTopic (
     FOREIGN KEY (topic_followed) REFERENCES Topic(topic_name)
 );
 
--- Initializes the Blacklist table
+-- Initializes the DirectMessage table.
+-- Note that users can technically send messages to themselves, but the backend should be able to handle this.
+-- When we modify account deletion, we may want to make sure that the correct usernames update to DELETED.
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		message_id: A unique ID assigned to each direct message
+-- 		sender: A username string corresponding to who sent the message
+-- 		receiver: A username string corresponding to who should get the message
+-- 		sender_status: A flag corresponding to whether or not the sender has deleted the message
+-- 		receiver_status: A flag corresponding to whether or not the receiver has deleted the message
+-- 			NOTE: For both of the flags above, a value of 0 means the message has been deleted.
+-- 		content: A string representing the content of the message. 500 characters maximum.
+-- 		date_created: A datetime field representing when the message was first sent. 
+CREATE TABLE DirectMessage (
+	message_id INT NOT NULL,
+    sender VARCHAR(20) NOT NULL,
+    receiver VARCHAR(20) NOT NULL,
+    sender_status INT NOT NULL,
+    receiver_status INT NOT NULL,
+    content VARCHAR(500) NOT NULL,
+    date_created DATETIME NOT NULL,
+    PRIMARY KEY (message_id),
+    FOREIGN KEY (sender) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (receiver) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- Initializes the UserBlock table.
+-- Note that users can technically block themselves. This would be problematic if the application allows it to happen.
+-- ATTRIBUTE DESCRIPTIONS:
+-- 		user_blocker: A username string corresponding to the blocking user in the relation (who pushed the button).
+-- 		user_blocked: A username string corresponding to the blocked user in the relation (whose button was pushed).
+CREATE TABLE UserBlock (
+	user_blocker VARCHAR(20) NOT NULL,
+    user_blocked VARCHAR(20) NOT NULL,
+    PRIMARY KEY (user_blocker, user_blocked),
+	FOREIGN KEY (user_blocker) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (user_blocked) REFERENCES UserAccount(username) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- Initializes the Blacklist table.
 -- ATTRIBUTE DESCRIPTIONS:
 -- 		token: The JWT token that needs to be blacklisted
 CREATE TABLE Blacklist (

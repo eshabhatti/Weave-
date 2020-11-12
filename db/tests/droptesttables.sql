@@ -2,6 +2,8 @@
 
 USE weave;
 DROP TABLE Blacklist;
+DROP TABLE UserBlock;
+DROP TABLE DirectMessage;
 DROP TABLE FollowTopic;
 DROP TABLE FollowUser;
 DROP TABLE CommentVote;

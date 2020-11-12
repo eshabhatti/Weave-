@@ -9,6 +9,12 @@ USE weave;
 -- Drops the Blacklist table.
 DROP TABLE Blacklist;
 
+-- Drops the DirectMessage table.
+DROP TABLE DirectMessage;
+
+-- Drops the UserBlock table.
+DROP TABLE UserBlock;
+
 -- Drops the TopicFollow table.
 DROP TABLE FollowTopic;
 
