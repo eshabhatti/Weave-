@@ -5,6 +5,7 @@ import re
 from werkzeug.utils import secure_filename
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
 import json
+import bcrypt
 
 weave_profile = Blueprint('weave_profile', __name__)
 
@@ -215,3 +216,100 @@ def weave_edit_profile_pic():
         }
         return jsonify(ret), 200
 
+
+# # # # Backend code for modifying senstive account information
+# # Expects a POST request with a JSON. Details are discussed in "/api/README.md".
+# # Returns a JSON with JWT tokens and confirmation of the user's identity.
+@weave_profile.route('/editsettings/', methods=["POST"])
+@jwt_required
+def weave_update_settings():
+
+    # The backend has recieved information that needs to go into the database.
+    if request.method == "POST":
+
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message': 'Request Error: Not JSON.'})
+        settings_info = request.get_json()
+        current_username = get_jwt_identity()
+
+        # Checks that the JSON has the required element.
+        if ("currentpass" not in settings_info):
+            return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+
+        # Pulls the user's encrypted password out of the database and then validates it.
+        cursor.execute("SELECT encrypted_password FROM UserAccount WHERE username = %s;", (current_username,))
+        correct_password = cursor.fetchall()[0]["encrypted_password"]
+        attempted_password = settings_info["currentpass"]
+        valid_password = bcrypt.checkpw(attempted_password.encode('utf8'), correct_password.encode('utf8')) 
+        if (not valid_password):
+            return jsonify({'error_message':'Password incorrect.'}), 401
+
+        # # # Allows the user to change their email.
+        if ("newemail" in settings_info):
+
+            # Verifies the new email's format.
+            if (re.search("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}$", settings_info["newemail"]) == None):
+                return jsonify({'error_message':'Your email address is invalid.'}), 400  
+            if (len(settings_info["newemail"]) > 50):
+                return jsonify({'error_message':'Your email address is invalid.'}), 400
+
+            # Checks for repeated email.
+            cursor.execute("SELECT email FROM UserAccount WHERE email = %s;", (settings_info["newemail"],))
+            if (cursor.rowcount != 0):
+                return jsonify({'error_message':'This email has already been used.'}), 400
+
+            # Updates the email column in the account entity.
+            cursor.execute("UPDATE UserAccount SET email = %s WHERE username = %s;" (settings_info["newemail"], current_username))
+            mysql.connection.commit()
+        
+        # # # Allows the user to change their password.
+        if ("newpass" in settings_info):
+
+            # Verifies the new password's format.
+            if (re.search("[A-Z]", settings_info["newpass"]) == None):
+                return jsonify({'error_message':'Passwords need an uppercase letter.'}), 400  
+            if (re.search("[a-z]", settings_info["newpass"]) == None):
+                return jsonify({'error_message':'Passwords need a lowercase letter.'}), 400
+            if (re.search("[0-9]", settings_info["newpass"]) == None):
+                return jsonify({'error_message':'Passwords need a number.'}), 400        
+            if (re.search("^[A-Za-z0-9!@#$%&?<>-_+]{6,20}$", settings_info["newpass"]) == None):
+                return jsonify({'error_message':'Your password has an invalid character.'}), 400
+
+            # Encrypts the password for storage in the database.
+            hash_password = bcrypt.hashpw(settings_info["newpass"].encode('utf8'), bcrypt.gensalt())
+
+            # Updates the password column in the account entity.
+            cursor.execute("UPDATE UserAccount SET encrypted_password = %s WHERE username = %s;" (hash_password, current_username))
+            mysql.connection.commit()
+
+        # # # Allows the user to change their usernames.
+        if ("newusername" in settings_info):
+
+            # Verifies the new username's format.
+            if (re.search("^[A-Za-z0-9_-]{6,20}$", settings_info["newusername"]) == None):
+                return jsonify({'error_message':'Your username is invalid.'}), 400
+
+            # Checks for repeated username.
+            cursor.execute("SELECT username FROM UserAccount WHERE username = %s;", (settings_info["newusername"],))
+            if (cursor.rowcount != 0):
+                return jsonify({'error_message':'This email has already been used.'}), 400              
+
+            # Updates the username column in the account entity.
+            cursor.execute("UPDATE UserAccount SET username = %s WHERE username = %s;" (settings_info["newusername"], current_username))
+            mysql.connection.commit()
+
+            # Updates the current username
+            current_username = settings_info["newusername"]
+
+        # # # Returns a new access token for the updated username.
+        ret = {
+            'access_token': create_access_token(identity=current_username),
+            'refresh_token': create_refresh_token(identity=current_username),
+            'username': current_username
+        }
+        return jsonify(ret), 200
+        

@@ -112,5 +112,8 @@ POST requests to the following routes require JSON objects formatted as shown:
     * username: \[username-string\]
     * comment_id: \[comment-id\]
 
-* User following and blocking states (`/userstates/`) requires a JSON object where JSON = 
-    * username: \[user-being-checked\]
+* Sensitive information updating (`/updatesettings/`) requires a JSON object where JSON = 
+    * currentpass: \[current-plaintext-password-string\]
+    * newpass: \[optional-new-plaintext-password-string\]
+    * newusername: \[optional-new-username-string\]
+    * newemail: \[optional-new-email-string\]
