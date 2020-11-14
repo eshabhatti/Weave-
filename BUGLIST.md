@@ -7,6 +7,7 @@
 * Deleting a user's account also does not remove follows, once again allowing people to inflate these numbers.
 * Clicking on an anonymous post's username will take the user to a 404 page.
 * Somewhat minor, but deleting an account will also rewrite the account's anonymous posts as DELETED, which breaks the garuntee of anonymousness that the functionality was supposed to have.
+* Weave icon on the edit profile page takes the user back to the login screen.
 * Users oftentimes have to refresh upon a modification to their profile page, probably caused by how we route back to this page.
 * Following count on the profile page still needs to be implemented or removed.
 * For some reason, the cursor doesn't work in the fourth follow test and thus the test only relies on what the backend says rather than the actual database entity. (Super minor.)

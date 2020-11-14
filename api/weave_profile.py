@@ -263,7 +263,7 @@ def weave_update_settings():
                 return jsonify({'error_message':'This email has already been used.'}), 400
 
             # Updates the email column in the account entity.
-            cursor.execute("UPDATE UserAccount SET email = %s WHERE username = %s;" (settings_info["newemail"], current_username))
+            cursor.execute("UPDATE UserAccount SET email = %s WHERE username = %s;", (settings_info["newemail"], current_username))
             mysql.connection.commit()
         
         # # # Allows the user to change their password.
@@ -283,7 +283,7 @@ def weave_update_settings():
             hash_password = bcrypt.hashpw(settings_info["newpass"].encode('utf8'), bcrypt.gensalt())
 
             # Updates the password column in the account entity.
-            cursor.execute("UPDATE UserAccount SET encrypted_password = %s WHERE username = %s;" (hash_password, current_username))
+            cursor.execute("UPDATE UserAccount SET encrypted_password = %s WHERE username = %s;", (hash_password, current_username))
             mysql.connection.commit()
 
         # # # Allows the user to change their usernames.
@@ -299,7 +299,7 @@ def weave_update_settings():
                 return jsonify({'error_message':'This email has already been used.'}), 400              
 
             # Updates the username column in the account entity.
-            cursor.execute("UPDATE UserAccount SET username = %s WHERE username = %s;" (settings_info["newusername"], current_username))
+            cursor.execute("UPDATE UserAccount SET username = %s WHERE username = %s;", (settings_info["newusername"], current_username))
             mysql.connection.commit()
 
             # Updates the current username
