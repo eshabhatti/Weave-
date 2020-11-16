@@ -42,6 +42,22 @@ def weave_delete_account():
         if (not valid_password):
             return jsonify({'error_message':'Password incorrect.'}), 401
 
+        # Deletes post votes in database by user (does not change total count)
+        post_vote_delete_query = 'DELETE from PostVote WHERE username = %s;'
+        post_vote_delete_values = (user_info["username"],)
+        
+        # Deletes comment votes in database (does not change total counts)
+        comment_vote_delete_query = 'DELETE from CommentVote WHERE username = %s;'
+        comment_vote_delete_values = (user_info["username"],)        
+        
+        # Deletes following data in database
+        user_follow_delete_query = 'DELETE from FollowUser WHERE user_follower = %s OR user_followed = %s;'
+        user_follow_delete_values = (user_info["username"], user_info["username"])  
+
+        # Deletes following data in database
+        topic_follow_delete_query = 'DELETE from FollowTopic WHERE user_follower = %s;'
+        topic_follow_delete_values = (user_info["username"],) 
+        
         # Changes posts made by user to show DELETED as creator
         post_delete_query = 'UPDATE Post SET creator = "DELETED" WHERE creator = %s;'
         post_delete_values = (user_info["username"],)
@@ -54,6 +70,18 @@ def weave_delete_account():
         delete_query = "DELETE FROM UserAccount WHERE username = %s;"
         delete_values = (user_info["username"],)
 
+        cursor.execute(post_vote_delete_query, post_vote_delete_values)
+        mysql.connection.commit()
+  
+        cursor.execute(comment_vote_delete_query, comment_vote_delete_values)
+        mysql.connection.commit()
+
+        cursor.execute(user_follow_delete_query, user_follow_delete_values)
+        mysql.connection.commit()
+
+        cursor.execute(topic_follow_delete_query, topic_follow_delete_values)
+        mysql.connection.commit()
+        
         cursor.execute(post_delete_query, post_delete_values)
         mysql.connection.commit()
 
