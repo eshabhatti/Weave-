@@ -13,8 +13,6 @@ weave_delete = Blueprint('weave_delete', __name__)
 @weave_delete.route("/deleteaccount/", methods=["POST"])
 @jwt_required
 def weave_delete_account():
-    
-    print("HELLO EVERYONE") # DEBUGGING
 
     # The backend has received a POST request.
     if request.method == "POST":
@@ -42,21 +40,45 @@ def weave_delete_account():
         if (not valid_password):
             return jsonify({'error_message':'Password incorrect.'}), 401
 
-        # Deletes post votes in database by user (does not change total count)
-        post_vote_delete_query = 'DELETE from PostVote WHERE username = %s;'
-        post_vote_delete_values = (user_info["username"],)
-        
-        # Deletes comment votes in database (does not change total counts)
-        comment_vote_delete_query = 'DELETE from CommentVote WHERE username = %s;'
-        comment_vote_delete_values = (user_info["username"],)        
-        
-        # Deletes following data in database
-        user_follow_delete_query = 'DELETE from FollowUser WHERE user_follower = %s OR user_followed = %s;'
-        user_follow_delete_values = (user_info["username"], user_info["username"])  
+        # Modifies post scores by removing the user's votes.
+        cursor.execute("SELECT * FROM PostVote WHERE username = %s;", (user_info["username"],))
+        score_reset_list = cursor.fetchall()
+        for row in score_reset_list:
+            if (row["score"] == 1):
+                cursor.execute("UPDATE Post SET upvote_count = upvote_count - 1 WHERE post_id = %s;", (row["post_id"],))
+            elif (row["score"] == -1):
+                cursor.execute("UPDATE Post SET downvote_count = downvote_count - 1 WHERE post_id = %s;", (row["post_id"],))
+            else:
+                return jsonify({'error_message': 'Request Error: Bad Score'}), 400
+            mysql.connection.commit()
 
-        # Deletes following data in database
-        topic_follow_delete_query = 'DELETE from FollowTopic WHERE user_follower = %s;'
-        topic_follow_delete_values = (user_info["username"],) 
+        # Modifies comment scores by removing the user's votes.
+        cursor.execute("SELECT * FROM CommentVote WHERE username = %s;", (user_info["username"],))
+        score_reset_list = cursor.fetchall()
+        for row in score_reset_list:
+            if (row["score"] == 1):
+                cursor.execute("UPDATE PostComment SET upvote_count = upvote_count - 1 WHERE comment_id = %s;", (row["comment_id"],))
+            elif (row["score"] == -1):
+                cursor.execute("UPDATE PostComment SET downvote_count = downvote_count - 1 WHERE comment_id = %s;", (row["comment_id"],))
+            else:
+                return jsonify({'error_message': 'Request Error: Bad Score'}), 400
+            mysql.connection.commit()
+
+        # Modifies the follower_count column for users who have been followed by the deleted user.
+        # Following counts do not need to be modified since they are determined directly be entities in the database.
+        cursor.execute("SELECT * FROM FollowUser WHERE user_follower = %s;", (user_info["username"],))
+        follower_reset_list = cursor.fetchall()
+        for row in follower_reset_list:
+            cursor.execute("UPDATE UserAccount SET follower_count = follower_count - 1 WHERE username = %s;", (row["user_followed"],))
+            mysql.connection.commit()
+
+        # Modifies the follower_count column for topics who have been followed by the deleted user.
+        # Following counts do not need to be modified since they are determined directly be entities in the database.
+        cursor.execute("SELECT * FROM FollowTopic WHERE user_follower = %s;", (user_info["username"],))
+        follower_reset_list = cursor.fetchall()
+        for row in follower_reset_list:
+            cursor.execute("UPDATE Topic SET follower_count = follower_count - 1 WHERE topic_name = %s;", (row["topic_followed"],))
+            mysql.connection.commit()
         
         # Changes posts made by user to show DELETED as creator
         post_delete_query = 'UPDATE Post SET creator = "DELETED" WHERE creator = %s;'
@@ -70,24 +92,10 @@ def weave_delete_account():
         delete_query = "DELETE FROM UserAccount WHERE username = %s;"
         delete_values = (user_info["username"],)
 
-        cursor.execute(post_vote_delete_query, post_vote_delete_values)
-        mysql.connection.commit()
-  
-        cursor.execute(comment_vote_delete_query, comment_vote_delete_values)
-        mysql.connection.commit()
-
-        cursor.execute(user_follow_delete_query, user_follow_delete_values)
-        mysql.connection.commit()
-
-        cursor.execute(topic_follow_delete_query, topic_follow_delete_values)
-        mysql.connection.commit()
-        
+        # Other entities that need to be deleted, including votes and follows, will be deleted by the database cascade.
+        # Initiaizes account removal from the database.
         cursor.execute(post_delete_query, post_delete_values)
-        mysql.connection.commit()
-
         cursor.execute(comment_delete_query, comment_delete_values)
-        mysql.connection.commit()
-        
         cursor.execute(delete_query, delete_values)
         mysql.connection.commit()
 
