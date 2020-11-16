@@ -7,20 +7,20 @@ import "./editprofile.css";
 //module.exports(Login);
 
 export default function EditProfile() {
-  const [username, updateUsername] = useState("");
   const [firstName, updateFirstName] = useState("");
   const [lastName, updateLastName] = useState("");
   const [bio, updateBio] = useState("");
   const [errorMessage, updateErrorMessage] = useState("");
+  const [successMessage, updateSuccessMessage] = useState("");
   const [image, saveImage] = useState(null);
   const [access_token, updateToken] = useState(localStorage.getItem('access_token'));
   window.onload = isLoggedIn(access_token);
 
   const onSubmit = (event) => {
     event.preventDefault();
-    if (isFormValid({ username, firstName, lastName, bio, access_token })) {
+    if (isFormValid({ firstName, lastName, bio, access_token })) {
       const body = {
-        newusername: username,
+        newusername: "",
         firstname: firstName,
         lastname: lastName,
         biocontent: bio,
@@ -44,9 +44,10 @@ export default function EditProfile() {
           updateErrorMessage(data.error_message);
         } else {
           const { access_token, refresh_token } = data;
-		  localStorage.setItem('access_token', access_token);
+          updateSuccessMessage("Profile updated!");
+		      localStorage.setItem('access_token', access_token);
           localStorage.setItem('refresh_token', refresh_token);
-		  updateToken(localStorage.getItem('access_token'));
+		      updateToken(localStorage.getItem('access_token'));
         }
       }).catch(err => {
         console.error(err);
@@ -72,6 +73,7 @@ export default function EditProfile() {
   }
 
   const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;
+  const succObject = successMessage !== "" ? <SuccessBubble message={successMessage} /> : null;
 
   return (
     <div>
@@ -98,21 +100,13 @@ export default function EditProfile() {
         <img src="./img/weave-icon.svg" className="login-icon" alt="" />
         <form className="edit-form">
 
-          <label className="edit-form-label">New Username</label>
-          <input
-            value={username}
-            onChange={e => {
-              updateUsername(e.target.value);
-              updateErrorMessage("");
-            }} className="edit-form-input"
-          />
-
           <label className="edit-form-label">First Name</label>
           <input
             value={firstName}
             onChange={e => {
               updateFirstName(e.target.value);
               updateErrorMessage("");
+              updateSuccessMessage("");
             }}
             className="edit-form-input"
           />
@@ -122,6 +116,7 @@ export default function EditProfile() {
             onChange={e => {
               updateLastName(e.target.value);
               updateErrorMessage("");
+              updateSuccessMessage("");
             }}
             className="edit-form-input"
           />
@@ -132,6 +127,7 @@ export default function EditProfile() {
             onChange={e => {
               updateBio(e.target.value);
               updateErrorMessage("");
+              updateSuccessMessage("");
             }}
             className="bio-form-input"
           />
@@ -151,13 +147,14 @@ export default function EditProfile() {
 
         </form>
         {errObject}
+        {succObject}
         <a href="javascript:history.back()" className="edit-link">go back</a>
       </div>
     </div>
   )
 }
 
-function isFormValid({ username, firstName, lastName, bio, access_token }) {
+function isFormValid({ firstName, lastName, bio, access_token }) {
   if (!access_token) {
     alert("Invalid access token");
     return false;
@@ -171,6 +168,14 @@ function ErrorBubble({ message }) {
       <p className="edit-error-message">{message}</p>
     </div>
   )
+}
+
+function SuccessBubble({ message }) {
+	return (
+		<div className="edit-success-bubble">
+			<p className="edit-error-message">{message}</p>
+		</div>
+	)
 }
 
 function isLoggedIn(access_token) {

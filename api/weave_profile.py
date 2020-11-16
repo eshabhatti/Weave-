@@ -100,7 +100,7 @@ def weave_edit_profile():
         mod_info = request.get_json()
 
         # Checks that the JSON has all elements.
-        if ("newusername" not in mod_info or "firstname" not in mod_info or "lastname" not in mod_info or "biocontent" not in mod_info):
+        if ("firstname" not in mod_info or "lastname" not in mod_info or "biocontent" not in mod_info):
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
         mod_info["username"] = get_jwt_identity()
 
@@ -114,22 +114,6 @@ def weave_edit_profile():
             current_firstname = row["first_name"]
             current_lastname = row["last_name"]
             current_bio = row["user_bio"]
-
-        # The original username should not need to be validated since it is not user input. (?)
-        # If newusername is the same as the old one, then once again no validation needs to be done.
-        # If there is a difference, however, then the new username needs to be checked for proper format.
-        final_username = mod_info["username"]
-        if (mod_info["username"] != mod_info["newusername"] and mod_info["newusername"] != ""):
-            if (re.search("^[A-Za-z0-9_-]{6,20}$", mod_info["newusername"]) == None):
-                return jsonify({'error_message': 'Your new username is invalid.'}), 400
-            final_username = mod_info["newusername"]
-
-        # There also cannot be repeated usernames, which should be checked for before we get a SQL error.
-        username_query = "SELECT username from UserAccount WHERE username = \"" + mod_info["newusername"] + "\";"
-        cursor.execute(username_query)
-        for row in cursor:
-            if (mod_info["username"] != mod_info["newusername"]) and (mod_info["newusername"] == row["username"]):
-                return jsonify({'error_message': 'Your new username has already been taken.'}), 400
 
         # If the name elements of the JSON are not empty strings, they also need to be checked.
         # Only capitals, lowercases, numbers, and spaces should be allow in names. (Maybe single quotes too?)
@@ -158,19 +142,16 @@ def weave_edit_profile():
 
         # # # End validation
         # Updates the database with the new information.
-        mod_query = "UPDATE UserAccount SET username = %s, first_name = %s, last_name = %s, user_bio = %s WHERE username = %s;"
-        mod_values = (final_username, final_firstname, final_lastname, final_biocontent, mod_info["username"])
+        mod_query = "UPDATE UserAccount SET first_name = %s, last_name = %s, user_bio = %s WHERE username = %s;"
+        mod_values = (final_firstname, final_lastname, final_biocontent, mod_info["username"])
         cursor.execute(mod_query, mod_values)
         mysql.connection.commit()
 
-        # Prints new database row for debugging
-        # cursor.execute("SELECT * FROM UserAccount WHERE username = %s;", (mod_info["username"],))
-        # print(cursor.fetchall())
-
+        # Access token refresh isn't really needed anymore but I don't particularly want to change it.
         ret = {
-            'access_token': create_access_token(identity=final_username),
-            'refresh_token': create_refresh_token(identity=final_username),
-            'username': final_username
+            'access_token': create_access_token(identity=mod_info["username"]),
+            'refresh_token': create_refresh_token(identity=mod_info["username"]),
+            'username': mod_info["username"]
         }
         return jsonify(ret), 200
 
