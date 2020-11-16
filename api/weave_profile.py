@@ -255,7 +255,7 @@ def weave_update_settings():
             return jsonify({'error_message':'Password incorrect.'}), 401
 
         # # # Allows the user to change their email.
-        if ("newemail" in settings_info):
+        if ("newemail" in settings_info and settings_info["newemail"] != ""):
 
             # Verifies the new email's format.
             if (re.search("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}$", settings_info["newemail"]) == None):
@@ -273,7 +273,7 @@ def weave_update_settings():
             mysql.connection.commit()
         
         # # # Allows the user to change their password.
-        if ("newpass" in settings_info):
+        if ("newpass" in settings_info and settings_info["newpass"] != ""):
 
             # Verifies the new password's format.
             if (re.search("[A-Z]", settings_info["newpass"]) == None):
@@ -293,7 +293,7 @@ def weave_update_settings():
             mysql.connection.commit()
 
         # # # Allows the user to change their usernames.
-        if ("newusername" in settings_info):
+        if ("newusername" in settings_info and settings_info["newusername"] != ""):
 
             # Verifies the new username's format.
             if (re.search("^[A-Za-z0-9_-]{6,20}$", settings_info["newusername"]) == None):

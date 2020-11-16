@@ -97,7 +97,7 @@
 }
 
 .delete-button {
-  width: 40%;
+  width: 30%;
   height: 32px;
   background: #7448BA;
   border-radius: 12px;
@@ -117,4 +117,13 @@
 
 .delete-button:hover {
   background: #522a92;
+}
+
+.edit-success-bubble {
+  background-color: rgba(0, 255, 0, 0.575);
+  width: 250px;
+  height: 30px;
+  display: block;
+  margin: 0px auto;
+  border-radius: 10px;
 }

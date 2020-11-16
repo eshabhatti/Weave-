@@ -12,7 +12,9 @@ export default function Settings(){
 	const [newPass, updateNewPass] = useState("");
 	const [newUser, updateNewUser] = useState("");
 	const [newEmail, updateNewEmail] = useState("");
-	const [errorMessage, updateErrorMessage] = useState("");
+	const [deleteErrorMessage, updateDeleteErrorMessage] = useState("");
+	const [normalErrorMessage, updateNormalErrorMessage] = useState("");
+	const [successMessage, updateSuccessMessage] = useState("");
 	if (access_token == null) {
 		window.location = '/login';
 	}
@@ -35,13 +37,11 @@ export default function Settings(){
 			  body: JSON.stringify(JSONbody)
     	}).then(response => response.json()).then(data => {
 			
-			// alert("Request sent!")  
+			// Catches errors
 			const errorMessage = data.error_message || data.msg;
       		if (errorMessage) {
-				// alert(errorMessage);
-				updateErrorMessage(data.error_message);
+				updateDeleteErrorMessage(data.error_message);
 			}
-
 			else {
 				
 				// Blacklists the current JWT tokens; mirrors logout.
@@ -84,7 +84,45 @@ export default function Settings(){
 	}
 	// End Delete Account
 
-	const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;
+	// Update settings Function
+	const UpdateSettings = (event) => {
+		
+		event.preventDefault();
+		const JSONbody = {
+			currentpass: currPass,
+			newemail: newEmail,
+			newpass: newPass,
+			newusername: newUser,
+		}
+
+		const endpoint = "http://localhost:5000/editsettings/";
+		fetch(endpoint, {
+      		method: 'POST',
+      		headers: {
+        		'Content-Type': 'application/json',
+        		'Authorization': 'Bearer ' + access_token
+			},
+			body: JSON.stringify(JSONbody)
+		}).then(response => response.json()).then(data => {
+			
+			// Catches errors
+			const errorMessage = data.error_message || data.msg;
+			if (errorMessage) {
+				updateNormalErrorMessage(data.error_message);
+			}
+			else {
+				updateSuccessMessage("Settings updated!");
+			}
+
+		}).catch(err => {
+			console.error(err);
+		});
+		// End Update Settings Function
+	}
+
+	const deleteErrObject = deleteErrorMessage !== "" ? <ErrorBubble message={deleteErrorMessage} /> : null;
+	const normalErrObject = normalErrorMessage !== "" ? <ErrorBubble message={normalErrorMessage} /> : null;
+	const succObject = successMessage !== "" ? <SuccessBubble message={successMessage} /> : null;
 
 	return (
 	    <div>
@@ -101,8 +139,11 @@ export default function Settings(){
 								value={currPass}
 								onChange={e => {
 									updateCurrPass(e.target.value);
-									updateErrorMessage("");
+									updateDeleteErrorMessage("");
+									updateNormalErrorMessage("");
+									updateSuccessMessage("");
 								}}
+								type="password"
 								className="settings-input" 
 							/>
 
@@ -113,8 +154,11 @@ export default function Settings(){
 								value={newPass}
 								onChange={e => {
 									updateNewPass(e.target.value);
-									updateErrorMessage("");
+									updateDeleteErrorMessage("");
+									updateNormalErrorMessage("");
+									updateSuccessMessage("");
 								}}
+								type="password"
 								className="settings-input" 
 							/>
 
@@ -123,7 +167,9 @@ export default function Settings(){
 								value={newUser}
 								onChange={e => {
 									updateNewUser(e.target.value);
-									updateErrorMessage("");
+									updateDeleteErrorMessage("");
+									updateNormalErrorMessage("");
+									updateSuccessMessage("");
 								}}
 								className="settings-input" 
 							/>
@@ -133,20 +179,24 @@ export default function Settings(){
 								value={newEmail}
 								onChange={e => {
 									updateNewEmail(e.target.value);
-									updateErrorMessage("");
+									updateDeleteErrorMessage("");
+									updateNormalErrorMessage("");
+									updateSuccessMessage("");
 								}}
 								className="settings-input" 
 							/>
 
-							<button className="settings-button">Update Settings</button>
+							<button className="settings-button" onClick={(e) => UpdateSettings(e)}>Update Settings</button>
+							{normalErrObject}
+							{succObject}
 
 							<hr className="settings-divider"/>
 
 							<label className="delete-label">If you are ready to end your time here on Weave, enter your password and then click the button below. THIS ACTION CANNOT BE UNDONE.</label>
 
 							<button className="delete-button" onClick={(e) => DeleteAccount(e)}>Delete My Account</button>
+							{deleteErrObject}
 						</form>
-						{errObject}
 					</div>
 				</div>
 			</div>
@@ -160,4 +210,12 @@ function ErrorBubble({ message }) {
 		<p className="edit-error-message">{message}</p>
 	  </div>
 	)
-  }
+}
+
+function SuccessBubble({ message }) {
+	return (
+		<div className="edit-success-bubble">
+			<p className="edit-error-message">{message}</p>
+		</div>
+	)
+}

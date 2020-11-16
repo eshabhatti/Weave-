@@ -16,7 +16,8 @@
 
 * After successful post creation, the form should refresh to prevent spam and to show successful post creation.
 * After successful comment creation, the post page should refresh to prevent spam and to show successful comment creation.
-* There should be some link on the 404 page that allows the user to return to Weave, especially since using the back button doesn't work.  
+* There should be some link on the 404 page that allows the user to return to Weave, especially since using the back button doesn't work.
+* Edit profile shows no success message upon successful profile edit.   
 * There are a lot of warnings in the NPM compile output. May want to look into some of these.
 * Post text only takes up about 40% of the avaliable space on a post container, making the whole thing look very lopsided. 
 * The posts on most feed pages are centered with the page and not with the non-sidebar white space and this makes me very upset.
