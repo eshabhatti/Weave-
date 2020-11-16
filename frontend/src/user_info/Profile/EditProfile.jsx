@@ -20,7 +20,6 @@ export default function EditProfile() {
     event.preventDefault();
     if (isFormValid({ firstName, lastName, bio, access_token })) {
       const body = {
-        newusername: "",
         firstname: firstName,
         lastname: lastName,
         biocontent: bio,
