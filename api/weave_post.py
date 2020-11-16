@@ -83,7 +83,7 @@ def weave_post_create():
 
         # Insert new text post into the database.
         post_query = "INSERT INTO Post VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-        post_values = (post_id, post_info["topic"], post_info["username"], current_date, post_info["title"], post_info["content"], None, 0, 0, post_info["anon"], 0)
+        post_values = (post_id, post_info["topic"].lower(), post_info["username"], current_date, post_info["title"], post_info["content"], None, 0, 0, post_info["anon"], 0)
         cursor.execute(post_query, post_values)
         mysql.connection.commit()
 
