@@ -37,6 +37,12 @@ def weave_profile_data(username):
         else:
             profile_data["user_pic"] = "http://localhost:5000/profile_picture/" + username
             
+        # Adds following count for profiles and topics
+        cursor.execute("SELECT * FROM FollowUser WHERE user_follower = %s;", (username,))
+        profile_data["following_count"] = cursor.rowcount
+        cursor.execute("SELECT * FROM FollowTopic WHERE user_follower = %s;", (username,))
+        profile_data["topic_count"] = cursor.rowcount
+        
         # Checks if the current user is following the given user.
         follow_query = "SELECT * FROM FollowUser WHERE user_follower = %s AND user_followed = %s;"
         follow_values = (profile_data["username"], username)
