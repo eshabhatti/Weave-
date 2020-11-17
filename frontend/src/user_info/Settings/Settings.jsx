@@ -7,7 +7,6 @@ import './settings.css';
 
 export default function Settings(){
 
-	const access_token = localStorage.getItem('access_token');
 	const [currPass, updateCurrPass] = useState("");
 	const [newPass, updateNewPass] = useState("");
 	const [newUser, updateNewUser] = useState("");
@@ -15,6 +14,7 @@ export default function Settings(){
 	const [deleteErrorMessage, updateDeleteErrorMessage] = useState("");
 	const [normalErrorMessage, updateNormalErrorMessage] = useState("");
 	const [successMessage, updateSuccessMessage] = useState("");
+	const [access_token, updateToken] = useState(localStorage.getItem('access_token'));
 	if (access_token == null) {
 		window.location = '/login';
 	}
@@ -111,6 +111,10 @@ export default function Settings(){
 				updateNormalErrorMessage(data.error_message);
 			}
 			else {
+				const { access_token, refresh_token } = data;
+				localStorage.setItem('access_token', access_token);
+				localStorage.setItem('refresh_token', refresh_token);
+				updateToken(localStorage.getItem('access_token'));
 				updateSuccessMessage("Settings updated!");
 			}
 
