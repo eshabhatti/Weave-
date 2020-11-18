@@ -18,6 +18,23 @@ export default function CommentCreator({
     window.location = "/login"
   }
 
+  useEffect(() => {
+    fetch("http://localhost:5000/protected", {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + access_token
+      }
+    }).then(response => response.json()).then(data => {
+      if (!data.logged_in) {
+        window.location.href = "/login";
+      }
+    }).catch(err => {
+      alert("Err in console");
+      console.error(err);
+    });
+  }, []);
+
   const commentpoint = "http://localhost:5000/createcomment/"
   const onSubmit = (event) => {
     event.preventDefault();
