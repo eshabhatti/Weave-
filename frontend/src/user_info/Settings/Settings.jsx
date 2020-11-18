@@ -190,6 +190,15 @@ export default function Settings(){
 								className="settings-input" 
 							/>
 
+							<hr className="settings-divider"/>
+							<input
+								type="checkbox"
+								className="settings-checkbox"
+							/>
+							<label className="settings-label-header">Activate privacy mode</label>
+							<label className="settings-label">When privacy mode is activated, you will not receieve direct messages from anyone but the users you have followed.</label>
+
+
 							<button className="settings-button" onClick={(e) => UpdateSettings(e)}>Update Settings</button>
 							{normalErrObject}
 							{succObject}
