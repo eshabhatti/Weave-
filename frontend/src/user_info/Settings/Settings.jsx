@@ -93,6 +93,7 @@ export default function Settings(){
 			newemail: newEmail,
 			newpass: newPass,
 			newusername: newUser,
+			privacy: 0,
 		}
 
 		const endpoint = "http://localhost:5000/editsettings/";

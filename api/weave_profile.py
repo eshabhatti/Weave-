@@ -292,6 +292,22 @@ def weave_update_settings():
             # Updates the current username
             current_username = settings_info["newusername"]
 
+        # # # Allows the user to update their privacy settings
+        # This setting condition will likely always be met. Changes will be made based on existing data versus new data.
+        if ("privacy" in settings_info):
+
+            # Checks the old moderation status value.
+            # A value of 0 means that privacy mode is currently off, while a value of 1 means that it is currently on.
+            cursor.execute("SELECT moderation_status FROM UserAccount WHERE username = %s;", (current_username,))
+            current_moderation = cursor.fetchall()[0]["moderation_status"]
+
+            # Checks if this route actually needs to do anything.
+            if (str(current_moderation) != str(settings_info["privacy"])):
+
+                # Updates the database with the new privacy value.
+                cursor.execute("UPDATE UserAccount SET moderation_status = %s WHERE username = %s;", (settings_info["privacy"], current_username))
+                mysql.connection.commit()
+
         # # # Returns a new access token for the updated username.
         ret = {
             'access_token': create_access_token(identity=current_username),
