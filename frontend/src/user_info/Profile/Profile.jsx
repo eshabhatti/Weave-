@@ -14,6 +14,7 @@ export default function Profile() {
   const [userData, setUserData] = useState([]);
   const [contentView, setContentView] = useState(0);
   const [username, updateUsername] = useState(pageUsername);
+  const [refreshFlag, updateRefreshFlag] = useState(true);
   // replace with API call to /secure to validate token
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
@@ -60,7 +61,7 @@ export default function Profile() {
         console.error(err);
       });
     }
-  }, [username]);
+  }, [username, refreshFlag]);
 
   useEffect(() => {
     // TODO - handle errors
@@ -75,14 +76,14 @@ export default function Profile() {
       <NavBar />
       <div className="profile-container">
         <Sidebar />
-        <UserInfo userData={userData} pageUsername={pageUsername} />
+        <UserInfo userData={userData} pageUsername={pageUsername} refresh={() => {updateRefreshFlag(!refreshFlag)}} />
         <UserPosts pageUsername={pageUsername} setContentView={setContentView} contentView={contentView} />
       </div>
     </div>
   );
 }
 
-function UserInfo({ userData, pageUsername }) {
+function UserInfo({ userData, pageUsername, refresh }) {
   const { user_bio, user_pic, follower_count, following_count, topic_count, first_name, last_name, date_joined, username, follow} = userData;
   return (
     <div className="profile-container">
@@ -94,7 +95,7 @@ function UserInfo({ userData, pageUsername }) {
         <p className="profile-bio">{user_bio}</p>
         <h1 className="profile-about-title">Joined</h1>
         <p className="profile-about">{date_joined}</p>
-        <EditProfileButton pageUsername={pageUsername} username={username} follow={follow} />
+        <EditProfileButton pageUsername={pageUsername} username={username} follow={follow} refresh={() => refresh()} />
         <p className="profile-followers">{follower_count} Followers</p>
         <p className="profile-following">{following_count} Following</p>
 		<p className="profile-following">{topic_count} Topics Following</p>
@@ -103,10 +104,10 @@ function UserInfo({ userData, pageUsername }) {
   );
 }
 
-function EditProfileButton({ pageUsername, username, follow }) {
+function EditProfileButton({ pageUsername, username, follow, refresh }) {
   const canUserEditProfile = (username === pageUsername);
   return canUserEditProfile ?
-    <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : <Follow className="profile-follow-button" followType="user" toFollow={pageUsername} initialState={follow} />
+    <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : <Follow className="profile-follow-button" followType="user" toFollow={pageUsername} initialState={follow} refresh={() => {refresh()}} />
     ;
 }
 

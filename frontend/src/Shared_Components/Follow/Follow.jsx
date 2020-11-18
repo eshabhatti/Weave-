@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 
-export default function Follow({ followType, toFollow, initialState, className }) {
+export default function Follow({ followType, toFollow, initialState, className, refresh }) {
   const [followed, setFollowed] = useState(initialState);
 
   const access_token = localStorage.getItem('access_token');
@@ -32,6 +32,7 @@ export default function Follow({ followType, toFollow, initialState, className }
         window.location = "/login"
       }
       const { followState } = data;
+      refresh();
       setFollowed(followState);
     }).catch(err => {
       console.error(err);
