@@ -5,15 +5,68 @@ import re
 weave_message = Blueprint('weave_message', __name__)
 
 
+# # # # Backend code for inserting direct messages into the database.
+# # Expects a MESSAGE request that includes a JSON. Details are in 'api/README.md'.
+# # Returns a JSON with a new set of JWT tokens along with confirmation of the user's identity.
+@weave_message.route("/createmessage/", methods=["MESSAGE"])
+@jwt_required
+def weave_message_create():
+    
+    # The backend has recieved information that needs to go into the database.
+    if request.method == "MESSAGE":
+
+        # Initializes MySQL cursor
+        cursor = mysql.connection.cursor()
+
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
+        message_info = request.get_json()
+        message_info["sender"] = get_jwt_identity()
+        
+        # Checks for all needed JSON elements.
+        if ("sender" not in message_info or "receiver" not in message_info or "content" not in message_info or "message_id" not in message_info):
+            return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+            
+        # Checks for valid content length
+        if (len(message_info["content"]) > 500 or len(message_info["content"]) == 0):
+            return jsonify({'error_message': 'Invalid Message Body.'}), 400
+
+        # Caches the current date and time in the proper format.
+        current_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Creates the new message ID based on the last one.
+        message_id = 1
+        id_query = "SELECT message_id FROM DirectMessage ORDER BY message_id DESC LIMIT 1;"
+        cursor.execute(id_query)
+        for row in cursor:
+            message_id = row["message_id"] + 1
+        
+        # Inserts the new message into the database.
+        message_query = "INSERT INTO DirectMessage VALUES (%s, %s, %s, %s, %s, %s, %s);"
+        message_values = (message_id, message_info["sender"], message_info["receiver"], 0, 0, message_info["content"], current_date)
+        cursor.execute(message_query, message_values)
+        mysql.connection.commit()
+        
+        # Returns a set of refreshed tokens.
+        ret = {
+            'access_token': create_access_token(identity=message_info["sender"]),
+            'refresh_token': create_refresh_token(identity=message_info["sender"]),
+            'username': message_info["sender"]
+        }
+        return jsonify(ret), 200
+
+
+
 # # # # Backend code for displaying a user's direct messages on Weave.
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
-# # Returns a JSON with a list of the Directmessages made by a user within the specified range.
-@weave_message.route("/message", methods=["MESSAGE"])
+# # Returns a JSON with a list of the direct messages made by a user within the specified range.
+@weave_message.route("/messages", methods=["MESSAGE"])
 @jwt_required
-def weave_render_messageList():
+def weave_render_messages():
 
     # The backend has recieved a request to display the user's direct messages.
-    if request.method == "message":
+    if request.method == "MESSAGE":
 
         # Checks for JSON format.
         if (not request.is_json):
@@ -39,10 +92,10 @@ def weave_render_messageList():
 
         # This SQL statement will pull everything the we need from the database for direct messages display.
         # Not only is this thing long and ugly, but it is also insecure and requires the limits to be validated above. B)
-        message_query = "SELECT message_id FROM Directmessage " + \
-            "WHERE message_id IN ( SELECT message_id FROM Directmessage WHERE sender = %s ) " + \
-            "OR message_id FROM Directmessage " + \
-                "WHERE message_id IN ( SELECT message_id FROM Directmessage WHERE receiver = %s ) " + \
+        message_query = "SELECT message_id FROM DirectMessage " + \
+            "WHERE message_id IN ( SELECT message_id FROM DirectMessage WHERE sender = %s ) " + \
+            "OR message_id FROM DirectMessage " + \
+                "WHERE message_id IN ( SELECT message_id FROM DirectMessage WHERE receiver = %s ) " + \
             "ORDER BY date_created DESC " + \
             "LIMIT " + str(message_info["start"]) + ", " + str(message_info["end"]) + ";"
         message_values = (username, username)
@@ -55,10 +108,10 @@ def weave_render_messageList():
         #print(str(message_list)) #debugging
 
         # Returns the total count of direct messages.
-        message_query = "SELECT COUNT(message_id) AS count FROM Directmessage " + \
-            "WHERE message_id IN ( SELECT message_id FROM Directmessage WHERE sender = %s ) " + \
-            "OR message_id FROM Directmessage " + \
-                "WHERE message_id IN ( SELECT message_id FROM Directmessage WHERE receiver = %s ) " + \
+        message_query = "SELECT COUNT(message_id) AS count FROM DirectMessage " + \
+            "WHERE message_id IN ( SELECT message_id FROM DirectMessage WHERE sender = %s ) " + \
+            "OR message_id FROM DirectMessage " + \
+                "WHERE message_id IN ( SELECT message_id FROM DirectMessage WHERE receiver = %s ) " + \
             "ORDER BY date_created DESC;"
         message_values = (username, username)
         cursor.execute(message_query, message_values)
