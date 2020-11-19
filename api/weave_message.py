@@ -41,9 +41,11 @@ def weave_render_messageList():
         # Not only is this thing long and ugly, but it is also insecure and requires the limits to be validated above. B)
         message_query = "SELECT message_id FROM Directmessage " + \
             "WHERE message_id IN ( SELECT message_id FROM Directmessage WHERE sender = %s ) " + \
+            "OR message_id FROM Directmessage " + \
+                "WHERE message_id IN ( SELECT message_id FROM Directmessage WHERE receiver = %s ) " + \
             "ORDER BY date_created DESC " + \
             "LIMIT " + str(message_info["start"]) + ", " + str(message_info["end"]) + ";"
-        message_values = (username)
+        message_values = (username, username)
         cursor.execute(message_query, message_values)
 
         # Adds the direct messages to a list that will then be returned.
@@ -55,8 +57,10 @@ def weave_render_messageList():
         # Returns the total count of direct messages.
         message_query = "SELECT COUNT(message_id) AS count FROM Directmessage " + \
             "WHERE message_id IN ( SELECT message_id FROM Directmessage WHERE sender = %s ) " + \
+            "OR message_id FROM Directmessage " + \
+                "WHERE message_id IN ( SELECT message_id FROM Directmessage WHERE receiver = %s ) " + \
             "ORDER BY date_created DESC;"
-        message_values = (username)
+        message_values = (username, username)
         cursor.execute(message_query, message_values)
         count = cursor.fetchall()[0]["count"]
 
