@@ -117,3 +117,8 @@ POST requests to the following routes require JSON objects formatted as shown:
     * newpass: \[optional-new-plaintext-password-string\]
     * newusername: \[optional-new-username-string\]
     * newemail: \[optional-new-email-string\]
+    * privacy: \[optional-privacy-mode-flag\]
+
+* Direct message creation (`/createmessage/`) requires a JSON object where JSON = 
+    * receiver: \[username-of-receiver\]
+    * content: \[content-of-message\]

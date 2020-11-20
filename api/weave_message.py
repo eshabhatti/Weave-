@@ -27,8 +27,29 @@ def weave_message_create():
         # Checks for all needed JSON elements.
         if ("sender" not in message_info or "receiver" not in message_info or "content" not in message_info):
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+
+        # Grabs the privacy mode flag (moderation_status) for the receiver.
+        cursor.execute("SELECT moderation_status FROM UserAccount WHERE username = %s;", (message_info["receiver"],))
+        message_info["privacy"] = cursor.fetchall()[0]["moderation_status"]
+        
+        # If the user has privacy mode on, the message can still be sent if the receiver is following the sender.
+        if (message_info["privacy"] == 1):
+
+            # Grabs the users who the receiver is following.
+            cursor.execute("SELECT user_followed FROM UserFollow WHERE user_follower = %s;", (message_info["receiver"],))
             
-        # Checks for valid content length
+            # Checks the list of users who the receiver is following for the sender
+            privacy_bypass = False
+            for row in cursor:
+                if (row["user_followed"] == message_info["sender"]):
+                    privacy_bypass = True
+                    break
+                
+            if (privacy_bypass == False):
+                return jsonify({'error_message':'Message cannot be sent'}), 403
+            
+        # Checks for valid content length.
+        # Direct messages cannot be more than 500 characters and cannot be empty.
         if (len(message_info["content"]) > 500 or len(message_info["content"]) == 0):
             return jsonify({'error_message': 'Invalid message body'}), 400
 
@@ -47,13 +68,16 @@ def weave_message_create():
         cursor.execute(message_query, message_values)
         mysql.connection.commit()
         
+        # Returns a success message
+        return "message sent"
+
         # Returns a set of refreshed tokens. (May be able to remove later.)
-        ret = {
-            'access_token': create_access_token(identity=message_info["sender"]),
-            'refresh_token': create_refresh_token(identity=message_info["sender"]),
-            'username': message_info["sender"]
-        }
-        return jsonify(ret), 200
+        # ret = {
+        #     'access_token': create_access_token(identity=message_info["sender"]),
+        #     'refresh_token': create_refresh_token(identity=message_info["sender"]),
+        #     'username': message_info["sender"]
+        # }
+        # return jsonify(ret), 200
 
 
 
