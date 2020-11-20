@@ -71,15 +71,51 @@ def weave_message_create():
         # Returns a success message
         return "message sent"
 
-        # Returns a set of refreshed tokens. (May be able to remove later.)
-        # ret = {
-        #     'access_token': create_access_token(identity=message_info["sender"]),
-        #     'refresh_token': create_refresh_token(identity=message_info["sender"]),
-        #     'username': message_info["sender"]
-        # }
-        # return jsonify(ret), 200
 
+# # # # Backend code for deleting a user's direct message on Weave.
+# # Direct messages will be deleted per user rather than completely, at least for single calls to the route.
+# # Expects a POST request with a JSON. Details will be in 'api/README.md'.
+# # Returns a success message upon route completion. 
+@weave_message.route("/deletemessage/", methods=["POST"])
+@jwt_required
+def weave_delete_message():
 
+    # The backend has recieved a request to delete the user's direct messages.
+    if request.method == "POST":
+
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
+        delete_info = request.get_json()
+        delete_info["username"] = get_jwt_identity()
+
+        # Checks for all needed JSON elements.
+        if ("message_id" not in delete_info or "username" not in delete_info):
+            return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+
+        # Allows us to check if the user who wants to delete the message is the sender or receiver.
+        # This could maybe be done earlier and passed into the route by the frontend, but this will also work.
+        cursor.execute("SELECT sender, receiver FROM DirectMessage WHERE message_id = %s;", (delete_info["message_id"],))
+        message_info = cursor.fetchall()[0]
+        
+        # If the user is the sender of the message, we update the sender_status attribute.
+        if (message_info["sender"] == delete_info["username"]):
+            cursor.execute("UPDATE DirectMessage SET sender_status = 0 WHERE sender = %s;", (delete_info["username"],))
+            mysql.connection.commit()
+            return "sender message deleted"
+
+        # If the user is the receiver of the message, we update the receiver_status attribute.
+        if (message_info["receiver"] == delete_info["username"]):
+            cursor.execute("UPDATE DirectMessage SET receiver_status = 0 WHERE receiver = %s;", (delete_info["username"],))
+            mysql.connection.commit()
+            return "receiver message deleted"
+
+        # This should never happen. (Even if the message does not exist, the server will likely crash earlier on.)
+        return jsonify({'error_message': 'Could not delete message'}), 400
+        
 
 # # # # Backend code for displaying a user's direct messages on Weave.
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
