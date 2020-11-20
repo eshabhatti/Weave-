@@ -52,6 +52,15 @@ def weave_profile_data(username):
         else:
             profile_data["follow"] = 0
             
+        # Checks if the current user is blocking the given user
+        block_query = "SELECT * FROM UserBlock WHERE user_blocker = %s AND user_blocked = %s;"
+        block_values = (profile_data["username"], username)
+        cursor.execute(block_query, block_values)
+        if (cursor.rowcount > 0):
+            profile_data["block"] = 1
+        else:
+            profile_data["block"] = 0   
+        
         return profile_data
 
 # # # # Backend code for editing user profile pictures on Weave.

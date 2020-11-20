@@ -7,6 +7,7 @@ import NavBar from '../../Shared_Components/NavBar';
 import Sidebar from '../../Shared_Components/Sidebar/Sidebar';
 import Feed from "../../Shared_Components/Feed/Feed";
 import Follow from "../../Shared_Components/Follow/Follow";
+import Block from "../../Shared_Components/Block/Block";
 
 export default function Profile() {
   const { username: pageUsername } = useParams();
@@ -84,7 +85,7 @@ export default function Profile() {
 }
 
 function UserInfo({ userData, pageUsername, refresh }) {
-  const { user_bio, user_pic, follower_count, following_count, topic_count, first_name, last_name, date_joined, username, follow} = userData;
+  const { user_bio, user_pic, follower_count, following_count, topic_count, first_name, last_name, date_joined, username, follow, block} = userData;
   return (
     <div className="profile-container">
       <div className="profile-info">
@@ -95,7 +96,7 @@ function UserInfo({ userData, pageUsername, refresh }) {
         <p className="profile-bio">{user_bio}</p>
         <h1 className="profile-about-title">Joined</h1>
         <p className="profile-about">{date_joined}</p>
-        <EditProfileButton pageUsername={pageUsername} username={username} follow={follow} refresh={() => refresh()} />
+        <EditProfileButton pageUsername={pageUsername} username={username} follow={follow} block={block} refresh={() => refresh()} />
         <p className="profile-followers">{follower_count} Followers</p>
         <p className="profile-following">{following_count} Following</p>
 		<p className="profile-following">{topic_count} Topics Following</p>
@@ -104,10 +105,10 @@ function UserInfo({ userData, pageUsername, refresh }) {
   );
 }
 
-function EditProfileButton({ pageUsername, username, follow, refresh }) {
+function EditProfileButton({ pageUsername, username, follow, block, refresh }) {
   const canUserEditProfile = (username === pageUsername);
   return canUserEditProfile ?
-    <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : <Follow className="profile-follow-button" followType="user" toFollow={pageUsername} initialState={follow} refresh={() => {refresh()}} />
+    <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : <div> <Follow className="profile-follow-button" followType="user" toFollow={pageUsername} initialState={follow} refresh={() => {refresh()}} /><Block className="profile-follow-button" toBlock={pageUsername} initialState={block} refresh={() => {refresh()}} /></div>
     ;
 }
 
