@@ -11,10 +11,13 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(0)
   const [perPage] = useState(5);
-  const access_token = localStorage.getItem('access_token');
-  if (access_token == null) {
-    window.location = "/login"
+  let access_token = localStorage.getItem('access_token');
+  if (!access_token) {
+    access_token = "";
   }
+  // if (access_token == null) {
+  //   window.location = "/login"
+  // }
 
   useEffect(() => {
     const endpoint = "http://localhost:5000/" + route

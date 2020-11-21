@@ -16,13 +16,16 @@ export default function Profile() {
   const [username, updateUsername] = useState(pageUsername);
   const [refreshFlag, updateRefreshFlag] = useState(true);
   // replace with API call to /secure to validate token
-  const access_token = localStorage.getItem('access_token');
-  if (access_token == null) {
-    window.location = '/login';
+  let access_token = localStorage.getItem('access_token');
+  if (!access_token) {
+    access_token = "";
   }
+  // if (access_token == null) {
+  //   window.location = '/login';
+  // }
 
   useEffect(() => {
-    if (!username) {
+    if (!username && access_token !== "") {
       fetch('http://localhost:5000/protected', {
         method: 'GET',
         headers: {
@@ -53,9 +56,10 @@ export default function Profile() {
         if (data.error_message) {
           window.location = "/404";
         }
-        if (data.msg) {
-          window.location = "/login";
-        }
+        // if (data.msg) {
+        //   window.location = "/login";
+        // }
+        console.log(data);
         setUserData(data);
       }).catch(err => {
         console.error(err);

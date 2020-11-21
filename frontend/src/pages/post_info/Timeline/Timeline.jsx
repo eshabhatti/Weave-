@@ -7,9 +7,9 @@ import './timeline.css';
 
 export default function TimelinePosts() {
   
-  const access_token = localStorage.getItem('access_token');
-  if (access_token == null) {
-    window.location = "/login"
+  let access_token = localStorage.getItem('access_token');
+  if (!access_token) {
+    access_token = "";
   }
 
   return (

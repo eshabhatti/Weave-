@@ -15,9 +15,9 @@ export default function Post({
   const [votes, setVotes] = useState(0);
 
 
-  const access_token = localStorage.getItem('access_token');
-  if (access_token == null) {
-    window.location = "/login"
+  let access_token = localStorage.getItem('access_token');
+  if (!access_token) {
+    access_token = "";
   }
 
   const endpoint = "http://localhost:5000/post/" + postId;

@@ -13,9 +13,9 @@ export default function TopicPosts() {
   const {topic_name: topic } = useParams();
   const [postData, setPostData] = useState([]);
   const [topicData, setTopicData] = useState([]);
-  const access_token = localStorage.getItem('access_token');
-  if (access_token == null) {
-    window.location = "/login"
+  let access_token = localStorage.getItem('access_token');
+  if (!access_token) {
+    access_token = "";
   }
 
 	useEffect(() => {
