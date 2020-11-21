@@ -151,7 +151,9 @@ def weave_render_messages():
 
         # This SQL statement will pull everything the we need from the database for direct messages display.
         # Not only is this thing long and ugly, but it is also insecure and requires the limits to be validated above. B)
-        message_query = "SELECT message_id FROM DirectMessage WHERE sender = %s OR receiver = %s" + \
+        message_query = "SELECT message_id FROM DirectMessage " + \
+            "WHERE (sender = %s AND NOT sender_status = 0) " +\ 
+                "OR (receiver = %s AND NOT receiver_status = 0) " + \
             "ORDER BY date_created DESC " + \
             "LIMIT " + str(message_info["start"]) + ", " + str(message_info["end"]) + ";"
         message_values = (username, username)
