@@ -51,9 +51,12 @@ export default function Profile() {
       }).then(response => response.json()).then(data => {
         //TODO- check what data.msg does
         const errorMessage = data.error_message || data.msg;
-        if (data.error_message) {
+        if (data.error_message == "User does not exist") {
           window.location = "/404";
         }
+		if (data.error_message == "Blocked from content"){
+	      window.location = "/blocked";
+		}
         if (data.msg) {
           window.location = "/login";
         }

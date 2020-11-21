@@ -32,6 +32,14 @@ def weave_profile_data(username):
         # Returns each needed item in one JSON object
         profile_data = (cursor.fetchall())[0]
         profile_data["username"] = get_jwt_identity()
+        
+        # Checks if selected user has blocked the requesting user
+        block_query = "SELECT * FROM UserBlock WHERE user_blocker = %s AND user_blocked = %s;"
+        block_values = (username, profile_data["username"])
+        cursor.execute(block_query, block_values)
+        if (cursor.rowcount > 0):
+            return jsonify({'error_message': 'Blocked from content'}), 403
+        
         if (profile_data["user_pic"] == None):
             profile_data["user_pic"] = None
         else:
