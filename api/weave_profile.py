@@ -32,6 +32,14 @@ def weave_profile_data(username):
         # Returns each needed item in one JSON object
         profile_data = (cursor.fetchall())[0]
         profile_data["username"] = get_jwt_identity()
+        
+        # Checks if selected user has blocked the requesting user
+        block_query = "SELECT * FROM UserBlock WHERE user_blocker = %s AND user_blocked = %s;"
+        block_values = (username, profile_data["username"])
+        cursor.execute(block_query, block_values)
+        if (cursor.rowcount > 0):
+            return jsonify({'error_message': 'Blocked from content'}), 403
+        
         if (profile_data["user_pic"] == None):
             profile_data["user_pic"] = None
         else:
@@ -52,6 +60,15 @@ def weave_profile_data(username):
         else:
             profile_data["follow"] = 0
             
+        # Checks if the current user is blocking the given user
+        block_query = "SELECT * FROM UserBlock WHERE user_blocker = %s AND user_blocked = %s;"
+        block_values = (profile_data["username"], username)
+        cursor.execute(block_query, block_values)
+        if (cursor.rowcount > 0):
+            profile_data["block"] = 1
+        else:
+            profile_data["block"] = 0   
+        
         return profile_data
 
 # # # # Backend code for editing user profile pictures on Weave.
@@ -291,6 +308,22 @@ def weave_update_settings():
 
             # Updates the current username
             current_username = settings_info["newusername"]
+
+        # # # Allows the user to update their privacy settings
+        # This setting condition will likely always be met. Changes will be made based on existing data versus new data.
+        if ("privacy" in settings_info):
+
+            # Checks the old moderation status value.
+            # A value of 0 means that privacy mode is currently off, while a value of 1 means that it is currently on.
+            cursor.execute("SELECT moderation_status FROM UserAccount WHERE username = %s;", (current_username,))
+            current_moderation = cursor.fetchall()[0]["moderation_status"]
+
+            # Checks if this route actually needs to do anything.
+            if (str(current_moderation) != str(settings_info["privacy"])):
+
+                # Updates the database with the new privacy value.
+                cursor.execute("UPDATE UserAccount SET moderation_status = %s WHERE username = %s;", (settings_info["privacy"], current_username))
+                mysql.connection.commit()
 
         # # # Returns a new access token for the updated username.
         ret = {

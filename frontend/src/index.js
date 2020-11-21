@@ -9,10 +9,11 @@ import {
 
 import Login from "./pages/auth/Login/Login";
 import Register from "./pages/auth/Register/Register";
-import Profile from "./user_info/Profile/Profile"
-import EditProfile from "./user_info/Profile/EditProfile"
-import NotFound from "./error_pages/NotFound"
-import CreatePost from "./pages/post_info/CreatePost/CreatePost"
+import Profile from "./user_info/Profile/Profile";
+import EditProfile from "./user_info/Profile/EditProfile";
+import NotFound from "./error_pages/NotFound";
+import Blocked from "./error_pages/Blocked";
+import CreatePost from "./pages/post_info/CreatePost/CreatePost";
 import SavedPosts from './user_info/SavedPosts/SavedPosts';
 import PostPage from './pages/post_info/PostPage/PostPage';
 import TopicPage from './pages/post_info/Topics/TopicPage';
@@ -64,6 +65,9 @@ function AppRouter() {
         <Route path="/topic/:topic_name">
           <TopicPage />
         </Route>
+		<Route path="/blocked">
+		  <Blocked />
+		</Route>
         <Route path="/">
           <NotFound />
         </Route>

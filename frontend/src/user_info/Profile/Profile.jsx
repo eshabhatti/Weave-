@@ -7,6 +7,7 @@ import NavBar from '../../Shared_Components/NavBar';
 import Sidebar from '../../Shared_Components/Sidebar/Sidebar';
 import Feed from "../../Shared_Components/Feed/Feed";
 import Follow from "../../Shared_Components/Follow/Follow";
+import Block from "../../Shared_Components/Block/Block";
 
 export default function Profile() {
   const { username: pageUsername } = useParams();
@@ -34,7 +35,7 @@ export default function Profile() {
         },
       }).then(response => response.json()).then(data => {
         // updateUsername(data.logged_in);
-        window.location.href = "/profile/"+data.logged_in;
+        window.location.href = "/profile/" + data.logged_in;
       }).catch(err => {
         console.error(err);
       });
@@ -53,13 +54,15 @@ export default function Profile() {
       }).then(response => response.json()).then(data => {
         //TODO- check what data.msg does
         const errorMessage = data.error_message || data.msg;
-        if (data.error_message) {
+        if (data.error_message == "User does not exist") {
           window.location = "/404";
         }
-        // if (data.msg) {
-        //   window.location = "/login";
-        // }
-        console.log(data);
+        if (data.error_message == "Blocked from content") {
+          window.location = "/blocked";
+        }
+        if (data.msg) {
+          window.location = "/login";
+        }
         setUserData(data);
       }).catch(err => {
         console.error(err);
@@ -80,7 +83,7 @@ export default function Profile() {
       <NavBar />
       <div className="profile-container">
         <Sidebar />
-        <UserInfo userData={userData} pageUsername={pageUsername} refresh={() => {updateRefreshFlag(!refreshFlag)}} />
+        <UserInfo userData={userData} pageUsername={pageUsername} refresh={() => { updateRefreshFlag(!refreshFlag) }} />
         <UserPosts pageUsername={pageUsername} setContentView={setContentView} contentView={contentView} />
       </div>
     </div>
@@ -88,7 +91,7 @@ export default function Profile() {
 }
 
 function UserInfo({ userData, pageUsername, refresh }) {
-  const { user_bio, user_pic, follower_count, following_count, topic_count, first_name, last_name, date_joined, username, follow} = userData;
+  const { user_bio, user_pic, follower_count, following_count, topic_count, first_name, last_name, date_joined, username, follow, block } = userData;
   return (
     <div className="profile-container">
       <div className="profile-info">
@@ -99,19 +102,19 @@ function UserInfo({ userData, pageUsername, refresh }) {
         <p className="profile-bio">{user_bio}</p>
         <h1 className="profile-about-title">Joined</h1>
         <p className="profile-about">{date_joined}</p>
-        <EditProfileButton pageUsername={pageUsername} username={username} follow={follow} refresh={() => refresh()} />
+        <EditProfileButton pageUsername={pageUsername} username={username} follow={follow} block={block} refresh={() => refresh()} />
         <p className="profile-followers">{follower_count} Followers</p>
         <p className="profile-following">{following_count} Following</p>
-		<p className="profile-following">{topic_count} Topics Following</p>
+        <p className="profile-following">{topic_count} Topics Following</p>
       </div>
     </div>
   );
 }
 
-function EditProfileButton({ pageUsername, username, follow, refresh }) {
+function EditProfileButton({ pageUsername, username, follow, block, refresh }) {
   const canUserEditProfile = (username === pageUsername);
   return canUserEditProfile ?
-    <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : <Follow className="profile-follow-button" followType="user" toFollow={pageUsername} initialState={follow} refresh={() => {refresh()}} />
+    <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : <div> <Follow className="profile-follow-button" followType="user" toFollow={pageUsername} initialState={follow} refresh={() => { refresh() }} /><Block className="profile-follow-button" toBlock={pageUsername} initialState={block} refresh={() => { refresh() }} /></div>
     ;
 }
 

@@ -170,6 +170,13 @@ def weave_post_data(post_id):
         post_info["username"] = get_jwt_identity()
         if (post_info["pic_path"] is not None):
             post_info["pic_path"] = "http://localhost:5000/postimage/"+str(post_id)
+            
+        # Checks if post creator has blocked requester
+        block_query = "SELECT * FROM UserBlock WHERE user_blocker = %s AND user_blocked = %s;"
+        block_values = (post_info["creator"], post_info["username"])
+        cursor.execute(block_query, block_values)
+        if (cursor.rowcount > 0):
+            return jsonify({'error_message': 'Blocked from content'}), 403
 
         # Adds easily computed score to the JSON.
         post_info["score"] = post_info["upvote_count"] - post_info["downvote_count"]

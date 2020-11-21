@@ -44,6 +44,15 @@
   padding-bottom: 5px;
 }
 
+.settings-label-header {
+  display: inline-block;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding-left: 3px;
+  margin-left: 10px;
+}
+
 .settings-input {
   width: 100%;
   margin-bottom: 20px;
@@ -55,6 +64,12 @@
   padding-left: 10px;
   color: grey;
   box-shadow: 2px 4px #d6ced9;
+}
+
+.settings-checkbox {
+  display: inline-block;
+  margin-left: 3px;
+  margin-top: 20px;
 }
 
 .settings-divider {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Linkify from 'react-linkify';
 
 import "./post.css";
 
@@ -197,10 +198,11 @@ function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isS
         <p className="post-component-author"><a href = {"/profile/" + author}> @{author}</a></p>
         <h2 className="post-component-title">{title}</h2>
         <img src={src} className="post-component-image" />
-
-        <p className="post-component-content-text">
-          {text}
-        </p>
+		<Linkify>
+			<p className="post-component-content-text">
+			  {text}
+			</p>
+		</Linkify>
       </div>
     </div>
   )
