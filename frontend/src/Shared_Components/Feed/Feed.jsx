@@ -13,15 +13,11 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
   const [perPage] = useState(5);
   let access_token = localStorage.getItem('access_token');
   if (!access_token) {
-    access_token = "";
+    access_token = "dick";
   }
-  // if (access_token == null) {
-  //   window.location = "/login"
-  // }
 
   useEffect(() => {
     const endpoint = "http://localhost:5000/" + route
-    console.log(endpoint)
     const offset = currentPage * perPage
     const body = {
       start: offset,
@@ -30,6 +26,7 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
       post_id: post_id,
       username: username,
     }
+    console.log(JSON.stringify(body));
     fetch(endpoint, {
       method: "POST",
       headers: {
@@ -71,7 +68,7 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
       setPostData(post_ids);
     }).catch(err => {
       console.log(err);
-      alert("Error in console");
+      // alert("Error in console");
     });
   }, [currentPage, reloadFlag]);
 

@@ -38,9 +38,6 @@ export default function Comment({
         window.location = "/404"
       }
       /* catches jwt errors that don't use the form "error_message:" */
-      if (data.msg) {
-        window.location = "/login"
-      }
       setCommentData(data);
       const { score } = data;
       setVotes(score);
@@ -67,9 +64,9 @@ export default function Comment({
         window.location = "/404"
       }
       /* catches jwt errors that don't use the form "error_message:" */
-      if (data.msg) {
-        window.location = "/login"
-      }
+      // if (data.msg) {
+      //   window.location = "/login"
+      // }
       /* setStateData(data); */
       const { voted } = data;
       setVoted(voted);
@@ -104,9 +101,9 @@ export default function Comment({
       //    window.location = "/404"
       // }
       /* catches jwt errors that don't use the form "error_message:" */
-      if (data.msg) {
-        window.location = "/login"
-      }
+      // if (data.msg) {
+      //   window.location = "/login"
+      // }
       const { score, voteState } = data;
       setVotes(score);
       setVoted(voteState);

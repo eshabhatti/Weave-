@@ -65,7 +65,7 @@ export default function Settings(){
 				}).then(response => response.json()).then(data => {
 					localStorage.clear("access_token");
 					localStorage.clear("refresh_token");
-					window.location = "/login";
+					// window.location = "/login";
 				}).catch(err => {
 					console.error(err);
 					alert("error: check console for details");

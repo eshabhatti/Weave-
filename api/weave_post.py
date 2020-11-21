@@ -145,7 +145,7 @@ def weave_post_upload_image():
 # # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
 # # Returns a dictionary of post information including the topic, date created, title, content, image path, score, and creator.
 @weave_post.route("/post/<post_id>", methods=["GET"])
-@jwt_required
+#@jwt_required
 def weave_post_data(post_id):
 
     # The backend has received a profile GET request.
@@ -267,11 +267,13 @@ def weave_post_image(post_id):
             return {}
 
 
+### MODIFICTION - UNBLOCKED POSTS
+
 # # # # Backend code for pulling a user's posts on Weave
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
 # # Returns a JSON with a list of the posts made by a user within the specified range.
 @weave_post.route("/userposts/", methods=["POST"])
-@jwt_required
+#@jwt_required
 def weave_pull_userposts():
 
     # The backend has received a saved post POST request.

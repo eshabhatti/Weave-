@@ -60,9 +60,6 @@ export default function Profile() {
         if (data.error_message == "Blocked from content") {
           window.location = "/blocked";
         }
-        if (data.msg) {
-          window.location = "/login";
-        }
         setUserData(data);
       }).catch(err => {
         console.error(err);
@@ -113,9 +110,24 @@ function UserInfo({ userData, pageUsername, refresh }) {
 
 function EditProfileButton({ pageUsername, username, follow, block, refresh }) {
   const canUserEditProfile = (username === pageUsername);
-  return canUserEditProfile ?
-    <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button> : <div> <Follow className="profile-follow-button" followType="user" toFollow={pageUsername} initialState={follow} refresh={() => { refresh() }} /><Block className="profile-follow-button" toBlock={pageUsername} initialState={block} refresh={() => { refresh() }} /></div>
-    ;
+  if (canUserEditProfile) {
+    return <button onClick={() => window.location.href = '/editprofile'} type="button" className="profile-follow-button">Edit Profile</button>;
+  }
+  return ProfileActionButtons({
+    pageUsername,
+    follow,
+    refresh,
+    block
+  });
+}
+
+function ProfileActionButtons({ pageUsername, follow, refresh, block }) {
+  return (
+    <div>
+      <Follow className="profile-follow-button" followType="user" toFollow={pageUsername} initialState={follow} refresh={() => { refresh() }} />
+      <Block className="profile-follow-button" toBlock={pageUsername} initialState={block} refresh={() => { refresh() }} />
+    </div>
+  );
 }
 
 function ProfilePicture({ user_pic }) {

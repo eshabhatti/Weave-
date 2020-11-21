@@ -4,9 +4,9 @@ import { useParams } from 'react-router-dom';
 export default function Block({ toBlock, initialState, className, refresh }) {
   const [blocked, setBlocked] = useState(initialState);
 
-  const access_token = localStorage.getItem('access_token');
-  if (access_token == null) {
-    window.location = '/login';
+  let access_token = localStorage.getItem('access_token');
+  if (!access_token) {
+    access_token = "";
   }
   
   useEffect(() => {
@@ -28,9 +28,6 @@ export default function Block({ toBlock, initialState, className, refresh }) {
       },
       body: JSON.stringify(body)
     }).then(response => response.json()).then(data => {
-      if (data.msg) {
-        window.location = "/login"
-      }
       const { blockState } = data;
       refresh();
       setBlocked(blockState);

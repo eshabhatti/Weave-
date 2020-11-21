@@ -15,7 +15,7 @@ weave_profile = Blueprint('weave_profile', __name__)
 # # DOES NOT expect a JSON but DOES expect a unique URL for the profile that needs to be displayed.
 # # Returns a JSON with profile information including the user's real name, date joined, bio, profile picture, and follower count.
 @weave_profile.route("/profile/<username>", methods=["GET"])
-@jwt_required
+#@jwt_required
 def weave_profile_data(username):
 
     # The backend has received a profile GET request.

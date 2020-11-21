@@ -56,9 +56,9 @@ export default function Profile() {
 	    window.location = "/blocked";
 	  }
       /* catches jwt errors that don't use the form "error_message:" */
-      if (data.msg) {
-        window.location = "/login"
-      }
+      // if (data.msg) {
+      //   window.location = "/login"
+      // }
       setPostData(data);
       const { score } = data;
       setVotes(score);
@@ -84,9 +84,9 @@ export default function Profile() {
         window.location = "/404"
       }
       /* catches jwt errors that don't use the form "error_message:" */
-      if (data.msg) {
-        window.location = "/login"
-      }
+      // if (data.msg) {
+      //   window.location = "/login"
+      // }
       /* setStateData(data); */
       const { saved, voted } = data;
       setSaved(saved);
@@ -121,9 +121,9 @@ export default function Profile() {
         window.location = "/404"
       }
       /* catches jwt errors that don't use the form "error_message:" */
-      if (data.msg) {
-        window.location = "/login"
-      }
+      // if (data.msg) {
+      //   window.location = "/login"
+      // }
       const { change } = data;
       setVotes(votes + change);
     }).catch(err => {

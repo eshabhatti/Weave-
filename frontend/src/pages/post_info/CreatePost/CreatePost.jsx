@@ -25,7 +25,7 @@ export default function Timeline() {
 			}
 		}).then(response => response.json()).then(data => {
 			if (!data.logged_in) {
-				window.location.href="/login";
+				// window.location.href="/login";
 			}
 		}).catch(err => {
 			alert("Err in console");
@@ -214,6 +214,6 @@ function SuccessBubble({ message }) {
 
 function isLoggedIn(access_token) {
 	if (access_token == "null") {
-		window.location = "/login"
+		// window.location = "/login"
 	}
 }

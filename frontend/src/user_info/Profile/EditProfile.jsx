@@ -36,9 +36,9 @@ export default function EditProfile() {
         },
         body: JSON.stringify(body)
       }).then(response => response.json()).then(data => {
-        if (data.msg) {
-          window.location = "/login"
-        }
+        // if (data.msg) {
+        //   window.location = "/login"
+        // }
         if (data.error_message) {
           updateErrorMessage(data.error_message);
         } else {

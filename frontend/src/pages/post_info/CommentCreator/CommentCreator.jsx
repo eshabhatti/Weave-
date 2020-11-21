@@ -27,7 +27,7 @@ export default function CommentCreator({
       }
     }).then(response => response.json()).then(data => {
       if (!data.logged_in) {
-        window.location.href = "/login";
+        // window.location.href = "/login";
       }
     }).catch(err => {
       alert("Err in console");
@@ -57,9 +57,9 @@ export default function CommentCreator({
       }
       reload();
       /* catches jwt errors that don't use the form "error_message:" */
-      if (data.msg) {
-        window.location = "/login"
-      }
+      // if (data.msg) {
+      //   window.location = "/login"
+      // }
     }).catch(err => {
       console.error(err);
       alert(err);
