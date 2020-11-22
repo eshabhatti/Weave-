@@ -5,6 +5,7 @@ import re
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
 import json
 
+from weave_block import weave_check_block
 weave_comment = Blueprint('weave_comment', __name__)
 
 
@@ -83,6 +84,21 @@ def weave_comment_data(comment_id):
 
         # Adds identity of requester to the JSON.
         comment_info["username"] = get_jwt_identity()
+
+        # Checks if the comment creator has blocked the active username and returns a fake comment if so.
+        if (weave_check_block(current_username=comment_info["username"], check_username=comment_info["user_parent"]) == True):
+            ret = {
+                "comment_id": comment_info["comment_id"],
+                "post_parent": comment_info["post_parent"],
+                "user_parent": "BLOCKED",
+                "comment_parent": comment_info["comment_parent"],
+                "date_created": comment_info["date_created"],
+                "content": "You have been blocked from viewing this comment.",
+                "score": 0,
+            }
+            return jsonify(ret), 403
+
+        # Calculates score for the comment.
         comment_info["score"] = comment_info["upvote_count"] - comment_info["downvote_count"]
 
         # Returns post info as JSON object.
