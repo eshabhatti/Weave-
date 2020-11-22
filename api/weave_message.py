@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify, current_app, send_file
 from extensions import mysql
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
 import re
+
+from weave_block import weave_check_block
 weave_message = Blueprint('weave_message', __name__)
 
 
@@ -27,6 +29,10 @@ def weave_message_create():
         # Checks for all needed JSON elements.
         if ("sender" not in message_info or "receiver" not in message_info or "content" not in message_info):
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+
+        # Checks to make sure the sender is not blocked by the receiver.
+        if (weave_check_block(current_username=message_info["sender"], check_username=message_info["receiver"]) == True):
+            return jsonify({'error_message': 'Blocked from content'}), 403
 
         # Grabs the privacy mode flag (moderation_status) for the receiver.
         cursor.execute("SELECT moderation_status FROM UserAccount WHERE username = %s;", (message_info["receiver"],))

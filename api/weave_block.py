@@ -17,8 +17,8 @@ def weave_check_block(current_username, check_username):
     cursor = mysql.connection.cursor()
 
     # Debugging statement
-    print("Current username == " + str(current_username))
-    print("Check username == " + str(check_username))
+    # print("Current username == " + str(current_username))
+    # print("Check username == " + str(check_username))
 
     # Function assumes that the usernames are passed in correctly. Validate usernames beforehand.
     # Checks if there exists a UserBlock entity where "check_username" has blocked "current_username".
