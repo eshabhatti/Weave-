@@ -1,10 +1,12 @@
 from datetime import datetime
 from flask import Blueprint, request, jsonify, current_app, send_file
 from extensions import mysql
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, jwt_optional
 from werkzeug.utils import secure_filename
 from os import path
 import re
+
+from weave_block import weave_check_block
 weave_post = Blueprint('weave_post', __name__)
 
 
@@ -145,7 +147,7 @@ def weave_post_upload_image():
 # # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
 # # Returns a dictionary of post information including the topic, date created, title, content, image path, score, and creator.
 @weave_post.route("/post/<post_id>", methods=["GET"])
-#@jwt_required
+@jwt_optional
 def weave_post_data(post_id):
 
     # The backend has received a profile GET request.
@@ -172,10 +174,7 @@ def weave_post_data(post_id):
             post_info["pic_path"] = "http://localhost:5000/postimage/"+str(post_id)
             
         # Checks if post creator has blocked requester
-        block_query = "SELECT * FROM UserBlock WHERE user_blocker = %s AND user_blocked = %s;"
-        block_values = (post_info["creator"], post_info["username"])
-        cursor.execute(block_query, block_values)
-        if (cursor.rowcount > 0):
+        if (weave_check_block(current_username=post_info["username"], check_username=post_info["creator"]) == True):
             return jsonify({'error_message': 'Blocked from content'}), 403
 
         # Adds easily computed score to the JSON.

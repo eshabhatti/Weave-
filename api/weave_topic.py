@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app, send_file
 from extensions import mysql
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, jwt_optional
 import re
 
 weave_topic = Blueprint('weave_topic', __name__)
@@ -8,6 +8,7 @@ weave_topic = Blueprint('weave_topic', __name__)
 @weave_topic.route("/topic/<topic_name>", methods=["GET"])
 @jwt_required
 def weave_topic_data(topic_name):
+    
     # The backend has received a profile GET request.
     if request.method == "GET":
 

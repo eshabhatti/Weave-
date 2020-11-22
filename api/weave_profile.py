@@ -1,12 +1,13 @@
 from flask import Blueprint, request, jsonify, current_app, send_file
 from extensions import mysql
 from os import path
-import re
 from werkzeug.utils import secure_filename
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token, jwt_optional
 import json
 import bcrypt
+import re
 
+from weave_block import weave_check_block
 weave_profile = Blueprint('weave_profile', __name__)
 
 
@@ -15,7 +16,7 @@ weave_profile = Blueprint('weave_profile', __name__)
 # # DOES NOT expect a JSON but DOES expect a unique URL for the profile that needs to be displayed.
 # # Returns a JSON with profile information including the user's real name, date joined, bio, profile picture, and follower count.
 @weave_profile.route("/profile/<username>", methods=["GET"])
-#@jwt_required
+@jwt_optional
 def weave_profile_data(username):
 
     # The backend has received a profile GET request.
@@ -34,10 +35,7 @@ def weave_profile_data(username):
         profile_data["username"] = get_jwt_identity()
         
         # Checks if selected user has blocked the requesting user
-        block_query = "SELECT * FROM UserBlock WHERE user_blocker = %s AND user_blocked = %s;"
-        block_values = (username, profile_data["username"])
-        cursor.execute(block_query, block_values)
-        if (cursor.rowcount > 0):
+        if (weave_check_block(current_username=profile_data["username"], check_username=username) == True):
             return jsonify({'error_message': 'Blocked from content'}), 403
         
         if (profile_data["user_pic"] == None):

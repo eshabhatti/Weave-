@@ -4,8 +4,34 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_tok
 
 weave_block = Blueprint('weave_block', __name__)
 
+
+# # # # Backend code for checking if one user has blocked another.
+# # This is NOT a route and thus cannot be called from the frontend. The backend will call this internally.
+# # The first parameter ("current_username") represents the current active user.
+# # The second parameter ("check_username") represents the user whose information the current user is trying to access.
+# # Returns TRUE if "check_username" has blocked "current_username". Returns FALSE otherwise.
+# # Call this function with the import line "from weave_block import weave_check_block".
+def weave_check_block(current_username, check_username):
+
+    # Initializes MySQL cursor
+    cursor = mysql.connection.cursor()
+
+    # Debugging statement
+    print("Current username == " + str(current_username))
+    print("Check username == " + str(check_username))
+
+    # Function assumes that the usernames are passed in correctly. Validate usernames beforehand.
+    # Checks if there exists a UserBlock entity where "check_username" has blocked "current_username".
+    block_query = "SELECT * FROM UserBlock WHERE user_blocker = %s AND user_blocked = %s;"
+    block_values = (check_username, current_username)
+    cursor.execute(block_query, block_values)
+    if (cursor.rowcount > 0):
+        return True
+    else:
+        return False
+
 # # # # Backend code for inserting blocking user info into the database.
-# # Expects a BLOCK request that includes a JSON. Details are in 'api/README.md'.
+# # Expects a POST request that includes a JSON. Details are in 'api/README.md'.
 # # Returns a JSON with a new set of JWT tokens along with confirmation of the user's identity.
 @weave_block.route("/blockuser/", methods=["POST"])
 @jwt_required
