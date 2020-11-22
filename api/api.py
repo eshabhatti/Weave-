@@ -23,6 +23,7 @@ from weave_delete import weave_delete
 from weave_topic import weave_topic
 from weave_message import weave_message
 from weave_block import weave_block
+from weave_search import weave_search
 
 # Initializes Flask
 app = Flask(__name__)
@@ -75,6 +76,7 @@ with app.app_context():
     app.register_blueprint(weave_topic)
     app.register_blueprint(weave_message)
     app.register_blueprint(weave_block)
+    app.register_blueprint(weave_search)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 

@@ -1,8 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import "./navbar.css";
 
 export default function NavBar() {
+	
+  const [searchString, updateSearchString] = useState("");
+  const [searchType, updateSearchType] = useState("profiles");
+  
+  const search = () => {
+	
+	const body = {
+      search_string: searchString,
+      search_type: searchType,
+    }	
+	
+	fetch('http://localhost:5000/search/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+	  body: JSON.stringify(body)
+    }).then(response => response.json()).then(data => {
+      //TODO- check what data.msg does
+      const errorMessage = data.error_message || data.msg;
+      if (!data.error_message) {
+        if (searchType == "profiles") {
+			window.location = "/profile/" + searchString;
+		}
+		else {
+			window.location = "/topic/" + searchString;
+		}
+      }
+    }).catch(err => {
+      console.error(err);
+    });
+  }
+  
   return (
     <div>
       {/* Bootstrap Stylesheet */}
@@ -22,6 +55,17 @@ export default function NavBar() {
           <Nav.Link>Messages</Nav.Link>
           <Nav.Link>Notifications</Nav.Link>
           <Nav.Link>Help</Nav.Link>
+		  <input 
+			value={searchString}
+			onChange={e => {
+				updateSearchString(e.target.value);
+			}}
+		  />
+		  <select id="type" onChange={e => {updateSearchType(e.target.value)}}>
+			<option value="profiles">profiles</option>
+			<option value="topics">topics</option>
+		  </select>
+		  <button  onClick={(e) => search()}>Search</button>
         </Nav>
       </Navbar>
     </div>
@@ -29,33 +73,3 @@ export default function NavBar() {
   //return CustomNavbar();
 }
 
-function CustomNavbar() {
-  return (
-    <div className="navbar-wrapper">
-      <div className="navbar">
-        <div className="navbar-heading">
-          <img src="./img/weave-icon.svg" className="navbar-icon" />
-          <h3 className="navbar-title">weave</h3>
-        </div>
-        <NavSearch />
-        <NavButtonGroup />
-      </div>
-    </div>
-  )
-}
-
-function NavSearch() {
-  return (
-    <div className="navbar-search">
-
-    </div>
-  )
-}
-
-function NavButtonGroup() {
-  return (
-    <div className="navbar-button-group">
-
-    </div>
-  )
-}
