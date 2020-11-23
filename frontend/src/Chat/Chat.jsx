@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from 'react-router-dom';
 import NavBar from "../Shared_Components/NavBar";
 import Sidebar from '../Shared_Components/Sidebar/Sidebar';
 import ChatDisplay from '../Chat/ChatDisplay'
@@ -8,8 +9,11 @@ import "./chat.css";
 //module.exports(isFormValid);
 //module.exports(Login);
 
-export default function Chat({sender, receiver}) {
+export default function Chat() {
+  const { username: sender } = useParams();
+
   const [message, uploadChatMessage] = useState("")
+  const [receiver, setReceiver] = useState("")
   const [errorMessage, updateErrorMessage] = useState("");
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
@@ -18,7 +22,7 @@ export default function Chat({sender, receiver}) {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    if (isMessageValid({ message: message, updateErrorMessage })) {
+    if (isMessageValid({ message: message, receiver: receiver, updateErrorMessage })) {
       const body = {
         content: message,
         receiver: receiver,
@@ -53,13 +57,21 @@ export default function Chat({sender, receiver}) {
       <div className="chat-container">
         <Sidebar />
         <div className="chat-content">
-          <ChatDisplay />
+          <ChatDisplay sender={sender} />
           <form className="chat-form">
             <label className="chat-form-label">Message</label>
             <input
               value={message}
               onChange={e => {
                 uploadChatMessage(e.target.value);
+                updateErrorMessage("");
+              }} className="chat-form-input"
+            />
+            <label className="chat-form-label">Receiver</label>
+            <input
+              value={receiver}
+              onChange={e => {
+                setReceiver(e.target.value);
                 updateErrorMessage("");
               }} className="chat-form-input"
             />
@@ -72,9 +84,12 @@ export default function Chat({sender, receiver}) {
   )
 }
 
-function isMessageValid({ message, updateErrorMessage }) {
+function isMessageValid({ message, receiver, updateErrorMessage }) {
   if (message === "") {
     updateErrorMessage("Please enter a message.");
+  }
+  else if (receiver === "") {
+    updateErrorMessage("Please enter a receiver.");
   }
   else {
     return true;

@@ -19,7 +19,7 @@ import PostPage from './pages/post_info/PostPage/PostPage';
 import TopicPage from './pages/post_info/Topics/TopicPage';
 import Timeline from './pages/post_info/Timeline/Timeline';
 import Settings from "./user_info/Settings/Settings";
-import Test from "./Chat/Test";
+import Chat from "./Chat/Chat"
 //import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 // import PostPage from "./pages/PostsPage/PostsPage";
 
@@ -51,8 +51,8 @@ function AppRouter() {
         <Route path="/editprofile">
           <EditProfile />
         </Route>
-        <Route path="/test">
-          <Test />
+        <Route path="/chat/:username">
+          <Chat />
         </Route>
 		<Route path="/settings">
 		  <Settings />

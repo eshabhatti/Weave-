@@ -3,7 +3,7 @@ import Message from '../Chat/Message'
 
 import "./display.css";
 
-export default function ChatDisplay({sender, receiver}) {
+export default function ChatDisplay({sender}) {
     const [messageContent, setMessageContent] = useState([]);
     const [messageData, setMessageData] = useState([]);
     const access_token = localStorage.getItem('access_token');
@@ -12,10 +12,11 @@ export default function ChatDisplay({sender, receiver}) {
     }
   
     useEffect(() => {
-      const endpoint = "http://localhost:5000/directmessages"
+      const endpoint = "http://localhost:5000/allmessages/"
       //console.log(endpoint)
       const body = {
-        receiver: receiver
+        start: 0,
+        end: 10
       }
       fetch(endpoint, {
         method: "POST",

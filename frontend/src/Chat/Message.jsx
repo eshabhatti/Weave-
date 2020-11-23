@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./message.css";
 
 export default function Comment({
-  messageId, user1
+  messageId
 }) {
 
   const [errorMessage, updateErrorMessage] = useState("");
@@ -41,19 +41,11 @@ export default function Comment({
 
   return (
     <div>
-        {sender === user1 ? (
-            <div className="message-sender-container">
-                {/* align these better later */}
-                <p className="message-text">{date_created}</p>
-                <p className="message-content">{content}</p>
-            </div>
-        ) : (
-            <div className="message-receiver-container">
-                {/* align these better later */}
-                <p className="message-text">{date_created}</p>
-                <p className="message-content">{content}</p>
-            </div>
-        )}
+        <div className="message-sender-container">
+            {/* align these better later */}
+            <p className="message-text">{date_created}</p>
+            <p className="message-content">{content}</p>
+        </div>
     </div>
   );
 }
