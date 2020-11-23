@@ -242,7 +242,7 @@ def weave_direct_messages():
 # # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
 # # Returns a dictionary of post information including the topic, date created, title, content, image path, score, and creator.
 @weave_message.route("/message/<message_id>", methods=["GET"])
-@jwt_optional
+@jwt_required
 def weave_post_data(message_id):
 
     # The backend has received a profile GET request.
