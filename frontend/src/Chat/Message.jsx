@@ -37,13 +37,14 @@ export default function Comment({
     });
   }, [])
 
-  const { date_created, content, sender} = messageData;
+  const { date_created, content, receiver} = messageData;
 
   return (
     <div>
         <div className="message-sender-container">
             {/* align these better later */}
             <p className="message-text">{date_created}</p>
+            <p className="message-text">{receiver}</p>
             <p className="message-content">{content}</p>
         </div>
     </div>

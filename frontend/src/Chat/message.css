@@ -12,13 +12,7 @@
   
   .message-sender-container {
     display: block;
-    background-color: green;
-    padding-left: 15px;
-  }
-  
-  .message-sender-container {
-    display: block;
-    background-color: blue;
+    background-color: yellow;
     padding-left: 15px;
   }
 
