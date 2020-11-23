@@ -2,9 +2,11 @@ from flask import Blueprint, request, jsonify
 from extensions import mysql
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+from weave_block import weave_check_block
 weave_vote = Blueprint('weave_vote', __name__)
-VOTE_ERROR = -50     # Essentially a constant that handles errors between functions.
 
+VOTE_ERROR = -50        # Constant that handles vote errors between functions.
+BLOCK_ERROR = -100      # Constant that designates a block error.
 
 # # # # Backend function that handles post voting on Weave.
 # # This is not a route itself, but its parameter is the JSON information that is originally passed into weave_voting().
@@ -132,6 +134,13 @@ def weave_comment_vote(vote_info):
 
     # Initializes MySQL cursor
     cursor = mysql.connection.cursor()
+
+    # # # Checks if the voter is blocked by the comment writer and refuses to allow the vote if so.
+    # This should not need to be implemented for posts because they are blocked entirely.
+    cursor.execute("SELECT user_parent FROM PostComment WHERE comment_id = %s;", (vote_info["id"],))
+    comment_creator = cursor.fetchall()[0]["user_parent"]
+    if (weave_check_block(current_username=vote_info["username"], check_username=comment_creator) == True):
+        return BLOCK_ERROR
 
     # # # Handles upvotes to comments.
     if (vote_info["vote"] == 1):
@@ -312,6 +321,8 @@ def weave_voting():
             # Checks for errors and then returns.
             if ret["voteState"] == VOTE_ERROR:
                 return jsonify({'error_message':'Bad vote score'}), 400
+            elif ret["voteState"] == BLOCK_ERROR:
+                return jsonify({'error_message': 'Blocked from content'}), 403
             else:
                 return ret
 
