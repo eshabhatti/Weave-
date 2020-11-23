@@ -182,3 +182,84 @@ def weave_render_messages():
             'pull_list': message_list,
             'rowCount': count
         }
+
+# # # # Backend code for displaying a user's direct messages on Weave to another user.
+# # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
+# # Returns a JSON with a list of the direct messages made by a user within the specified range.
+@weave_message.route("/directmessages/", methods=["POST"])
+@jwt_required
+def weave_direct_messages():
+
+    # The backend has recieved a request to display the user's direct messages.
+    if request.method == "POST":
+
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
+        message_info = request.get_json()
+
+        # Checks for all needed JSON elements.
+        if ("sender" not in message_info or "receiver" not in message_info):
+            return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+
+        # Grabs the identity of the user.
+        username = get_jwt_identity()
+
+        # This SQL statement will pull everything the we need from the database for direct messages display.
+        # Not only is this thing long and ugly, but it is also insecure and requires the limits to be validated above. B)
+        message_query = "SELECT message_id FROM DirectMessage " + \
+            "WHERE ((sender = %s AND NOT sender_status = 0) " + \
+            "AND (receiver = %s AND NOT receiver_status = 0)_ " + \
+            "OR ((sender = %s AND NOT sender_status = 0) " + \
+            "AND (receiver = %s AND NOT receiver_status = 0)) " + \
+            "ORDER BY date_created DESC;"
+        message_values = (username, message_info["receiver"], message_info["receiver"], username)
+        cursor.execute(message_query, message_values)
+
+        # Adds the direct messages to a list that will then be returned.
+        message_list = []
+        for row in cursor:
+            message_list.append(row["message_id"])
+        #print(str(message_list)) #debugging
+
+        # Returns the total count of direct messages.
+        message_query = "SELECT COUNT(message_id) AS count FROM DirectMessage WHERE sender = %s AND receiver = %s;"
+        message_values = (username, message_info["receiver"])
+        cursor.execute(message_query, message_values)
+        count = cursor.fetchall()[0]["count"]
+
+        # Return as list
+        return {
+            'pull_list': message_list,
+            'rowCount': count
+        }
+
+# # # # # Backend code for viewing posts on Weave.
+# # The frontend will need to make another call to /postimage/<post_id> to get any possible other image.
+# # DOES NOT expect a JSON but DOES expect a unique URL for the post that needs to be displayed.
+# # Returns a dictionary of post information including the topic, date created, title, content, image path, score, and creator.
+@weave_message.route("/message/<message_id>", methods=["GET"])
+@jwt_optional
+def weave_post_data(message_id):
+
+    # The backend has received a profile GET request.
+    if request.method == "GET":
+
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+
+        # Checks if post exists in db and grabs relevant data.
+        cursor.execute("SELECT sender, receiver, content, date_created FROM DirectMessage WHERE message_id = %s;", (message_id,))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message': 'Message does not exist'}), 404
+
+        # Checks and updates return items if post is anonymous.
+        message_info = (cursor.fetchall())[0]
+            
+        #blocking code?
+
+        # Returns post info as JSON object.
+        return message_info

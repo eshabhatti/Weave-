@@ -12,8 +12,8 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
   const [pageCount, setPageCount] = useState(0)
   const [perPage] = useState(5);
   let access_token = localStorage.getItem('access_token');
-  if (!access_token) {
-    access_token = "dick";
+  if (access_token == null) {
+    window.location = "/login"
   }
 
   useEffect(() => {
