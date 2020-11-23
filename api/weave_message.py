@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Blueprint, request, jsonify, current_app, send_file
 from extensions import mysql
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
@@ -199,7 +200,7 @@ def weave_direct_messages():
         message_info = request.get_json()
 
         # Checks for all needed JSON elements.
-        if ("sender" not in message_info or "receiver" not in message_info):
+        if ("receiver" not in message_info):
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
 
         # Initializes MySQL cursor.

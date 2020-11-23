@@ -18,17 +18,18 @@ export default function Chat({sender, receiver}) {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    if (isMessageValid({ message, updateErrorMessage })) {
+    if (isMessageValid({ message: message, updateErrorMessage })) {
       const body = {
         content: message,
-        sender: sender,
         receiver: receiver,
       }
+      console.log(body)
       const endpoint = "http://localhost:5000/createmessage/";
       fetch(endpoint, {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token
         },
         body: JSON.stringify(body)
       }).then(response => response.json()).then(data => {
@@ -52,11 +53,9 @@ export default function Chat({sender, receiver}) {
       <div className="chat-container">
         <Sidebar />
         <div className="chat-content">
-
           <ChatDisplay />
-          <img src="./img/weave-icon.svg" className="register-icon" alt="" />
           <form className="chat-form">
-            <label className="chat-form-label">Username</label>
+            <label className="chat-form-label">Message</label>
             <input
               value={message}
               onChange={e => {
@@ -76,10 +75,12 @@ export default function Chat({sender, receiver}) {
 function isMessageValid({ message, updateErrorMessage }) {
   if (message === "") {
     updateErrorMessage("Please enter a message.");
-  } 
+  }
+  else {
+    return true;
+  }
+  return false;
 }
-
-//module.exports(isFormValid);
 
 function ErrorBubble({ message }) {
   return (
