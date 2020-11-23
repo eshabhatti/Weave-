@@ -94,7 +94,6 @@ def weave_comment_data(comment_id):
                 "comment_parent": comment_info["comment_parent"],
                 "date_created": comment_info["date_created"],
                 "content": "You have been blocked from viewing this comment.",
-                "score": 0,
                 "username": comment_info["username"],
             }
             return jsonify(ret), 403
