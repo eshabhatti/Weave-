@@ -213,7 +213,7 @@ def weave_direct_messages():
         # Not only is this thing long and ugly, but it is also insecure and requires the limits to be validated above. B)
         message_query = "SELECT message_id FROM DirectMessage " + \
             "WHERE ((sender = %s AND NOT sender_status = 0) " + \
-            "AND (receiver = %s AND NOT receiver_status = 0)_ " + \
+            "AND (receiver = %s AND NOT receiver_status = 0)) " + \
             "OR ((sender = %s AND NOT sender_status = 0) " + \
             "AND (receiver = %s AND NOT receiver_status = 0)) " + \
             "ORDER BY date_created DESC;"
