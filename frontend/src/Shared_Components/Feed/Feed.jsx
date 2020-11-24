@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Post from "../../Shared_Components/Post/Post";
 import Comment from '../../Shared_Components/Comment/Comment';
+import ProfilePreview from '../../Shared_Components/ProfilePreview/ProfilePreview';
 import ReactPaginate from 'react-paginate';
 
 import './Feed.css';
@@ -75,18 +76,21 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
   useEffect(() => {
     let tester = [];
     if (postData) {
-      postData.forEach((postId) => {
-        console.log(postId)
+      postData.forEach((identifier) => {
+        console.log(identifier)
         if (elementType == "comment") {
-          tester.push(<Comment key={postId} commentId={postId} userName={"schikyal"} />)
+          tester.push(<Comment key={identifier} commentId={identifier} userName={"schikyal"} />)
         }
+		else if (elementType == "profile") {
+		  tester.push(<ProfilePreview username={identifier} />)		
+		}
         else {
-          tester.push(<Post key={postId} postId={postId} userName={"schikyal"} redesign={true} isMinimized={true} />)
+          tester.push(<Post key={identifier} postId={identifier} userName={"schikyal"} redesign={true} isMinimized={true} />)
         }
       });
       setPostsContent(tester);
       if (postsContent.length === 0) {
-        tester = <p>No Posts!</p>;
+        tester = <p>No Content Yet!</p>;
       }
     }
   }, [postData, reloadFlag])

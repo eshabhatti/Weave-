@@ -79,3 +79,48 @@ def weave_block_user():
             ret["blockState"] = 1
             
         return jsonify(ret), 200
+
+# # # # Backend code for getting a list of your blocked users.
+@weave_block.route("/blockedusers/", methods=["POST"])
+@jwt_required
+def weave_block_list(): 
+
+    if request.method == "POST":
+        
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+        
+        # Checks for JSON format.
+        if (not request.is_json):
+            return jsonify({'error_message': 'Request Error: Not JSON.'}), 400
+        block_info = request.get_json()
+        
+        # Checks for all needed elements in the JSON.
+        if ("start" not in block_info or "end" not in block_info):
+            return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+        
+        username = get_jwt_identity()
+        
+        block_query = "SELECT user_blocked FROM UserBlock WHERE user_blocker = %s ORDER BY user_blocked DESC LIMIT " + str(block_info["start"]) + ", " + str(block_info["end"]) + ";"
+        block_values = (username,)
+        cursor.execute(block_query, block_values)
+        
+        block_list = []
+        for row in cursor:
+            block_list.append(row["user_blocked"])
+         
+        block_query = "SELECT COUNT(user_blocked) AS count FROM UserBlock WHERE user_blocker = %s;"
+        block_values = (username,)
+        cursor.execute(block_query, block_values)
+        count = cursor.fetchall()[0]["count"]
+
+        # Return as list
+        return {
+            'pull_list': block_list,
+            'rowCount': count
+        }
+
+
+
+
+
