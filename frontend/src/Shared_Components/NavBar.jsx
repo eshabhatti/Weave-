@@ -7,7 +7,12 @@ export default function NavBar() {
   const [searchString, updateSearchString] = useState("");
   const [searchType, updateSearchType] = useState("profiles");
   
+  const [errorMessage, updateErrorMessage] = useState("");
+  const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;
+  
   const search = () => {
+	
+	updateErrorMessage("");
 	
 	const body = {
       search_string: searchString,
@@ -25,12 +30,15 @@ export default function NavBar() {
       const errorMessage = data.error_message || data.msg;
       if (!data.error_message) {
         if (searchType == "profiles") {
-			window.location = "/profile/" + searchString;
+		  window.location = "/profile/" + searchString;
 		}
 		else {
-			window.location = "/topic/" + searchString;
+		  window.location = "/topic/" + searchString;
 		}
       }
+	  else {
+	    updateErrorMessage("No Results.");
+	  }
     }).catch(err => {
       console.error(err);
     });
@@ -66,6 +74,7 @@ export default function NavBar() {
 			<option value="topics">topics</option>
 		  </select>
 		  <button  onClick={(e) => search()}>Search</button>
+		  {errObject}
         </Nav>
       </Navbar>
     </div>
@@ -73,3 +82,10 @@ export default function NavBar() {
   //return CustomNavbar();
 }
 
+function ErrorBubble({ message }) {
+  return (
+    <div className="comment-error-bubble">
+      <p className="comment-error-message">{message}</p>
+    </div>
+  )
+}
