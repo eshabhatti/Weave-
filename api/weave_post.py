@@ -78,7 +78,7 @@ def weave_post_create():
         # Assigns the Post a new post_id by querying the most recent post and then adding one.
         # The post_id is initialized to 1 because the first query should not return any posts.
         post_id = 1
-        id_query = "SELECT post_id FROM Post ORDER BY post_id DESC LIMIT 1;"
+        id_query = "SELECT post_id from Post ORDER BY post_id DESC LIMIT 1;"
         cursor.execute(id_query)
         for row in cursor:
             post_id = row["post_id"] + 1
@@ -157,7 +157,7 @@ def weave_post_data(post_id):
         cursor = mysql.connection.cursor()
 
         # Checks if post exists in db and grabs relevant data.
-        cursor.execute("SELECT topic_name, date_created, title, content, upvote_count, downvote_count, anon_flag, creator, pic_path FROM Post WHERE post_id = %s;", (post_id,))
+        cursor.execute("SELECT topic_name, date_created, title, content, upvote_count, downvote_count, anon_flag, creator, pic_path from Post WHERE post_id = %s;", (post_id,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'Post does not exist'}), 404
 
@@ -250,7 +250,7 @@ def weave_post_image(post_id):
         cursor = mysql.connection.cursor()
 
         # Checks if post exists in db; may not need to be done if we know the post data route is visited first.
-        cursor.execute("SELECT pic_path FROM POST WHERE post_id = %s;", (post_id,))
+        cursor.execute("SELECT pic_path from Post WHERE post_id = %s;", (post_id,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'Post does not exist'}), 404
 
@@ -305,7 +305,7 @@ def weave_pull_userposts():
 
         # Pulls the user's most recent posts as specified by the range.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
-        pull_query = "SELECT post_id FROM Post WHERE creator = \"" + \
+        pull_query = "SELECT post_id from Post WHERE creator = \"" + \
             pull_info["username"] + "\" AND anon_flag = 0 ORDER BY post_id DESC LIMIT " + \
             str(pull_info["start"]) + ", " + str(pull_info["end"]) + ";"
         cursor.execute(pull_query)
@@ -316,7 +316,7 @@ def weave_pull_userposts():
             pull_list.append(row["post_id"])
 
         # Pulls the count of all the posts that the user made.
-        count_query = "SELECT COUNT(post_id) AS count FROM Post WHERE creator = %s;"
+        count_query = "SELECT COUNT(post_id) AS count from Post WHERE creator = %s;"
         cursor.execute(count_query, (pull_info["username"],))
         count = cursor.fetchall()[0]["count"]
 
@@ -474,7 +474,7 @@ def weave_pull_topicposts():
 
         # Pulls the user's most recent posts as specified by the range.
         # This query has to be written this ugly way because otherwise the limit parameters will be written with surrounding quotes.
-        pull_query = "SELECT post_id FROM Post WHERE topic_name = \"" + \
+        pull_query = "SELECT post_id from Post WHERE topic_name = \"" + \
             pull_info["topic"] + "\" ORDER BY post_id DESC LIMIT " + \
             str(pull_info["start"]) + ", " + str(pull_info["end"]) + ";"
         cursor.execute(pull_query)
@@ -486,7 +486,7 @@ def weave_pull_topicposts():
         print(pull_list)
 
         # Pulls the count of all the posts of the topic.
-        count_query = "SELECT COUNT(post_id) AS count FROM Post WHERE topic_name = %s;"
+        count_query = "SELECT COUNT(post_id) AS count from Post WHERE topic_name = %s;"
         cursor.execute(count_query, (pull_info["topic"],))
         count = cursor.fetchall()[0]["count"]
 

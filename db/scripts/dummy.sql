@@ -84,7 +84,7 @@ VALUES (4, "blah", "Dummy3");
 -- This will allow us to see who posts what and things like that.
 -- Note that AS can be used to simplify names of things in the database for long WHERE statements.
 SELECT D.realname, P.content
-FROM Post AS P, Dummy AS D
+from Post AS P, Dummy AS D
 WHERE P.creator_username = D.username AND D.username = "Dummy1"
 ;
 

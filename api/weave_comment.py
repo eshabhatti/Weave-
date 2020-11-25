@@ -128,7 +128,7 @@ def weave_comment_pull():
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
         
         # Checks if post exists in db and grabs relevant data.
-        cursor.execute("SELECT post_id FROM POST WHERE post_id = %s;", (pull_info["post_id"],))
+        cursor.execute("SELECT post_id from Post WHERE post_id = %s;", (pull_info["post_id"],))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'Post does not exist'}), 404
             

@@ -101,7 +101,7 @@ def follow_test(access_token, valid_post_1, valid_post_2):
     # Follow User Timeline Modifications
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     cursor = db.cursor()
-    cursor.execute("SELECT post_id FROM Post WHERE creator = \"followtest_2\" AND anon_flag = 0;")
+    cursor.execute("SELECT post_id from Post WHERE creator = \"followtest_2\" AND anon_flag = 0;")
     for row in cursor:
         valid_posts.append(str(row[0]))
     cursor.close()
@@ -174,7 +174,7 @@ def follow_test(access_token, valid_post_1, valid_post_2):
     # Follow Topic Timeline Modifications
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     cursor = db.cursor()
-    cursor.execute("SELECT post_id FROM Post WHERE topic_name = \"art\";")
+    cursor.execute("SELECT post_id from Post WHERE topic_name = \"art\";")
     for row in cursor:
         if (str(row[0]) not in valid_posts):
             valid_posts.append(str(row[0]))

@@ -295,7 +295,7 @@ def weave_voting():
             ret["voteState"] = weave_post_vote(vote_info)
 
             # Queries the database for the post's new score.
-            vote_query = "SELECT upvote_count - downvote_count AS score FROM Post WHERE post_id = %s;"
+            vote_query = "SELECT upvote_count - downvote_count AS score from Post WHERE post_id = %s;"
             vote_values = (vote_info["id"],)
             cursor.execute(vote_query, vote_values)
             ret["score"] = cursor.fetchall()[0]["score"]

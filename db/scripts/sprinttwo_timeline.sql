@@ -331,7 +331,7 @@ VALUES (
 -- The easiest thing to do is likely going to be returning an explicit list of post_id attributes for each subquery.
 -- The follow-user subquery, for instance, may look something like this:
 SELECT post_id
-FROM Post AS P, FollowUser AS F
+from Post AS P, FollowUser AS F
 WHERE F.user_followed = P.creator 
     AND P.anon_flag = 0 AND F.user_follower = 'followtest1'
 ;
@@ -344,7 +344,7 @@ WHERE creator = 'followtest1' AND anon_flag = 0
 
 -- And the topic query may look like this:
 SELECT post_id
-FROM Post AS P, FollowTopic AS T
+from Post AS P, FollowTopic AS T
 WHERE T.topic_followed = P.topic_name
     AND T.user_follower = 'followtest1'
 ;
@@ -358,11 +358,11 @@ WHERE post_id IN
       WHERE creator = 'followtest1' AND anon_flag = 0 )
 OR post_id IN 
     ( SELECT post_id
-      FROM Post AS P, FollowTopic AS T
+      from Post AS P, FollowTopic AS T
       WHERE T.topic_followed = P.topic_name AND T.user_follower = 'followtest1' )
 OR post_id IN
     ( SELECT post_id
-	  FROM Post AS P, FollowUser AS F
+	  from Post AS P, FollowUser AS F
       WHERE F.user_followed = P.creator AND P.anon_flag = 0 AND F.user_follower = 'followtest1')
 ORDER BY date_created DESC
 ;
