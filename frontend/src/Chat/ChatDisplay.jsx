@@ -12,7 +12,7 @@ export default function ChatDisplay({sender}) {
     }
   
     useEffect(() => {
-      const endpoint = "http://localhost:5000/allmessages/"
+      const endpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/allmessages/"
       //console.log(endpoint)
       const body = {
         start: 0,

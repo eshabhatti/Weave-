@@ -20,9 +20,9 @@ export default function Comment({
     access_token = "";
   }
 
-  const endpoint = "http://localhost:5000/comment/" + commentId;
-  const votepoint = "http://localhost:5000/vote/"
-  const statepoint = "http://localhost:5000/commentstates/"
+  const endpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/comment/" + commentId;
+  const votepoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/vote/"
+  const statepoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/commentstates/"
 
   {/* renders the post with fetch data and the states of the save and voting buttons */ }
   useEffect(() => {

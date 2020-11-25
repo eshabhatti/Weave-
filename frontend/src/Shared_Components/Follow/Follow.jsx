@@ -14,7 +14,7 @@ export default function Follow({ followType, toFollow, initialState, className, 
 	  
   }, [initialState]);
   
-  const followpoint = "http://localhost:5000/follow" + followType + "/";
+  const followpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/follow" + followType + "/";
   const follow = (value) => {
     const body = {
       following: toFollow,

@@ -19,7 +19,7 @@ export default function Login() {
       /*
        * post to backend
        */
-      const endpoint = "http://localhost:5000/login/";
+      const endpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/login/";
       fetch(endpoint, {
         method: "POST",
         headers: {

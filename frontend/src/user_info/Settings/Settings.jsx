@@ -27,7 +27,7 @@ export default function Settings(){
 			password: currPass,
 		}
 
-		const deletepoint = "http://localhost:5000/deleteaccount/";
+		const deletepoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/deleteaccount/";
 		fetch(deletepoint, {
       		method: 'POST',
       		headers: {
@@ -46,7 +46,7 @@ export default function Settings(){
 				
 				// Blacklists the current JWT tokens; mirrors logout.
 				const access_token = localStorage.getItem('access_token');
-				const logoutEndpoint = "http://localhost:5000/logout";
+				const logoutEndpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/logout";
 				fetch(logoutEndpoint, {
 				method: "DELETE",
 				headers: {
@@ -55,7 +55,7 @@ export default function Settings(){
 				},
 				}).then(response => response.json()).then(data => {
 				const { refresh_token } = data;
-				const endpoint2 = "http://localhost:5000/logout2";
+				const endpoint2 = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/logout2";
 				fetch(endpoint2, {
 					method: "DELETE",
 					headers: {
@@ -96,7 +96,7 @@ export default function Settings(){
 			privacy: 0,
 		}
 
-		const endpoint = "http://localhost:5000/editsettings/";
+		const endpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/editsettings/";
 		fetch(endpoint, {
       		method: 'POST',
       		headers: {

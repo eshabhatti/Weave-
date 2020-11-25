@@ -19,7 +19,7 @@ export default function Sidebar() {
   //delete JWT token and refresh
   const logout = () => {
     const access_token = localStorage.getItem('access_token');
-    const logoutEndpoint = "http://localhost:5000/logout";
+    const logoutEndpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/logout";
     fetch(logoutEndpoint, {
       method: "DELETE",
       headers: {
@@ -28,7 +28,7 @@ export default function Sidebar() {
       },
     }).then(response => response.json()).then(data => {
       const { refresh_token } = data;
-      const endpoint2 = "http://localhost:5000/logout2";
+      const endpoint2 = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/logout2";
       fetch(endpoint2, {
         method: "DELETE",
         headers: {

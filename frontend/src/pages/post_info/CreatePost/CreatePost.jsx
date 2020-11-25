@@ -17,7 +17,7 @@ export default function Timeline() {
 	window.onload = isLoggedIn(access_token);
 
 	useEffect(() => {
-		fetch("http://localhost:5000/protected", {
+		fetch(process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/protected", {
 			method: "GET",
 			headers: {
 				'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export default function Timeline() {
 				anon: isAnon,
 				topic: postTopic
 			}
-			const endpoint = "http://localhost:5000/createpost/";
+			const endpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/createpost/";
 			fetch(endpoint, {
 				method: "POST",
 				headers: {
@@ -62,7 +62,7 @@ export default function Timeline() {
 						const formData = new FormData();
 						const lastImg = image[image.length - 1];
 						formData.append('image', lastImg, lastImg.name);
-						fetch("http://localhost:5000/createimage/", {
+						fetch(process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/createimage/", {
 							method: "POST",
 							headers: {
 								'Authorization': 'Bearer ' + access_token

@@ -19,7 +19,7 @@ export default function CommentCreator({
   }
 
   useEffect(() => {
-    fetch("http://localhost:5000/protected", {
+    fetch(process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/protected", {
       method: "GET",
       headers: {
         'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export default function CommentCreator({
     });
   }, []);
 
-  const commentpoint = "http://localhost:5000/createcomment/"
+  const commentpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/createcomment/"
   const onSubmit = (event) => {
     event.preventDefault();
     const body = {
