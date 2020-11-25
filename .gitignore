@@ -10,7 +10,7 @@
 api/test/__pycache__
 
 # production
-/build
+# /build
 /api/static
 
 # security
