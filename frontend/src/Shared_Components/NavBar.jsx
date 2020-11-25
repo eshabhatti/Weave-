@@ -19,7 +19,7 @@ export default function NavBar() {
       search_type: searchType,
     }	
 	
-	fetch('http://localhost:5000/search/', {
+	fetch((process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + '/search/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

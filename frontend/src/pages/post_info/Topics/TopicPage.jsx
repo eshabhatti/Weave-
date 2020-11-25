@@ -19,7 +19,7 @@ export default function TopicPosts() {
   }
 
 	useEffect(() => {
-		fetch('http://localhost:5000/topic/' + topic, {
+		fetch((process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + '/topic/' + topic, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',

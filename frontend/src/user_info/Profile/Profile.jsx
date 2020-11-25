@@ -27,7 +27,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (!username && access_token !== "") {
-      fetch('http://localhost:5000/protected', {
+      fetch((process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + '/protected', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ export default function Profile() {
   useEffect(() => {
     if (username) {
       console.log(username);
-      fetch('http://localhost:5000/profile/' + username, {
+      fetch((process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + '/profile/' + username, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
