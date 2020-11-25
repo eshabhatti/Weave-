@@ -191,11 +191,11 @@ export default function Settings(){
 								className="settings-input" 
 							/>
 							
-							<hr className="settings-divider"/>
+							<hr className="settings-divider-special"/>
 							
-							<a href="/blockedusers" >Blocked Users</a> <br />
+							<a className="settings-link" href="/blockedusers" >Blocked Users</a> <br />
 							
-							<hr className="settings-divider"/>
+							<hr className="settings-divider-special"/>
 							
 							<input
 								type="checkbox"
