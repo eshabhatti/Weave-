@@ -69,6 +69,7 @@ def weave_profile_data(username):
         
         return profile_data
 
+
 # # # # Backend code for editing user profile pictures on Weave.
 # # Needs to be called in cordination with the /profile/<username> route.
 # # DOES NOT expect a JSON but DOES expect a unique URL for the profile that needs to be displayed.
@@ -330,4 +331,30 @@ def weave_update_settings():
             'username': current_username
         }
         return jsonify(ret), 200
-        
+
+
+# # # # Backend code for returning the user's current privacy status
+# # Expects a GET request. Does not need a JSON.
+# # Returns {privacy: TRUE} if the user has privacy mode on and {privacy: FALSE} if the user does not.
+@weave_profile.route('/checkprivacy/', methods=["GET"])
+@jwt_required
+def weave_check_privacy():
+
+    # The backend has recieved information that needs to go into the database.
+    if request.method == "GET":
+
+        # Pulls the current username
+        current_username = get_jwt_identity()
+
+        # Initializes MySQL cursor.
+        cursor = mysql.connection.cursor()
+
+        # Pulls the moderation status of the correct user.
+        cursor.execute("SELECT moderation_status FROM UserAccount WHERE username = %s;", (current_username,))
+        current_moderation = cursor.fetchall()[0]["moderation_status"]
+
+        # Returns the correct JSON.
+        if (current_moderation == 0):
+            return jsonify({'privacy':'FALSE'}), 200
+        else:
+            return jsonify({'privacy':'TRUE'}), 200
