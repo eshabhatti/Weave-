@@ -28,7 +28,7 @@ export default function Chat() {
         receiver: receiver,
       }
       console.log(body)
-      const endpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/createmessage/";
+      const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/createmessage/";
       fetch(endpoint, {
         method: "POST",
         headers: {

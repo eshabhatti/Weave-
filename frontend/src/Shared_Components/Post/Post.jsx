@@ -21,8 +21,8 @@ export default function Post({
     access_token = "";
   }
 
-  const endpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/post/" + postId;
-  const statepoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/poststates/"
+  const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/post/" + postId;
+  const statepoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/poststates/"
 
   {/* renders the post with fetch data and the states of the save and voting buttons */ }
   useEffect(() => {
@@ -93,7 +93,7 @@ export default function Post({
       id: postId,
       vote: value,
     }
-    fetch(process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/vote/", {
+    fetch((process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/vote/", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ export default function Post({
       post: postId,
       type: value,
     }
-    fetch(process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/save/", {
+    fetch((process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/save/", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',

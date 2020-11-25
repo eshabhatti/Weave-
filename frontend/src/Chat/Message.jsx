@@ -14,7 +14,7 @@ export default function Comment({
     window.location = "/login"
   }
 
-  const endpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/message/" + messageId + "/";
+  const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/message/" + messageId + "/";
 
   {/* renders the post with fetch data and the states of the save and voting buttons */ }
   useEffect(() => {

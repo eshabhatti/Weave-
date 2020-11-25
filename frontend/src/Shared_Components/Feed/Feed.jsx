@@ -18,8 +18,8 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
   }
 
   useEffect(() => {
-    const endpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/" + route
-    const offset = currentPage * perPage
+    const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/" + route;
+    const offset = currentPage * perPage;
     const body = {
       start: offset,
       end: perPage,
@@ -28,6 +28,7 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
       username: username,
     }
     console.log(JSON.stringify(body));
+    console.log(endpoint);
     fetch(endpoint, {
       method: "POST",
       headers: {
@@ -46,7 +47,7 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
   }, [route, reloadFlag]);
 
   useEffect(() => {
-    const endpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/" + route
+    const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/" + route
     console.log(endpoint)
     const offset = currentPage * perPage
     const body = {

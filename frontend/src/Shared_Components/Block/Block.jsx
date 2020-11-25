@@ -14,7 +14,7 @@ export default function Block({ toBlock, initialState, className, refresh }) {
 	  
   }, [initialState]);
   
-  const blockpoint = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000" + "/blockuser/";
+  const blockpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/blockuser/";
   const block = (value) => {
     const body = {
       user_blocked: toBlock,
