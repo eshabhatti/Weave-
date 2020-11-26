@@ -65,6 +65,9 @@ export default function Profile() {
         console.error(err);
       });
     }
+	if (!username && access_token == "") {
+	  window.location = "/login";
+	}
   }, [username, refreshFlag]);
 
   useEffect(() => {
@@ -81,7 +84,7 @@ export default function Profile() {
       <div className="profile-container">
         <Sidebar />
         <UserInfo userData={userData} pageUsername={pageUsername} refresh={() => { updateRefreshFlag(!refreshFlag) }} />
-        <UserPosts pageUsername={pageUsername} setContentView={setContentView} contentView={contentView} />
+        <UserPosts pageUsername={pageUsername} setContentView={setContentView} contentView={contentView} access_token={access_token} />
       </div>
     </div>
   );
@@ -138,13 +141,19 @@ function ProfilePicture({ user_pic }) {
     );
 }
 
-function UserPosts({ pageUsername, setContentView, contentView }) {
+function UserPosts({ pageUsername, setContentView, contentView, access_token }) {
 
   const [route, setRoute] = useState("userposts/")
   const [element, setElem] = useState("post")
 
   useEffect(() => {
+	
     if (contentView == 1) {
+	  
+	  if (access_token == "") {
+	    window.location = "/login"
+	  }
+	
       setRoute("usercomments/")
       setElem("comment")
     }

@@ -30,7 +30,7 @@ export default function Profile() {
 
   let access_token = localStorage.getItem('access_token');
   if (!access_token) {
-    access_token = "";
+    window.location = "/login"
   }
 
   const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/post/" + pagePost;

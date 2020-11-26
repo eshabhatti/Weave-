@@ -272,7 +272,6 @@ def weave_post_image(post_id):
 # # Does not expect a unique URL but does expect a JSON. Details will be in "api/README.md".
 # # Returns a JSON with a list of the posts made by a user within the specified range.
 @weave_post.route("/userposts/", methods=["POST"])
-#@jwt_required
 def weave_pull_userposts():
 
     # The backend has received a saved post POST request.

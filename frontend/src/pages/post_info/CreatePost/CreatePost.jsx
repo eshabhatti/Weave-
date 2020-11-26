@@ -213,7 +213,7 @@ function SuccessBubble({ message }) {
 }
 
 function isLoggedIn(access_token) {
-	if (access_token == "null") {
-		// window.location = "/login"
+	if (access_token == null) {
+		window.location = "/login"
 	}
 }

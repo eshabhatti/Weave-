@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify, current_app
 from extensions import mysql
 import re
-from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token, create_refresh_token
+from flask_jwt_extended import jwt_required, jwt_optional, get_jwt_identity, create_access_token, create_refresh_token
 import json
 
 from weave_block import weave_check_block
@@ -168,7 +168,6 @@ def weave_comment_pull():
 # # Expects a POST request with a JSON. Details are in 'api/README.md'.
 # # Returns a list of comments that are attached to the specified user.
 @weave_comment.route("/usercomments/", methods=["POST"])
-@jwt_required
 def weave_user_comment_pull():
 
     # The backend has received a profile POST request.

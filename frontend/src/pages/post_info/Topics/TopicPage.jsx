@@ -15,7 +15,7 @@ export default function TopicPosts() {
   const [topicData, setTopicData] = useState([]);
   let access_token = localStorage.getItem('access_token');
   if (!access_token) {
-    access_token = "";
+    window.location = "/login";
   }
 
 	useEffect(() => {

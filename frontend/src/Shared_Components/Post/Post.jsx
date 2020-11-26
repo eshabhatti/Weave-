@@ -37,10 +37,6 @@ export default function Post({
         updateErrorMessage(data.error_message);
         window.location = "/404"
       }
-      /* catches jwt errors that don't use the form "error_message:" */
-      // if (data.msg) {
-      //   window.location = "/login"
-      // }
       setPostData(data);
       const { score } = data;
       setVotes(score);
@@ -53,32 +49,29 @@ export default function Post({
       username: userName,
       post_id: postId,
     }
+	
+	if (access_token != ""){
+      fetch(statepoint, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token
+        },
+       body: JSON.stringify(body)
+      }).then(response => response.json()).then(data => {
+        if (data.error_message) {
+          updateErrorMessage(data.error_message);
+          window.location = "/404"
+        }
+        const { saved, voted } = data;
+        setSaved(saved);
+        setVoted(voted);
+      }).catch(err => {
+        console.error(err);
+        alert(err);
 
-    fetch(statepoint, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + access_token
-      },
-      body: JSON.stringify(body)
-    }).then(response => response.json()).then(data => {
-      if (data.error_message) {
-        updateErrorMessage(data.error_message);
-        window.location = "/404"
-      }
-      /* catches jwt errors that don't use the form "error_message:" */
-      // if (data.msg) {
-      //   window.location = "/login"
-      // }
-      /* setStateData(data); */
-      const { saved, voted } = data;
-      setSaved(saved);
-      setVoted(voted);
-    }).catch(err => {
-      console.error(err);
-      alert(err);
-
-    });
+      });
+	}
     setVoted(postdata.score);
   }, [])
 
@@ -86,6 +79,11 @@ export default function Post({
 
   {/* sends the votes to the server and receives the change in score */ }
   const vote = (value) => {
+	  
+	if (access_token == "") {
+	  window.location = "/login"
+	}  
+	  
     setVoted(value);
     const body = {
       username: userName,
@@ -119,6 +117,11 @@ export default function Post({
 
   {/* sends the saved/unsaved postId to the server */ }
   const savePost = (value) => {
+	
+	if (access_token == "") {
+	  window.location = "/login"
+	}
+	
     setSaved(value);
     const body = {
       username: userName,

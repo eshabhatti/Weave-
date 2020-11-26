@@ -14,7 +14,7 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
   const [perPage] = useState(5);
   let access_token = localStorage.getItem('access_token');
   if (access_token == null) {
-    window.location = "/login"
+    //window.location = "/login"
   }
 
   useEffect(() => {
