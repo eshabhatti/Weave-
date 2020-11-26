@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Post from "../../Shared_Components/Post/Post";
 import Comment from '../../Shared_Components/Comment/Comment';
 import ProfilePreview from '../../Shared_Components/ProfilePreview/ProfilePreview';
+import Message from '../../Chat/Message';
 import ReactPaginate from 'react-paginate';
 
 import './Feed.css';
@@ -84,6 +85,9 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
         }
 		else if (elementType == "profile") {
 		  tester.push(<ProfilePreview username={identifier} />)		
+		}
+		else if (elementType == "messages") {
+		  tester.push(<Message messageId={identifier} />)
 		}
         else {
           tester.push(<Post key={identifier} postId={identifier} userName={"schikyal"} redesign={true} isMinimized={true} />)

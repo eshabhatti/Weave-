@@ -19,6 +19,7 @@ import PostPage from './pages/post_info/PostPage/PostPage';
 import TopicPage from './pages/post_info/Topics/TopicPage';
 import Timeline from './pages/post_info/Timeline/Timeline';
 import Settings from "./user_info/Settings/Settings";
+import Messages from "./user_info/Messages/MessagingPage";
 import BlockedUsers from "./user_info/BlockedUsers/BlockedUsers";
 import Chat from "./Chat/Chat"
 //import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
@@ -75,6 +76,9 @@ function AppRouter() {
 		</Route>
 		<Route path="/blockedusers">
 		  <BlockedUsers />
+		</Route>
+		<Route path="/messages">
+		  <Messages />
 		</Route>
         <Route path="/">
           <NotFound />

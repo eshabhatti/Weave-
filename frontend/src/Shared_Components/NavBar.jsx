@@ -60,7 +60,7 @@ export default function NavBar() {
             className="d-inline-block align-top" alt="" />
         </Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link>Messages</Nav.Link>
+          <Nav.Link href="/messages">Messages</Nav.Link>
           <Nav.Link>Notifications</Nav.Link>
           <Nav.Link>Help</Nav.Link>
 		  <input 
