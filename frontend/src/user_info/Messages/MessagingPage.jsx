@@ -43,7 +43,7 @@ export default function MessagingPage(){
   }
 
   const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;
-  
+
 	return (
 		<div>
 		  <NavBar />
@@ -74,7 +74,7 @@ export default function MessagingPage(){
 			</div>
 		  </div>
 		</div>
-	  )
+	  );
 	}
 	
 	function isMessageValid({ message, receiver, updateErrorMessage }) {
@@ -97,5 +97,3 @@ export default function MessagingPage(){
 		</div>
 	  )
 	}
-
-}
