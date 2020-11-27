@@ -48,7 +48,6 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
   }, [route]);
 
   useEffect(() => {
-    console.log("notpage")
     const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/" + route
     console.log(endpoint)
     const offset = currentPage * perPage
@@ -77,12 +76,10 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
   }, [currentPage, reloadFlag]);
 
   useEffect(() => {
-    console.log("pull")
-    console.log(postData)
     let tester = [];
     if (postData) {
       postData.forEach((identifier) => {
-        console.log(identifier)
+        //console.log(identifier)
         if (elementType == "comment") {
           tester.push(<Comment key={identifier} commentId={identifier} userName={"schikyal"} />)
         }
