@@ -9,9 +9,10 @@ export default function MessagingPage(){
   const [receiver, setReceiver] = useState("")
   const [reload, setReload] = useState(false)
   const [errorMessage, updateErrorMessage] = useState("");
+  const [successMessage, updateSuccessMessage] = useState("");
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
-    window.location = "/login"
+    window.location = "/login";
   }
 
   const onSubmit = (event) => {
@@ -34,7 +35,7 @@ export default function MessagingPage(){
         if (data.error_message) {
           updateErrorMessage(data.error_message);
         } else {
-
+		  updateSuccessMessage("Message Sent");
         }
       }).catch(err => {
         console.log(err);
@@ -45,6 +46,7 @@ export default function MessagingPage(){
   }
 
   const errObject = errorMessage !== "" ? <ErrorBubble message={errorMessage} /> : null;
+  const successObject = successMessage != "" ? <SuccessBubble message={successMessage} /> : null;
 
 	return (
 		<div>
@@ -60,6 +62,7 @@ export default function MessagingPage(){
 				  onChange={e => {
 					uploadChatMessage(e.target.value);
 					updateErrorMessage("");
+					updateSuccessMessage("");
 				  }} className="chat-form-input"
 				/>
 				<label className="chat-form-label">Receiver</label>
@@ -73,6 +76,7 @@ export default function MessagingPage(){
 				<button type="submit" className="chat-submit-btn" onClick={(e) => onSubmit(e)}>Send Message</button>
 			  </form>
 			  {errObject}
+			  {successObject}
 			</div>
 		  </div>
 		</div>
@@ -85,6 +89,9 @@ export default function MessagingPage(){
 	  }
 	  else if (receiver === "") {
 		updateErrorMessage("Please enter a receiver.");
+	  }
+	  else if (message.length > 500) {
+		updateErrorMessage("Message cannot exceed 500 characters.");  
 	  }
 	  else {
 		return true;
@@ -99,3 +106,11 @@ export default function MessagingPage(){
 		</div>
 	  )
 	}
+	
+	function SuccessBubble({ message }) {
+	return (
+		<div className="success-error-bubble">
+			<p className="post-error-message">{message}</p>
+		</div>
+	)
+}

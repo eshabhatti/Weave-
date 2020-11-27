@@ -30,13 +30,18 @@ def weave_message_create():
         # Checks for all needed JSON elements.
         if ("sender" not in message_info or "receiver" not in message_info or "content" not in message_info):
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+        
+        if (message_info["sender"] == message_info["receiver"]):
+            return jsonify({'error_message': 'Cannot send a message to yourself'})
 
         # Checks to make sure the sender is not blocked by the receiver.
         if (weave_check_block(current_username=message_info["sender"], check_username=message_info["receiver"]) == True):
-            return jsonify({'error_message': 'Blocked from content'}), 403
+            return jsonify({'error_message': 'Blocked from messaging this user'}), 403
 
         # Grabs the privacy mode flag (moderation_status) for the receiver.
         cursor.execute("SELECT moderation_status FROM UserAccount WHERE username = %s;", (message_info["receiver"],))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message': 'Recipient does not exist.'}), 400
         message_info["privacy"] = cursor.fetchall()[0]["moderation_status"]
         
         # If the user has privacy mode on, the message can still be sent if the receiver is following the sender.
