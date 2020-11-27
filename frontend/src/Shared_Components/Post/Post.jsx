@@ -37,6 +37,9 @@ export default function Post({
         updateErrorMessage(data.error_message);
         window.location = "/404"
       }
+      if (data.error_message == "Blocked from content"){
+	      window.location = "/blocked";
+	    }
       setPostData(data);
       const { score } = data;
       setVotes(score);
