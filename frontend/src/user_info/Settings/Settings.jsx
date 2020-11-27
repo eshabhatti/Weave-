@@ -11,6 +11,7 @@ export default function Settings(){
 	const [newPass, updateNewPass] = useState("");
 	const [newUser, updateNewUser] = useState("");
 	const [newEmail, updateNewEmail] = useState("");
+	const [setPrivate, updatePrivacyCheck] = useState(false)
 	const [deleteErrorMessage, updateDeleteErrorMessage] = useState("");
 	const [normalErrorMessage, updateNormalErrorMessage] = useState("");
 	const [successMessage, updateSuccessMessage] = useState("");
@@ -93,7 +94,7 @@ export default function Settings(){
 			newemail: newEmail,
 			newpass: newPass,
 			newusername: newUser,
-			privacy: 0,
+			privacy: setPrivate,
 		}
 
 		const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/editsettings/";
@@ -200,6 +201,11 @@ export default function Settings(){
 							<input
 								type="checkbox"
 								className="settings-checkbox"
+								checked={setPrivate}
+								onChange={e => {
+									updatePrivacyCheck(!setPrivate);
+									updateErrorMessage("");
+								}}
 							/>
 							<label className="settings-label-header">Activate privacy mode</label>
 							<label className="settings-label">When privacy mode is activated, you will not receieve direct messages from anyone but the users you have followed.</label>
