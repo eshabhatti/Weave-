@@ -203,8 +203,8 @@ def weave_post_data(message_id):
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'Message does not exist'}), 404
 
-        # Checks and updates return items if post is anonymous.
         message_info = (cursor.fetchall())[0]
+        message_info["username"] = get_jwt_identity()
             
         #blocking code?
 

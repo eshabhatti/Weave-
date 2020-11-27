@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 
 import "./message.css";
 
-export default function Comment({
-  messageId, user
+export default function Message({
+  messageId
 }) {
 
   const [errorMessage, updateErrorMessage] = useState("");
@@ -37,11 +37,10 @@ export default function Comment({
     });
   }, [])
 
-  const { date_created, content, receiver} = messageData;
-
+  const { date_created, content, receiver, sender, username} = messageData;
   return (
     <div>
-        { user === receiver ? (
+        { username === receiver ? (
           <div className="message-receiver-container">
             <p className="message-text">{date_created}</p>
             <p className="message-text">{sender}</p>
