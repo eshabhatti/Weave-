@@ -204,7 +204,9 @@ export default function Settings(){
 								checked={setPrivate}
 								onChange={e => {
 									updatePrivacyCheck(!setPrivate);
-									updateErrorMessage("");
+									updateDeleteErrorMessage("");
+									updateNormalErrorMessage("");
+									updateSuccessMessage("");
 								}}
 							/>
 							<label className="settings-label-header">Activate privacy mode</label>
