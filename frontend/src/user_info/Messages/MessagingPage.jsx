@@ -5,8 +5,9 @@ import Sidebar from '../../Shared_Components/Sidebar/Sidebar';
 import Feed from "../../Shared_Components/Feed/Feed";
 
 export default function MessagingPage(){	
-	const [message, uploadChatMessage] = useState("")
+  const [message, uploadChatMessage] = useState("")
   const [receiver, setReceiver] = useState("")
+  const [reload, setReload] = useState(false)
   const [errorMessage, updateErrorMessage] = useState("");
   const access_token = localStorage.getItem('access_token');
   if (access_token == null) {
@@ -38,7 +39,8 @@ export default function MessagingPage(){
       }).catch(err => {
         console.log(err);
         alert("error: check console for details");
-      });
+	  });
+	  setReload(reload => !reload)
     }
   }
 
@@ -50,7 +52,7 @@ export default function MessagingPage(){
 		  <div className="chat-container">
 			<Sidebar />
 			<div className="chat-content">
-			  <Feed route="allmessages/" elementType="messages"/>
+			  <Feed route="allmessages/" elementType="messages" reloadFlag={reload}/>
 			  <form className="chat-form">
 				<label className="chat-form-label">Message</label>
 				<input
