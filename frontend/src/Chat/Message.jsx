@@ -35,7 +35,7 @@ export default function Message({
       console.error(err);
 
     });
-  }, [])
+  }, [messageData])
 
   const { date_created, content, receiver, sender, username} = messageData;
   return (
@@ -43,13 +43,13 @@ export default function Message({
         { username === receiver ? (
           <div className="message-receiver-container">
             <p className="message-text">{date_created}</p>
-            <p className="message-text">{sender}</p>
+            <p className="message-text">from: {sender}</p>
             <p className="message-content">{content}</p>
           </div>
         ) : (
           <div className="message-sender-container">
             <p className="message-text">{date_created}</p>
-            <p className="message-text">{receiver}</p>
+            <p className="message-text">sent to: {receiver}</p>
             <p className="message-content">{content}</p>
           </div>
           )}
