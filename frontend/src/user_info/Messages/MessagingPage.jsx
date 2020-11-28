@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import NavBar from '../../Shared_Components/NavBar';
 import Sidebar from '../../Shared_Components/Sidebar/Sidebar';
 import Feed from "../../Shared_Components/Feed/Feed";
+import './messagingpage.css';
 
 export default function MessagingPage(){	
   const [message, uploadChatMessage] = useState("")
@@ -51,32 +52,37 @@ export default function MessagingPage(){
 	return (
 		<div>
 		  <NavBar />
-		  <div className="chat-container">
+		  <div className="chat-page-container">
 			<Sidebar />
-			<div className="chat-content">
-			  <Feed route="allmessages/" elementType="messages" reloadFlag={reload}/>
-			  <form className="chat-form">
-				<label className="chat-form-label">Message</label>
-				<input
+			<div className="chat-page-content">
+			  <h1 className="chat-page-feed-header">Your message feed</h1>
+			  <div className="chat-page-feed">
+			  	<Feed route="allmessages/" elementType="messages" reloadFlag={reload}/>
+			  </div>
+			  <h2 className="chat-page-form-header">Write a message</h2>
+			  <form className="chat-page-form">
+				<label className="chat-page-form-label">Message</label>
+				<textarea
 				  value={message}
 				  onChange={e => {
 					uploadChatMessage(e.target.value);
 					updateErrorMessage("");
 					updateSuccessMessage("");
-				  }} className="chat-form-input"
+				  }} 
+				  className="chat-message-input"
 				/>
-				<label className="chat-form-label">Receiver</label>
+				<label className="chat-page-form-label">Receiver</label>
 				<input
 				  value={receiver}
 				  onChange={e => {
 					setReceiver(e.target.value);
 					updateErrorMessage("");
-				  }} className="chat-form-input"
+				  }} className="chat-page-form-input"
 				/>
-				<button type="submit" className="chat-submit-btn" onClick={(e) => onSubmit(e)}>Send Message</button>
+				<button type="submit" className="chat-submit-button" onClick={(e) => onSubmit(e)}>Send Message</button>
+				{errObject}
+			  	{successObject}
 			  </form>
-			  {errObject}
-			  {successObject}
 			</div>
 		  </div>
 		</div>

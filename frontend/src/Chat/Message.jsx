@@ -45,12 +45,14 @@ export default function Message({
             <p className="message-text">{date_created}</p>
             <p className="message-text">from: {sender}</p>
             <p className="message-content">{content}</p>
+            <button className="message-delete">Delete this message</button>
           </div>
         ) : (
           <div className="message-sender-container">
             <p className="message-text">{date_created}</p>
             <p className="message-text">sent to: {receiver}</p>
             <p className="message-content">{content}</p>
+            <button className="message-delete">Delete this message</button>
           </div>
           )}
         

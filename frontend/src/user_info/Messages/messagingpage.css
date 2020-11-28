@@ -1,0 +1,108 @@
+.chat-page-container {
+    background: rgba(255, 255, 255, 0.91);
+    display: flex;
+    margin: 0px auto;
+}
+
+.chat-page-content {
+    /* background: orange; */
+    
+    border-radius: 30px;
+    min-height: 450px;
+    width: 400px;
+    display: block;
+    margin: 0px auto;
+    padding-bottom: 30px;
+    margin-bottom: 100px;
+}
+
+.chat-page-feed-header {
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 24pt;
+    margin-top: 7vh;
+}
+
+.chat-page-feed {
+    margin-top: 20px;
+    background-color: rgba(247, 247, 251, 0.91);
+    padding-top: 18px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 10px;
+}
+
+.chat-page-form-header {
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20pt;
+    margin-top: 35px;
+    margin-bottom: 20px;
+}
+
+.chat-page-form {
+    padding: 20px;
+    margin-bottom: 30px;
+    background-color: rgba(247, 247, 251, 0.91);
+    border-radius: 10px;
+}
+
+.chat-page-form-label {
+    display: block;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    padding-left: 3px;
+    padding-bottom: 5px;
+}
+
+.chat-message-input {
+    width: 100%;
+    margin-bottom: 20px;
+    border: none;
+    height: 126px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    outline: none;
+    padding-left: 10px;
+    padding-top: 10px;
+    color: grey;
+    font-size: 11pt;
+    resize: none;
+    box-shadow: 2px 4px #d6ced9;
+}
+
+.chat-page-form-input {
+    width: 100%;
+    margin-bottom: 20px;
+    border: none;
+    height: 32px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    outline: none;
+    padding-left: 10px;
+    color: grey;
+    box-shadow: 2px 4px #d6ced9;
+}
+
+.chat-submit-button {
+    width: 120px;
+    height: 32px;
+    background: #7448BA;
+    border-radius: 12px;
+    display: block;
+    margin: 0px auto;
+    outline: none;
+    border: none;
+    color: white;
+    font-size: 13px;
+    transition-duration: 0.3s;
+    font-family: 'Open Sans', sans-serif;
+    margin-bottom: 10px;
+    cursor: pointer;
+    margin-top: 30px;
+}
+  
+.chat-submit-button:hover {
+    background: #522a92;
+}
