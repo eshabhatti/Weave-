@@ -35,7 +35,7 @@ export default function Message({
       console.error(err);
 
     });
-  }, [messageData])
+  }, [messageId])
 
   const { date_created, content, receiver, sender, username} = messageData;
   return (
