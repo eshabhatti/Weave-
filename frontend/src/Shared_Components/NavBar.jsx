@@ -63,18 +63,29 @@ export default function NavBar() {
           <Nav.Link href="/messages">Messages</Nav.Link>
           <Nav.Link>Notifications</Nav.Link>
           <Nav.Link>Help</Nav.Link>
-		  <input 
-			value={searchString}
-			onChange={e => {
-				updateSearchString(e.target.value);
-			}}
-		  />
-		  <select id="type" onChange={e => {updateSearchType(e.target.value)}}>
-			<option value="profiles">profiles</option>
-			<option value="topics">topics</option>
-		  </select>
-		  <button  onClick={(e) => search()}>Search</button>
-		  {errObject}
+          <div className="search-form">
+            <input 
+              value={searchString}
+              className="search-input"
+              onChange={e => {
+                updateSearchString(e.target.value);
+                updateErrorMessage("");
+              }}
+            />
+            <select 
+              id="type" 
+              className="search-selection" 
+              onChange={e => {
+                updateSearchType(e.target.value)
+                updateErrorMessage("");
+              }}
+            >
+              <option className="search-option" value="profiles">profiles</option>
+              <option className="search-option" value="topics">topics</option>
+            </select>
+            <button className="search-button" onClick={(e) => search()}>Search</button>
+            {errObject}
+          </div>
         </Nav>
       </Navbar>
     </div>
@@ -84,8 +95,8 @@ export default function NavBar() {
 
 function ErrorBubble({ message }) {
   return (
-    <div className="comment-error-bubble">
-      <p className="comment-error-message">{message}</p>
+    <div className="search-error-bubble">
+      <p className="search-error-message">{message}</p>
     </div>
   )
 }
