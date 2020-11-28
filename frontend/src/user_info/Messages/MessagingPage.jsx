@@ -84,6 +84,9 @@ export default function MessagingPage(){
 	  else if (receiver === "") {
 		updateErrorMessage("Please enter a receiver.");
 	  }
+	  else if (message.length > 500) {
+		updateErrorMessage("Message cannot exceed 500 characters.");  
+	  }
 	  else {
 		return true;
 	  }
