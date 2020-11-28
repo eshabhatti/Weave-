@@ -75,8 +75,10 @@ def weave_message_create():
         cursor.execute(message_query, message_values)
         mysql.connection.commit()
         
+        ret = {"message": "success"}
+        
         # Returns a success message
-        return "message sent"
+        return ret
 
 
 # # # # Backend code for deleting a user's direct message on Weave.

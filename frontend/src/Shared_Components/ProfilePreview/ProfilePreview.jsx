@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function BlockedUsers({username}){	
+export default function ProfilePreview({username}){	
   
 	let access_token = localStorage.getItem('access_token');
 	if (!access_token) {

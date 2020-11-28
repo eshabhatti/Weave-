@@ -36,7 +36,7 @@ export default function MessagingPage(){
 
         }
       }).catch(err => {
-        console.error(err);
+        console.log(err);
         alert("error: check console for details");
       });
     }
