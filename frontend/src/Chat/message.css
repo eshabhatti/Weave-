@@ -12,9 +12,20 @@
   
   .message-sender-container {
     display: block;
-    background-color: yellow;
+    background-color: #d7d9ee;
     padding-left: 15px;
     padding-bottom: 5px;
+    padding-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+
+  .message-receiver-container {
+    display: block;
+    background-color: #edd7ee;
+    padding-left: 15px;
+    padding-bottom: 5px;
+    padding-top: 5px;
     margin-bottom: 10px;
     border-radius: 5px;
   }
