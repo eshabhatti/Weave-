@@ -180,7 +180,9 @@ def weave_render_messages():
         #print(str(message_list)) #debugging
 
         # Returns the total count of direct messages.
-        message_query = "SELECT COUNT(message_id) AS count FROM DirectMessage WHERE sender = %s OR receiver = %s;"
+        message_query = "SELECT COUNT(message_id) AS count FROM DirectMessage " + \
+            "WHERE (sender = %s AND NOT sender_status = 0) " + \
+            "OR (receiver = %s AND NOT receiver_status = 0) ;"
         message_values = (username, username)
         cursor.execute(message_query, message_values)
         count = cursor.fetchall()[0]["count"]
