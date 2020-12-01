@@ -41,7 +41,7 @@ def weave_profile_data(username):
         if (profile_data["user_pic"] == None):
             profile_data["user_pic"] = None
         else:
-            profile_data["user_pic"] = "http://localhost:5000/profile_picture/" + username
+            profile_data["user_pic"] = "/profile_picture/" + username
             
         # Adds following count for profiles and topics
         cursor.execute("SELECT * FROM FollowUser WHERE user_follower = %s;", (username,))

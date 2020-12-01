@@ -134,10 +134,11 @@ function ProfileActionButtons({ pageUsername, follow, refresh, block }) {
 }
 
 function ProfilePicture({ user_pic }) {
+  const host = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000";
   return user_pic == null ? (
     <img src="/img/weave-icon.svg" className="profile-icon" alt="" />
   ) : (
-      <img src={user_pic} className="profile-icon" alt="" />
+      <img src={host+user_pic} className="profile-icon" alt="" />
     );
 }
 
