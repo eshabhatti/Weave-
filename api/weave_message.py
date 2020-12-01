@@ -48,7 +48,7 @@ def weave_message_create():
         if (message_info["privacy"] == 1):
 
             # Grabs the users who the receiver is following.
-            cursor.execute("SELECT user_followed FROM UserFollow WHERE user_follower = %s;", (message_info["receiver"],))
+            cursor.execute("SELECT user_followed FROM FollowUser WHERE user_follower = %s;", (message_info["receiver"],))
             
             # Checks the list of users who the receiver is following for the sender
             privacy_bypass = False
@@ -58,7 +58,7 @@ def weave_message_create():
                     break
                 
             if (privacy_bypass == False):
-                return jsonify({'error_message':'Message cannot be sent'}), 403
+                return jsonify({'error_message':'Failed: User has privacy settings enabled.'}), 403
             
         # Checks for valid content length.
         # Direct messages cannot be more than 500 characters and cannot be empty.

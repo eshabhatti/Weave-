@@ -35,7 +35,6 @@ export default function Settings(){
       }
       /* catches jwt errors that don't use the form "error_message:" */
       const { privacy } = data;
-	  alert(privacy)
       updatePrivacyCheck(privacy);
     }).catch(err => {
       console.error(err);
