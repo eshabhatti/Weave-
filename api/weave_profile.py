@@ -355,6 +355,6 @@ def weave_check_privacy():
 
         # Returns the correct JSON.
         if (current_moderation == 0):
-            return jsonify({'privacy':'FALSE'}), 200
+            return jsonify({'privacy': 0}), 200
         else:
-            return jsonify({'privacy':'TRUE'}), 200
+            return jsonify({'privacy': 1}), 200

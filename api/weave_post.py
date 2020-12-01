@@ -175,7 +175,7 @@ def weave_post_data(post_id):
             
         # Checks if post creator has blocked requester
         if (weave_check_block(current_username=post_info["username"], check_username=post_info["creator"]) == True):
-            return jsonify({'error_message': 'Blocked from content'}), 403
+            return jsonify({'error_message': 'Blocked from content', "content": "you have been blocked from this content.", "title":"blocked"}), 403
 
         # Adds easily computed score to the JSON.
         post_info["score"] = post_info["upvote_count"] - post_info["downvote_count"]

@@ -14,6 +14,8 @@ export default function Post({
   const [voteCheck, setVoted] = useState(0);
   {/* current score of post */ }
   const [votes, setVotes] = useState(0);
+  {/* keeps track of if the user should vote or save this post */}
+  const [blocked, setBlocked] = useState(0);
 
 
   let access_token = localStorage.getItem('access_token');
@@ -33,11 +35,17 @@ export default function Post({
         'Authorization': 'Bearer ' + access_token
       },
     }).then(response => response.json()).then(data => {
-      if (data.error_message) {
+      if (data.error_message == "Post does not exist") {
         updateErrorMessage(data.error_message);
         window.location = "/404"
       }
-      setPostData(data);
+      if (data.error_message == "Blocked from content"){
+	      setBlocked(1);
+		  if (!isMinimized){
+		    window.location = "/blocked";
+		  }
+	  }
+	  setPostData(data);
       const { score } = data;
       setVotes(score);
     }).catch(err => {
@@ -157,28 +165,33 @@ export default function Post({
   const postLink = "/post/" + postId;
   const profileLink = "/profile/" + creator;
   const topicLink = "/topic/" + topic_name;
-
-  return PostComponent({ author: creator, title, text: content, topic_name, score: votes, isSaved: saveCheck, savePost, voteCheck, vote, isMinimized, postId, src });
+  return PostComponent({ author: creator, title, text: content, topic_name, score: votes, isSaved: saveCheck, savePost, voteCheck, vote, isMinimized, postId, src, blocked });
 
 }
 
-function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isSaved, savePost, voteCheck, vote, isMinimized, postId, src, topic_name }) {
+function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isSaved, savePost, voteCheck, vote, isMinimized, postId, src, topic_name, blocked }) {
   const bookmarkFill = (isSaved == 1) ? "red" : "rgba(225, 225, 225, 1)";
   const bookmarkClicked = () => {
-    console.log(isSaved);
-    if (isSaved == -1) {
-      savePost(1);
-    } else {
-      savePost(-1);
-    }
+	if (!blocked) {
+      console.log(isSaved);
+      if (isSaved == -1) {
+        savePost(1);
+      } else {
+        savePost(-1);
+      }
+	}
   }
   let isUpvotedFlag = voteCheck == 1;
   let isDownVotedFlag = voteCheck == -1;
   const upvote = () => {
-    vote(1);
+	if (!blocked) {
+      vote(1);
+	}
   }
   const downvote = () => {
-    vote(-1);
+	if (!blocked) {
+      vote(-1);
+	}
   }
   const containerClass = isMinimized ? "post-component-container post-component-container-collapsed" : "post-component-container";
   const onClick = () => {

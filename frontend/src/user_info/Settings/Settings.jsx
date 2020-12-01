@@ -11,6 +11,7 @@ export default function Settings(){
 	const [newPass, updateNewPass] = useState("");
 	const [newUser, updateNewUser] = useState("");
 	const [newEmail, updateNewEmail] = useState("");
+	const [setPrivate, updatePrivacyCheck] = useState(0)
 	const [deleteErrorMessage, updateDeleteErrorMessage] = useState("");
 	const [normalErrorMessage, updateNormalErrorMessage] = useState("");
 	const [successMessage, updateSuccessMessage] = useState("");
@@ -18,6 +19,27 @@ export default function Settings(){
 	if (access_token == null) {
 		window.location = '/login';
 	}
+	
+	const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/checkprivacy/";
+	
+	useEffect(() => {
+	  fetch(endpoint, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + access_token
+      },
+    }).then(response => response.json()).then(data => {
+      if (data.error_message) {
+        window.location = "/404"
+      }
+      /* catches jwt errors that don't use the form "error_message:" */
+      const { privacy } = data;
+      updatePrivacyCheck(privacy);
+    }).catch(err => {
+      console.error(err);
+    });
+	}, [])
 
 	// Delete Account Function
 	const DeleteAccount = (event) => {
@@ -93,7 +115,7 @@ export default function Settings(){
 			newemail: newEmail,
 			newpass: newPass,
 			newusername: newUser,
-			privacy: 0,
+			privacy: setPrivate,
 		}
 
 		const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/editsettings/";
@@ -200,6 +222,13 @@ export default function Settings(){
 							<input
 								type="checkbox"
 								className="settings-checkbox"
+								checked={setPrivate}
+								onChange={e => {
+									updatePrivacyCheck(!setPrivate);
+									updateDeleteErrorMessage("");
+									updateNormalErrorMessage("");
+									updateSuccessMessage("");
+								}}
 							/>
 							<label className="settings-label-header">Activate privacy mode</label>
 							<label className="settings-label">When privacy mode is activated, you will not receieve direct messages from anyone but the users you have followed.</label>

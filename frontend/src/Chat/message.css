@@ -12,8 +12,22 @@
   
   .message-sender-container {
     display: block;
-    background-color: yellow;
+    background-color: #d7d9ee;
     padding-left: 15px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+
+  .message-receiver-container {
+    display: block;
+    background-color: #edd7ee;
+    padding-left: 15px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
   }
 
   .message-text {
@@ -30,6 +44,16 @@
     font-size: 10pt;
     color: darkslategray;
     padding-left: 3px;
+    padding-bottom: 10px;
+  }
+
+  .message-delete {
+    display: block;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: -10px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 9pt;
   }
   
   .comment-component-container {

@@ -19,6 +19,7 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
   }
 
   useEffect(() => {
+    console.log("page")
     const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/" + route;
     const offset = currentPage * perPage;
     const body = {
@@ -29,7 +30,6 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
       username: username,
     }
     console.log(JSON.stringify(body));
-    console.log(endpoint);
     fetch(endpoint, {
       method: "POST",
       headers: {
@@ -45,7 +45,7 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
     }).catch(err => {
       console.log(err);
     });
-  }, [route, reloadFlag]);
+  }, [route]);
 
   useEffect(() => {
     const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/" + route
@@ -79,7 +79,7 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
     let tester = [];
     if (postData) {
       postData.forEach((identifier) => {
-        console.log(identifier)
+        //console.log(identifier)
         if (elementType == "comment") {
           tester.push(<Comment key={identifier} commentId={identifier} userName={"schikyal"} />)
         }
@@ -98,7 +98,7 @@ export default function Feed({ route, topic, post_id, username, elementType, rel
         tester = <p>No Content Yet!</p>;
       }
     }
-  }, [postData, reloadFlag])
+  }, [postData])
 
 
   const handlePageClick = (e) => {

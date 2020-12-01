@@ -30,20 +30,25 @@ def weave_message_create():
         # Checks for all needed JSON elements.
         if ("sender" not in message_info or "receiver" not in message_info or "content" not in message_info):
             return jsonify({'error_message': 'Request Error: Missing JSON Element'}), 400
+        
+        if (message_info["sender"] == message_info["receiver"]):
+            return jsonify({'error_message': 'Cannot send a message to yourself'})
 
         # Checks to make sure the sender is not blocked by the receiver.
         if (weave_check_block(current_username=message_info["sender"], check_username=message_info["receiver"]) == True):
-            return jsonify({'error_message': 'Blocked from content'}), 403
+            return jsonify({'error_message': 'Blocked from messaging this user'}), 403
 
         # Grabs the privacy mode flag (moderation_status) for the receiver.
         cursor.execute("SELECT moderation_status FROM UserAccount WHERE username = %s;", (message_info["receiver"],))
+        if (cursor.rowcount == 0):
+            return jsonify({'error_message': 'Recipient does not exist.'}), 400
         message_info["privacy"] = cursor.fetchall()[0]["moderation_status"]
         
         # If the user has privacy mode on, the message can still be sent if the receiver is following the sender.
         if (message_info["privacy"] == 1):
 
             # Grabs the users who the receiver is following.
-            cursor.execute("SELECT user_followed FROM UserFollow WHERE user_follower = %s;", (message_info["receiver"],))
+            cursor.execute("SELECT user_followed FROM FollowUser WHERE user_follower = %s;", (message_info["receiver"],))
             
             # Checks the list of users who the receiver is following for the sender
             privacy_bypass = False
@@ -53,7 +58,7 @@ def weave_message_create():
                     break
                 
             if (privacy_bypass == False):
-                return jsonify({'error_message':'Message cannot be sent'}), 403
+                return jsonify({'error_message':'Failed: User has privacy settings enabled.'}), 403
             
         # Checks for valid content length.
         # Direct messages cannot be more than 500 characters and cannot be empty.
@@ -75,8 +80,10 @@ def weave_message_create():
         cursor.execute(message_query, message_values)
         mysql.connection.commit()
         
+        ret = {"message": "success"}
+        
         # Returns a success message
-        return "message sent"
+        return ret
 
 
 # # # # Backend code for deleting a user's direct message on Weave.
@@ -110,13 +117,13 @@ def weave_delete_message():
         
         # If the user is the sender of the message, we update the sender_status attribute.
         if (message_info["sender"] == delete_info["username"]):
-            cursor.execute("UPDATE DirectMessage SET sender_status = 0 WHERE sender = %s;", (delete_info["username"],))
+            cursor.execute("UPDATE DirectMessage SET sender_status = 0 WHERE message_id = %s;", (delete_info["message_id"],))
             mysql.connection.commit()
             return "sender message deleted"
 
         # If the user is the receiver of the message, we update the receiver_status attribute.
         if (message_info["receiver"] == delete_info["username"]):
-            cursor.execute("UPDATE DirectMessage SET receiver_status = 0 WHERE receiver = %s;", (delete_info["username"],))
+            cursor.execute("UPDATE DirectMessage SET receiver_status = 0 WHERE message_id = %s;", (delete_info["message_id"],))
             mysql.connection.commit()
             return "receiver message deleted"
 
@@ -173,7 +180,9 @@ def weave_render_messages():
         #print(str(message_list)) #debugging
 
         # Returns the total count of direct messages.
-        message_query = "SELECT COUNT(message_id) AS count FROM DirectMessage WHERE sender = %s OR receiver = %s;"
+        message_query = "SELECT COUNT(message_id) AS count FROM DirectMessage " + \
+            "WHERE (sender = %s AND NOT sender_status = 0) " + \
+            "OR (receiver = %s AND NOT receiver_status = 0) ;"
         message_values = (username, username)
         cursor.execute(message_query, message_values)
         count = cursor.fetchall()[0]["count"]
@@ -203,8 +212,8 @@ def weave_post_data(message_id):
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'Message does not exist'}), 404
 
-        # Checks and updates return items if post is anonymous.
         message_info = (cursor.fetchall())[0]
+        message_info["username"] = get_jwt_identity()
             
         #blocking code?
 

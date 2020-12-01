@@ -41,6 +41,7 @@ export default function Profile() {
 
   {/* renders the post with fetch data and the states of the save and voting buttons */ }
   useEffect(() => {
+    console.log("d")
     fetch(endpoint, {
       method: "GET",
       headers: {
@@ -48,13 +49,15 @@ export default function Profile() {
         'Authorization': 'Bearer ' + access_token
       },
     }).then(response => response.json()).then(data => {
+      console.log("k")
+      console.log(data)
       if (data.error_message == "User does not exist") {
         updateErrorMessage(data.error_message);
         window.location = "/404"
       }
-	  if (data.error_message == "Blocked from content"){
-	    window.location = "/blocked";
-	  }
+	    if (data.error_message == "Blocked from content"){
+	      window.location = "/blocked";
+	    }
       /* catches jwt errors that don't use the form "error_message:" */
       // if (data.msg) {
       //   window.location = "/login"
@@ -79,6 +82,7 @@ export default function Profile() {
       },
       body: JSON.stringify(body)
     }).then(response => response.json()).then(data => {
+      console.log("m")
       if (data.error_message == "User does not exist") {
         updateErrorMessage(data.error_message);
         window.location = "/404"
