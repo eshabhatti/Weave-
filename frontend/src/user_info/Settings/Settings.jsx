@@ -11,7 +11,7 @@ export default function Settings(){
 	const [newPass, updateNewPass] = useState("");
 	const [newUser, updateNewUser] = useState("");
 	const [newEmail, updateNewEmail] = useState("");
-	const [setPrivate, updatePrivacyCheck] = useState(false)
+	const [setPrivate, updatePrivacyCheck] = useState(0)
 	const [deleteErrorMessage, updateDeleteErrorMessage] = useState("");
 	const [normalErrorMessage, updateNormalErrorMessage] = useState("");
 	const [successMessage, updateSuccessMessage] = useState("");
@@ -19,6 +19,28 @@ export default function Settings(){
 	if (access_token == null) {
 		window.location = '/login';
 	}
+	
+	const endpoint = (process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000") + "/checkprivacy/";
+	
+	useEffect(() => {
+	  fetch(endpoint, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + access_token
+      },
+    }).then(response => response.json()).then(data => {
+      if (data.error_message) {
+        window.location = "/404"
+      }
+      /* catches jwt errors that don't use the form "error_message:" */
+      const { privacy } = data;
+	  alert(privacy)
+      updatePrivacyCheck(privacy);
+    }).catch(err => {
+      console.error(err);
+    });
+	}, [])
 
 	// Delete Account Function
 	const DeleteAccount = (event) => {
