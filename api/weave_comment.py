@@ -75,7 +75,7 @@ def weave_comment_data(comment_id):
         cursor = mysql.connection.cursor()
 
         # Checks if comment exists in db and grabs relevant data.
-        cursor.execute("SELECT * FROM POSTCOMMENT WHERE comment_id = %s;", (comment_id,))
+        cursor.execute("SELECT * FROM PostComment WHERE comment_id = %s;", (comment_id,))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'Comment does not exist'}), 404
 
