@@ -171,7 +171,7 @@ def weave_post_data(post_id):
         # Adds identity of requester to the JSON.
         post_info["username"] = get_jwt_identity()
         if (post_info["pic_path"] is not None):
-            post_info["pic_path"] = "http://localhost:5000/postimage/"+str(post_id)
+            post_info["pic_path"] = "/postimage/"+str(post_id) #modified here
             
         # Checks if post creator has blocked requester
         if (weave_check_block(current_username=post_info["username"], check_username=post_info["creator"]) == True):

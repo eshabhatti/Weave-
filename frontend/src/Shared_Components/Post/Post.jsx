@@ -199,6 +199,7 @@ function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isS
       window.location.href = "/post/" + postId;
     }
   }
+  const host = process.env.NODE_ENV === 'production' ? "http://weave.projectcarbon.io/server" : "http://localhost:5000";
   return (
     <div className={containerClass}>
       <VerticalVoteBar
@@ -213,7 +214,7 @@ function PostComponent({ isUpvoted, isDownVoted, score, title, text, author, isS
       <div className="post-component-content" onClick={() => onClick()}>
         <p className="post-component-author"><a href = {"/profile/" + author}> @{author}</a></p>
         <h2 className="post-component-title">{title}</h2>
-        <img src={src} className="post-component-image" />
+        <img src={host+src} className="post-component-image" alt="" />
 		<Linkify>
 			<p className="post-component-content-text">
 			  {text}
