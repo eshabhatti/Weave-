@@ -39,10 +39,12 @@ def weave_message_create():
             return jsonify({'error_message': 'Blocked from messaging this user'}), 403
 
         # Grabs the privacy mode flag (moderation_status) for the receiver.
-        cursor.execute("SELECT moderation_status FROM UserAccount WHERE username = %s;", (message_info["receiver"],))
+        cursor.execute("SELECT username, moderation_status FROM UserAccount WHERE username = %s;", (message_info["receiver"],))
         if (cursor.rowcount == 0):
             return jsonify({'error_message': 'Recipient does not exist.'}), 400
-        message_info["privacy"] = cursor.fetchall()[0]["moderation_status"]
+        message_tuple = cursor.fetchall()[0]
+        message_info["privacy"] = message_tuple["moderation_status"]
+        message_info["receiver"] = message_tuple["username"]
         
         # If the user has privacy mode on, the message can still be sent if the receiver is following the sender.
         if (message_info["privacy"] == 1):
@@ -116,13 +118,13 @@ def weave_delete_message():
         message_info = cursor.fetchall()[0]
         
         # If the user is the sender of the message, we update the sender_status attribute.
-        if (message_info["sender"] == delete_info["username"]):
+        if (str(message_info["sender"]).upper() == str(delete_info["username"]).upper()):
             cursor.execute("UPDATE DirectMessage SET sender_status = 0 WHERE message_id = %s;", (delete_info["message_id"],))
             mysql.connection.commit()
             return "sender message deleted"
 
         # If the user is the receiver of the message, we update the receiver_status attribute.
-        if (message_info["receiver"] == delete_info["username"]):
+        if (str(message_info["receiver"]).upper() == str(delete_info["username"]).upper()):
             cursor.execute("UPDATE DirectMessage SET receiver_status = 0 WHERE message_id = %s;", (delete_info["message_id"],))
             mysql.connection.commit()
             return "receiver message deleted"
